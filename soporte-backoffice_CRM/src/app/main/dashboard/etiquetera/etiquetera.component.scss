@@ -1,0 +1,40 @@
+@import "@core/scss/angular/libs/datatables.component.scss";
+@import "@core/scss/base/plugins/charts/chart-apex.scss";
+@import "@core/scss/angular/libs/toastr.component.scss";
+.datatable-scroll {
+  width: auto !important;
+}
+
+/* Estilo personalizado para SweetAlert */
+.swal-custom-popup {
+  color: #fff;
+}
+
+.swal-custom-title {
+  font-weight: bold;
+}
+
+.swal-custom-content {
+  font-size: 14px;
+}
+
+// /* Aumentar separación entre secciones (Palabras Clave y el botón Registrar) */
+// .palabras-clave {
+//   margin-bottom: 2rem; /* Agrega margen debajo de la tabla */
+// }
+
+// button[type="submit"] {
+//   margin-top: 2rem; /* Separa el botón del formulario */
+// }
+
+// /* Ajustar visualización de tabla */
+// .palabras-clave .table {
+//   margin-top: 1rem; /* Espaciado entre la entrada de palabra clave y la tabla */
+// }
+
+// /* Alineación en secciones responsivas */
+// @media (max-width: 768px) {
+//   .d-flex.justify-content-end {
+//     justify-content: center;
+//   }
+// }

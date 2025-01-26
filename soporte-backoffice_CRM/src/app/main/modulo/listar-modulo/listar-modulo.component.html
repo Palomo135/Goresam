@@ -1,0 +1,21 @@
+<h2>Lista de Módulos</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nombre</th>
+      <th>Curso ID</th>
+      <th>Estado</th>
+      <th>Orden</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let modulo of moduloList; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ modulo.nombre }}</td>
+      <td>{{ modulo.cursoId }}</td>
+      <td>{{ modulo.estado ? "Activo" : "Inactivo" }}</td>
+      <td>{{ modulo.orden }}</td>
+    </tr>
+  </tbody>
+</table>

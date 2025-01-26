@@ -1,0 +1,31 @@
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">Lista de Cláusulas</h2>
+  <div class="row">
+    <!-- Iteramos sobre las cláusulas y mostramos cada una en una tarjeta -->
+    <div class="col-md-4 mb-4" *ngFor="let clausula of clausulas">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title text-primary">{{ clausula.nombre }}</h5>
+          <p class="card-text text-muted">{{ clausula.descripcion }}</p>
+        </div>
+        <div class="card-footer bg-light">
+          <small class="text-secondary">
+            <strong>Módulo:</strong> {{ clausula.modulo?.nombre }}
+          </small>
+          <button
+            class="btn btn-sm btn-primary"
+            (click)="openEditClausulaModal(clausula)"
+          >
+            Editar
+          </button>
+          <button
+            class="btn btn-sm btn-danger"
+            (click)="deleteClausula(clausula.id)"
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

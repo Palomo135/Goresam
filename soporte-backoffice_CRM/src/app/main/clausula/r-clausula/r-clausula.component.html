@@ -1,0 +1,80 @@
+<div class="container">
+  <h1>Crear Nueva Cláusula</h1>
+  <form [formGroup]="clausulaForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="nombre">Nombre</label>
+      <input
+        type="text"
+        id="nombre"
+        formControlName="nombre"
+        class="form-control"
+        placeholder="Ingrese el nombre de la cláusula"
+      />
+      <div
+        *ngIf="
+          clausulaForm.get('nombre')?.invalid &&
+          clausulaForm.get('nombre')?.touched
+        "
+        class="text-danger"
+      >
+        El nombre es obligatorio.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="descripcion">Descripción</label>
+      <div id="summernote"></div>
+      <!-- Contenedor para Summernote -->
+      <div
+        *ngIf="
+          clausulaForm.get('descripcion')?.invalid &&
+          clausulaForm.get('descripcion')?.touched
+        "
+        class="text-danger"
+      >
+        La descripción es obligatoria.
+      </div>
+    </div>
+    <div
+      *ngIf="
+        clausulaForm.get('descripcion')?.invalid &&
+        clausulaForm.get('descripcion')?.touched
+      "
+      class="text-danger"
+    >
+      La descripción es obligatoria.
+    </div>
+
+    <div class="form-group">
+      <label for="moduloId">Módulo</label>
+      <select
+        id="moduloId"
+        class="form-control"
+        formControlName="moduloId"
+        required
+      >
+        <option value="" disabled selected>Seleccione un módulo</option>
+        <option *ngFor="let modulo of modulos" [value]="modulo.id">
+          {{ modulo.nombre }}
+        </option>
+      </select>
+      <div
+        *ngIf="
+          clausulaForm.get('moduloId')?.invalid &&
+          clausulaForm.get('moduloId')?.touched
+        "
+        class="text-danger"
+      >
+        Debe seleccionar un módulo.
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="clausulaForm.invalid"
+    >
+      Crear Cláusula
+    </button>
+  </form>
+</div>
