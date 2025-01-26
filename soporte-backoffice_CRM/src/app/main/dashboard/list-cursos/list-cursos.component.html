@@ -80,85 +80,65 @@
       </ng-template>
     </ngx-datatable-column>
 
-    <!-- Acciones Column -->
-    <ngx-datatable-column name="Acciones" [width]="30" [sortable]="false">
+    <!-- Actions Column -->
+    <ngx-datatable-column name="Acciones" [width]="20" [sortable]="false">
       <ng-template ngx-datatable-cell-template let-row="row">
-        <button
-          class="btn btn-outline-primary btn-sm"
-          (click)="toggleModulePanel(row)"
-        >
-          Gestionar Módulos
-        </button>
-
-        <div *ngIf="row.showModules" class="mt-3">
-          <!-- Select Box para Módulos -->
-          <select
-            class="form-control"
-            [(ngModel)]="row.selectedModule"
-            (change)="onAddModuleToCourse(row)"
-          >
-            <option [value]="null">Añadir nuevo módulo</option>
-            <option *ngFor="let module of availableModules" [value]="module.id">
-              {{ module.nombre }}
-            </option>
-          </select>
-
-          <!-- Lista de Módulos Seleccionados -->
-          <ul class="mt-3">
-            <li
-              *ngFor="let module of row.modules"
-              class="d-flex align-items-center"
+        <div class="d-flex align-items-center">
+          <!-- Dropdown Menu -->
+          <div ngbDropdown container="body">
+            <a
+              ngbDropdownToggle
+              href="javascript:void(0);"
+              class="hide-arrow"
+              id="dropdownBrowserState"
+              aria-haspopup="true"
+              aria-expanded="false"
             >
-              <span> Módulo N° {{ module.id }}: {{ module.nombre }} </span>
-              <button
-                class="btn btn-sm btn-warning ms-2"
-                (click)="editModule(module.id)"
+              <i
+                data-feather="more-vertical"
+                class="text-primary cursor-pointer me-2"
+              ></i>
+            </a>
+            <div
+              ngbDropdownMenu
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="dropdownBrowserState"
+              style="z-index: 1050"
+            >
+              <a
+                href="javascript:void(0)"
+                ngbDropdownItem
+                class="d-flex align-items-center"
+                (click)="openModuloModal(row.id)"
               >
-                Editar
-              </button>
-              <button
-                class="btn btn-sm btn-danger ms-2"
-                (click)="removeModuleFromCourse(row, module.id)"
+                <i data-feather="edit" class="me-2"></i> Modulo
+              </a>
+              <a
+                href="javascript:void(0)"
+                ngbDropdownItem
+                class="d-flex align-items-center"
+                (click)="openClausulaModal(row.id)"
               >
-                Eliminar
-              </button>
-
-              <!-- Select Box para Cláusulas -->
-              <div class="ms-3">
-                <select
-                  class="form-control"
-                  [(ngModel)]="module.selectedClausula"
-                  (change)="onAddClausulaToModule(module)"
-                >
-                  <option [value]="null">Añadir nueva cláusula</option>
-                  <option
-                    *ngFor="let clausula of availableClausulas"
-                    [value]="clausula.id"
-                  >
-                    {{ clausula.nombre }}
-                  </option>
-                </select>
-
-                <!-- Lista de Cláusulas -->
-                <ul class="mt-2">
-                  <li
-                    *ngFor="let clausula of module.clausulas"
-                    class="d-flex align-items-center"
-                  >
-                    <span>
-                      Cláusula N° {{ clausula.id }}: {{ clausula.nombre }}</span
-                    >
-                    <button
-                      class="btn btn-sm btn-danger ms-2"
-                      (click)="removeClausulaFromModule(module, clausula.id)"
-                    >
-                      Eliminar
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
+                <i data-feather="edit" class="me-2"></i> Clausula
+              </a>
+              <a
+                href="javascript:void(0)"
+                ngbDropdownItem
+                class="d-flex align-items-center"
+                (click)="onEdit(row.id)"
+              >
+                <i data-feather="edit" class="me-2"></i> Editar
+              </a>
+              <a
+                href="javascript:void(0)"
+                ngbDropdownItem
+                class="d-flex align-items-center text-danger"
+                (click)="onDelete(row.id)"
+              >
+                <i data-feather="trash-2" class="me-2"></i> Eliminar
+              </a>
+            </div>
+          </div>
         </div>
       </ng-template>
     </ngx-datatable-column>
