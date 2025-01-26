@@ -6,5 +6,7 @@ export interface CursoEdit {
     logo: Buffer;
     estado: boolean;
     recurso: string;
+    fechaCaducidad: Date;
+    Encargado: string;
     detallePalabrasClave?: DetallePalabraClave[];
 }

@@ -38,6 +38,12 @@ export class Curso {
     @UpdateDateColumn()
     fechaUpdate: Date;
 
+    @Column()
+    fechaCaducidad: Date;
+
+    @Column()
+    Encargado: string;
+
     @Column({ default: true })
     estado: boolean;
 
