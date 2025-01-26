@@ -4,6 +4,8 @@ export class CursoEditDTO {
     nombre: string;
     descripcion: string;
     estado: boolean;
+    fechaCaducidad: Date;
+    encargado: string;
     recurso: string;
     detallePalabraClave: DetallePalabraClaveDTO[];
     logo: string;
