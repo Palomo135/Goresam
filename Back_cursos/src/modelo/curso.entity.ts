@@ -42,7 +42,7 @@ export class Curso {
     fechaCaducidad: Date;
 
     @Column()
-    Encargado: string;
+    encargado: string;
 
     @Column({ default: true })
     estado: boolean;
