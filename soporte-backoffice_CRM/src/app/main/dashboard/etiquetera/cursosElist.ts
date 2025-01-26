@@ -3,5 +3,5 @@ export interface CursoElistDTO {
     nombre: string;
     logo: string;
     fechaCaducidad: Date;
-    Encargado: string;
+    encargado: string;
 }

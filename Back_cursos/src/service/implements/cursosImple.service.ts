@@ -27,16 +27,14 @@ export class CursoService {
   async findAll(): Promise<Curso[]> {
     const cursos = await this.cursoRepository.find({
       relations: ['detallePalabrasClave'],
-      order: {
-        fechaCreate: 'DESC'
-      }
+      order: { fechaCreate: 'DESC' }
     });
     return cursos
   }
 
   async findElistAll(): Promise<CursoElistDTO[]> {
     const cursos = await this.cursoRepository.find({
-      select: ['id', 'nombre', 'logo'], // Seleccionamos solo los campos necesarios
+      select: ['id', 'nombre', 'logo', 'fechaCaducidad', 'encargado'], // Seleccionamos solo los campos necesarios
       order: { fechaCreate: 'DESC' }
     });
 
@@ -45,6 +43,8 @@ export class CursoService {
       id: curso.id,
       nombre: curso.nombre,
       logo: curso.logo ? `http://localhost:3200/api/curso/logo/${curso.id}` : null,
+      fechaCaducidad: curso.fechaCaducidad,
+      encargado: curso.encargado
     }));
   }
 
@@ -124,6 +124,8 @@ export class CursoService {
     curso.descripcion = updateDTO.descripcion ?? curso.descripcion;
     curso.recurso = updateDTO.recurso ?? curso.recurso;
     curso.estado = updateDTO.estado ?? curso.estado;
+    curso.fechaCaducidad = updateDTO.fechaCaducidad ?? curso.fechaCaducidad;
+    curso.encargado = updateDTO.encargado ?? curso.encargado;
 
     if (updateDTO.logo) {
       curso.logo = updateDTO.logo;
@@ -153,54 +155,6 @@ export class CursoService {
     } as Curso;
   }
 
-  // async update(id: number, curso: CursoDTO): Promise<Curso> {
-  //   const queryRunner = this.dataSource.createQueryRunner();
-  //   await queryRunner.connect();
-  //   await queryRunner.startTransaction();
-  //   try {
-  //     const existingCurso = await this.findOne(id);
-
-  //     // Actualizar datos básicos del curso
-  //     await queryRunner.manager.update(Curso, id, {
-  //       ...curso,
-  //       logo: curso.logo ?? existingCurso.logo,
-  //       detallePalabrasClave: undefined, // No actualizar directamente las relaciones aquí
-  //     });
-
-  //     // Actualizar palabras clave
-  //     if (curso.detallePalabraClave.length > 0) {
-  //       await queryRunner.manager.delete(DetallePalabraClave, { curso: { id } });
-
-  //       const palabrasClaveToSave = curso.detallePalabraClave.map((palabraClave) => {
-  //         const detalle = new DetallePalabraClave();
-  //         detalle.nombre = palabraClave.nombre;
-  //         detalle.curso = { id } as Curso;
-  //         return detalle;
-  //       });
-
-  //       await queryRunner.manager.save(DetallePalabraClave, palabrasClaveToSave);
-  //     }
-
-  //     await queryRunner.commitTransaction();
-
-  //     //return this.findOne(id);
-
-  //     // Obtener el curso actualizado con las relaciones
-  //     const updatedCurso = await this.cursoRepository.findOne({
-  //       where: { id },
-  //       relations: ['detallePalabrasClave'],
-  //     });
-  //     return updatedCurso;
-
-  //   } catch (error) {
-  //     console.error('Error durante la actualización del curso:', error);
-  //     await queryRunner.rollbackTransaction();
-  //     if (error instanceof NotFoundException) throw error;
-  //     throw new InternalServerErrorException('Error al actualizar el curso.');
-  //   } finally {
-  //     await queryRunner.release();
-  //   }
-  // }
 
   async remove(id: number): Promise<void> {
     const queryRunner = this.dataSource.createQueryRunner();

@@ -37,6 +37,8 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit
       logo: [null, Validators.required],
       recurso: ['', Validators.required],
       estado: [true, Validators.required],
+      fechaCaducidad: ['', Validators.required],
+      encargado: ['', Validators.required],
       frase: [''],
       dirigido: [''],
       aprendizaje: [''],
@@ -54,6 +56,8 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit
           descripcion: course.descripcion,
           recurso: course.recurso, // Cargar el URL
           estado: course.estado, // Cargar el estado
+          fechaCaducidad: course.fechaCaducidad,
+          encargado: course.encargado,
         });
 
         if (course.logo) {
