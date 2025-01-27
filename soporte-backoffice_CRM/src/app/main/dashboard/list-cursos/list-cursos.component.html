@@ -49,39 +49,54 @@
     class="bootstrap core-bootstrap"
     [rows]="filteredRows"
     [columnMode]="ColumnMode.force"
-    [headerHeight]="50"
-    [footerHeight]="50"
-    [rowHeight]="60"
+    [headerHeight]="70"
+    [footerHeight]="70"
+    [rowHeight]="100"
     [limit]="basicSelectedOption"
   >
     <!-- Nro Column -->
-    <ngx-datatable-column name="" [width]="10" [sortable]="false">
+    <ngx-datatable-column name="#" [width]="50" [sortable]="false">
       <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
         {{ rowIndex + 1 }}
       </ng-template>
     </ngx-datatable-column>
 
     <!-- Logo Column -->
-    <ngx-datatable-column name="Logo" [width]="10" [sortable]="false">
+    <ngx-datatable-column name="Logo" [width]="100" [sortable]="false">
       <ng-template ngx-datatable-cell-template let-row="row">
         <img
           [src]="'http://localhost:3200/api/curso/logo/' + row.id"
           alt="Logo del Curso"
-          class="rounded-circle shadow-sm border"
-          style="height: 40px; width: 40px; object-fit: cover"
+          class="rounded-circle shadow-sm border logo-img"
         />
       </ng-template>
     </ngx-datatable-column>
 
     <!-- Nombre del Curso Column -->
-    <ngx-datatable-column name="Nombre del Curso" prop="nombre" [width]="50">
+    <ngx-datatable-column name="Nombre del Curso" prop="nombre" [width]="200">
       <ng-template ngx-datatable-cell-template let-row="row">
         <span class="fw-bold text-dark">{{ row.nombre }}</span>
       </ng-template>
     </ngx-datatable-column>
 
+    <!-- Encargado Column -->
+    <ngx-datatable-column name="Encargado" prop="nombre" [width]="200">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <span class="fw-bold text-dark">{{ row.encargado }}</span>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <!-- Fecha Caducidad Column -->
+    <ngx-datatable-column name="Fecha de Caducidad" prop="nombre" [width]="200">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <span class="fw-bold text-dark">{{
+          row.fechaCaducidad | date : "yyyy-MM-dd"
+        }}</span>
+      </ng-template>
+    </ngx-datatable-column>
+
     <!-- Actions Column -->
-    <ngx-datatable-column name="Acciones" [width]="20" [sortable]="false">
+    <ngx-datatable-column name="Acciones" [width]="150" [sortable]="false">
       <ng-template ngx-datatable-cell-template let-row="row">
         <div class="d-flex align-items-center">
           <!-- Dropdown Menu -->

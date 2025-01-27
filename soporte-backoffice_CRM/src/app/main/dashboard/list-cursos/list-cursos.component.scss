@@ -1,0 +1,13 @@
+.logo-img {
+  height: 75px;
+  width: 75px;
+  object-fit: cover;
+}
+
+ngx-datatable .datatable-body-row {
+  height: 170px; /* Ajusta este valor para que las filas sean lo suficientemente altas para el logo */
+}
+
+ngx-datatable .datatable-body-cell {
+  font-size: 25.5rem; /* Ajusta este valor para aumentar el tamaño de la letra */
+}

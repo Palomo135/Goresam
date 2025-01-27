@@ -11,7 +11,7 @@ export interface Curso {
   reconocimiento?: string;
   estado: boolean;
   fechaCaducidad: Date;
-  Encargado: string;
+  encargado: string;
   recurso: string;
   detallePalabrasClave?: DetallePalabraClave[];
 }

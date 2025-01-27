@@ -83,28 +83,6 @@ export class CursoService {
     return await this.cursoRepository.save(curso)
   }
 
-  // async create(curso: Curso): Promise<Curso> {
-  //   const queryRunner = this.dataSource.createQueryRunner();
-  //   await queryRunner.connect();
-  //   await queryRunner.startTransaction();
-
-  //   try {
-
-
-  //     // Guardar el curso
-  //     const savedCurso = await queryRunner.manager.save(Curso, curso);
-  //     await queryRunner.commitTransaction();
-
-  //     // Retornar el curso con sus relaciones
-  //     return this.findOne(savedCurso.id);
-
-  //   } catch (error) {
-  //     await queryRunner.rollbackTransaction();
-  //     throw new InternalServerErrorException('Error al crear el curso');
-  //   } finally {
-  //     await queryRunner.release();
-  //   }
-  // }
 
   async update(id: number, updateDTO: CursoDTO): Promise<Curso> {
     console.log('Service recibe:', updateDTO);

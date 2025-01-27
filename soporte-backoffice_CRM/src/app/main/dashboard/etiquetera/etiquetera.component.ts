@@ -14,12 +14,10 @@ declare var $: any;
   templateUrl: './etiquetera.component.html',
   styleUrls: ['./etiquetera.component.scss']
 })
-export class EtiqueteraComponent implements OnInit, AfterViewInit
-//OnChanges 
-{
+export class EtiqueteraComponent implements OnInit, AfterViewInit {
 
   @Input() courseToEdit: CursoEdit | null = null;
-  cursoToEdit: Curso | null = null; // Recibe el curso para editar
+  //cursoToEdit: Curso | null = null; // Recibe el curso para editar
 
   cursoForm: FormGroup;
   logoPreview: string | ArrayBuffer | null = null;
@@ -34,7 +32,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit
     this.cursoForm = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      logo: [null, Validators.required],
+      logo: [null],
       recurso: ['', Validators.required],
       estado: [true, Validators.required],
       fechaCaducidad: ['', Validators.required],
@@ -47,39 +45,60 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit
     });
   }
 
+  // ngOnInit(): void {
+  //   this.courseSharedService.course$.subscribe((course) => {
+  //     if (course) {
+
+  //       this.cursoForm.patchValue({
+  //         nombre: course.nombre,
+  //         descripcion: course.descripcion,
+  //         recurso: course.recurso, // Cargar el URL
+  //         estado: course.estado, // Cargar el estado
+  //         fechaCaducidad: course.fechaCaducidad,
+  //         encargado: course.encargado,
+  //       });
+
+  //       if (course.logo) {
+  //         this.logoPreview = `http://localhost:3200/api/curso/logo/${course.id}`;
+  //       }
+
+  //       // Cargamos las palabras clave
+  //       if (course.detallePalabrasClave) {
+  //         this.keywords = course.detallePalabrasClave.map((p) => p.nombre)
+  //       }
+
+  //       // Mandamos la id del curso al formulario
+  //       if (!this.cursoForm.contains('id')) {
+  //         this.cursoForm.addControl('id', this.fb.control(course.id));
+  //       }
+
+  //       // Iniciamos la descripción en el formulario summernote
+  //       $('#summernote').summernote('code', course.descripcion || '')
+  //       if (this.cursoForm.get('id')?.value) {
+  //         this.cursoForm.get('logo')?.clearValidators();
+  //         this.cursoForm.get('logo')?.updateValueAndValidity();
+  //       }
+  //     }
+  //     if (this.courseToEdit) {
+  //       this.cursoForm.patchValue({
+  //         id: this.courseToEdit.id,
+  //         nombre: this.courseToEdit.nombre,
+  //         descripcion: this.courseToEdit.descripcion,
+  //         recurso: this.courseToEdit.recurso,
+  //         estado: this.courseToEdit.estado,
+  //         fechaCaducidad: this.formatDate(this.courseToEdit.fechaCaducidad),
+  //         encargado: this.courseToEdit.encargado
+  //       });
+  //     };
+  //   });
+  // }
+
   ngOnInit(): void {
     this.courseSharedService.course$.subscribe((course) => {
       if (course) {
-
-        this.cursoForm.patchValue({
-          nombre: course.nombre,
-          descripcion: course.descripcion,
-          recurso: course.recurso, // Cargar el URL
-          estado: course.estado, // Cargar el estado
-          fechaCaducidad: course.fechaCaducidad,
-          encargado: course.encargado,
-        });
-
-        if (course.logo) {
-          this.logoPreview = `http://localhost:3200/api/curso/logo/${course.id}`;
-        }
-
-        // Cargamos las palabras clave
-        if (course.detallePalabrasClave) {
-          this.keywords = course.detallePalabrasClave.map((p) => p.nombre)
-        }
-
-        // Mandamos la id del curso al formulario
-        if (!this.cursoForm.contains('id')) {
-          this.cursoForm.addControl('id', this.fb.control(course.id));
-        }
-
-        // Iniciamos la descripción en el formulario summernote
-        $('#summernote').summernote('code', course.descripcion || '')
-        if (this.cursoForm.get('id')?.value) {
-          this.cursoForm.get('logo')?.clearValidators();
-          this.cursoForm.get('logo')?.updateValueAndValidity();
-        }
+        this.setFormValues(course);
+      } else if (this.courseToEdit) {
+        this.setFormValues(this.courseToEdit);
       }
     });
   }
@@ -108,6 +127,37 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit
     });
   }
 
+  setFormValues(course: CursoEdit): void {
+    this.cursoForm.patchValue({
+      id: course.id,
+      nombre: course.nombre,
+      descripcion: course.descripcion,
+      recurso: course.recurso,
+      estado: course.estado,
+      fechaCaducidad: this.formatDate(course.fechaCaducidad),
+      encargado: course.encargado
+    });
+
+    if (course.logo) {
+      this.logoPreview = `http://localhost:3200/api/curso/logo/${course.id}`;
+    }
+
+    this.keywords = course.detallePalabrasClave?.map(k => k.nombre) || [];
+    $('#summernote').summernote('code', course.descripcion || '');
+
+    if (!this.cursoForm.contains('id')) {
+      this.cursoForm.addControl('id', this.fb.control(course.id));
+    }
+  }
+
+  formatDate(date: Date): string {
+    const d = new Date(date);
+    const month = '' + (d.getMonth() + 1);
+    const day = '' + d.getDate();
+    const year = d.getFullYear();
+
+    return [year, month.padStart(2, '0'), day.padStart(2, '0')].join('-');
+  } // Formatea la fecha
 
   addKeyword(): void {
     if (this.newKeyword && !this.keywords.includes(this.newKeyword)) {
@@ -200,8 +250,6 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit
 
   resetForm(): void {
     this.cursoForm.reset();
-    this.cursoForm.markAsPristine();
-    this.cursoForm.markAsUntouched();
     this.keywords = [];
     this.logoPreview = null;
     $('#summernote').summernote('reset');

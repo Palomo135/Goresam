@@ -38,7 +38,7 @@ export class Curso {
     @UpdateDateColumn()
     fechaUpdate: Date;
 
-    @Column()
+    @Column({ nullable: true })
     fechaCaducidad: Date;
 
     @Column()
