@@ -12,7 +12,6 @@ import { ModuloComponent } from 'app/main/modulo/R_modulo/modulo.component';
 import { Modulo } from 'app/main/modulo/R_modulo/modulo';
 import { Clausula } from 'app/main/clausula/r-clausula/clausula';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 import { CursoElistDTO } from '../etiquetera/cursosElist';
 import { ModuloService } from 'app/main/modulo/modulo.service';
 import { RClausulaComponent } from 'app/main/clausula/r-clausula/r-clausula.component';
@@ -24,13 +23,15 @@ import { RClausulaComponent } from 'app/main/clausula/r-clausula/r-clausula.comp
   styleUrls: ['./list-cursos.component.scss']
 })
 export class ListCursosComponent implements OnInit {
+  @ViewChild('table') table: any;
   cursoElist: CursoElistDTO[] = [];
-  logoBaseUrl: 'http://localhost:3200/api/curso/logo/'
   cursos: Curso[] = [];
-  availableModules: Modulo[] = [];
+  modulos: Modulo[] = [];
   availableClauses: Clausula[] = [];
   //filteredRows: Curso[] = [];
   filteredRows: CursoElistDTO[] = [];
+  selectedModule: { [key: number]: number } = {};
+  expanded: { [key: number]: boolean } = {};
   searchTerm: string = '';
   basicSelectedOption: number = 10;
   verModal: boolean = true;
@@ -41,7 +42,7 @@ export class ListCursosComponent implements OnInit {
   @Output() courseSaved = new EventEmitter<void>(); // Evento para notificar que un curso se guardó
   @Output() editCurso: EventEmitter<Curso> = new EventEmitter<Curso>();
   //@Output() editCourse = new EventEmitter<Curso>();
-  @ViewChild(DatatableComponent) table: DatatableComponent;
+  // @ViewChild(DatatableComponent) table: DatatableComponent;
   @ViewChild(EtiqueteraComponent) etiqueteraComponent: EtiqueteraComponent; // Referencia al componente de creación/edición de curso
   @ViewChild(ModuloComponent) moduloComponent: ModuloComponent; // Referencia al componente de creación/edición de curso
 
@@ -51,12 +52,14 @@ export class ListCursosComponent implements OnInit {
   constructor(
     private etiqueteraService: EtiqueteraService,
     private courseSharedService: CourseSharedService,
+    private moduloService: ModuloService,
 
     private modalService: NgbModal // Inyectar el servicio NgbModal
   ) { }
 
   ngOnInit(): void {
     this.loadCourses();
+    this.loadModulos();
   }
 
   loadCourses(): void {
@@ -71,6 +74,43 @@ export class ListCursosComponent implements OnInit {
       error: (err) => console.error('Error al cargar los cursos:', err)
     });
   }
+
+  loadModulos(): void {
+    this.moduloService.getTodosModulos().subscribe({
+      next: (data) => {
+        this.modulos = data;
+        console.log(data);
+      },
+      error: (err) => console.error('Error al cargar los módulos:', err)
+    });
+  }
+
+  assignModule(cursoId: number): void {
+    const moduloId = this.selectedModule[cursoId];
+    this.moduloService.assignModuleToCurso(cursoId, moduloId).subscribe({
+      next: () => {
+        Swal.fire('Módulo asignado', 'El módulo ha sido asignado al curso.', 'success');
+        this.loadCourses();
+      },
+      error: () => Swal.fire('Error', 'No se pudo asignar el módulo.', 'error')
+    });
+  }
+
+  removeModule(cursoId: number, moduloId: number): void {
+    this.moduloService.removeModuleFromCurso(cursoId, moduloId).subscribe({
+      next: () => {
+        Swal.fire('Módulo eliminado', 'El módulo ha sido eliminado del curso.', 'success');
+        this.loadCourses();
+      },
+      error: () => Swal.fire('Error', 'No se pudo eliminar el módulo.', 'error')
+    });
+  }
+
+  toggleExpandRow(row: any): void {
+    this.expanded[row.id] = !this.expanded[row.id];
+    //this.table.rowDetail.toggleExpandRow(row);
+  }
+
 
   onEdit(id: number): void {
     this.etiqueteraService.getCursoById(id).subscribe({
@@ -110,6 +150,13 @@ export class ListCursosComponent implements OnInit {
       // Llama a un método en ListCursosComponent si necesitas refrescar algo aquí
       console.log('Modal cerrado');
     });
+    // modalRef.result.then(
+    //   (result) => {
+    //     this.selectedModule[cursoId] = result.id; // Asigna el nuevo módulo al curso
+    //     this.assignModule(cursoId);
+    //   }, 
+    // (reason) => {}
+    // );
   }
 
   openClausulaModal(cursoId: number): void {
@@ -133,6 +180,7 @@ export class ListCursosComponent implements OnInit {
             this.cursos = this.cursos.filter((course) => course.id !== id);
             this.filteredRows = [...this.cursoElist]; // Actualizar las filas filtradas
             Swal.fire('Eliminado', 'El curso ha sido eliminado.', 'success');
+            this.loadCourses();
           },
           error: () => Swal.fire('Error', 'No se pudo eliminar el curso.', 'error'),
         });

@@ -32,6 +32,16 @@ export class ModuloController {
     return this.moduloService.create(modulo);
   }
 
+  @Post('assign')
+  assignModuleToCurso(@Body() assignModuleDto: { cursoId: number; moduloId: number }): Promise<void> {
+    return this.moduloService.assignModuleToCurso(assignModuleDto.cursoId, assignModuleDto.moduloId);
+  }
+
+  @Delete('remove')
+  removeModuleFromCurso(@Body() removeModuleDto: { cursoId: number; moduloId: number }): Promise<void> {
+    return this.moduloService.removeModuleFromCurso(removeModuleDto.cursoId, removeModuleDto.moduloId);
+  }
+
   @Put(':id')
   update(@Param('id') id: number, @Body() modulo: Modulo): Promise<Modulo> {
     return this.moduloService.update(id, modulo);

@@ -20,6 +20,14 @@ export class ModuloService {
     return this.http.get<Modulo[]>(`${this.apiUrl}/todos`);
   }
 
+  assignModuleToCurso(cursoId: number, moduloId: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/assign`, { cursoId, moduloId });
+  }
+
+  removeModuleFromCurso(cursoId: number, moduloId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/remove`, { body: { cursoId, moduloId } });
+  }
+
   getModulosLista(): Observable<ModuloList[]> {
     return this.http.get<ModuloList[]>(`${this.apiUrl}`);
   }

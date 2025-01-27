@@ -154,8 +154,67 @@
               </a>
             </div>
           </div>
+          <!-- Expand/Collapse Button -->
+          <button class="btn btn-link" (click)="toggleExpandRow(row)">
+            <i
+              [class]="
+                expanded[row.id] ? 'fas fa-chevron-up' : 'fas fa-chevron-down'
+              "
+            ></i>
+          </button>
         </div>
       </ng-template>
     </ngx-datatable-column>
   </ngx-datatable>
+
+  <!-- Expanded Row Template -->
+  <ngx-datatable-row-detail
+    [rowHeight]="auto"
+    *ngx-datatableRowDetail="let row"
+  >
+    <div class="p-3">
+      <h5>Asignar Módulo</h5>
+      <div class="d-flex flex-column mb-3">
+        <select
+          class="form-select"
+          [(ngModel)]="selectedModule[row.id]"
+          (change)="assignModule(row.id)"
+        >
+          <option *ngFor="let modulo of modulos" [value]="modulo.id">
+            {{ modulo.nombre }}
+          </option>
+        </select>
+        <button
+          class="btn btn-sm btn-primary mt-2"
+          (click)="openModuloModal(row.id)"
+        >
+          Añadir Módulo
+        </button>
+      </div>
+      <h6>Módulos Asignados</h6>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let modulo of row.modulos; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ modulo.nombre }}</td>
+            <td>
+              <button
+                class="btn btn-sm btn-danger"
+                (click)="removeModule(row.id, modulo.id)"
+              >
+                Quitar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ngx-datatable-row-detail>
 </section>

@@ -71,6 +71,31 @@ export class ModuloImpleService {
     return this.moduloRepository.findOne({ where: { id } }); // Asegúrate de pasar el ID directamente
   }
 
+  async assignModuleToCurso(cursoId: number, moduloId: number): Promise<void> {
+    const curso = await this.cursoRepository.findOne({ where: { id: cursoId }, relations: ['modulos'] });
+    if (!curso) {
+      throw new NotFoundException('Curso no encontrado');
+    }
+
+    const modulo = await this.moduloRepository.findOne({ where: { id: moduloId } });
+    if (!modulo) {
+      throw new NotFoundException('Módulo no encontrado');
+    }
+
+    curso.modulos.push(modulo);
+    await this.cursoRepository.save(curso);
+  }
+
+  async removeModuleFromCurso(cursoId: number, moduloId: number): Promise<void> {
+    const curso = await this.cursoRepository.findOne({ where: { id: cursoId }, relations: ['modulos'] });
+    if (!curso) {
+      throw new NotFoundException('Curso no encontrado');
+    }
+
+    curso.modulos = curso.modulos.filter(modulo => modulo.id !== moduloId);
+    await this.cursoRepository.save(curso);
+  }
+
   async remove(id: number): Promise<void> {
     await this.moduloRepository.delete(id);
   }
