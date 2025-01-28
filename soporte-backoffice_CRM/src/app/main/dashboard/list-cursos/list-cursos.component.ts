@@ -107,8 +107,8 @@ export class ListCursosComponent implements OnInit {
   }
 
   toggleExpandRow(row: any): void {
-    this.expanded[row.id] = !this.expanded[row.id];
-    //this.table.rowDetail.toggleExpandRow(row);
+    //this.expanded[row.id] = !this.expanded[row.id];
+    this.table.rowDetail.toggleExpandRow(row);
   }
 
 
@@ -150,13 +150,15 @@ export class ListCursosComponent implements OnInit {
       // Llama a un método en ListCursosComponent si necesitas refrescar algo aquí
       console.log('Modal cerrado');
     });
-    // modalRef.result.then(
-    //   (result) => {
-    //     this.selectedModule[cursoId] = result.id; // Asigna el nuevo módulo al curso
-    //     this.assignModule(cursoId);
-    //   }, 
-    // (reason) => {}
-    // );
+    modalRef.result.then(
+      //   (result) => {
+      //     this.selectedModule[cursoId] = result.id; // Asigna el nuevo módulo al curso
+      //     this.assignModule(cursoId);
+      //   }, 
+      // (reason) => {}
+      () => this.loadCourses(),
+      () => { }
+    );
   }
 
   openClausulaModal(cursoId: number): void {
@@ -177,7 +179,7 @@ export class ListCursosComponent implements OnInit {
       if (result.isConfirmed) {
         this.etiqueteraService.deleteCourse(id).subscribe({
           next: () => {
-            this.cursos = this.cursos.filter((course) => course.id !== id);
+            this.cursoElist = this.cursoElist.filter((course) => course.id !== id);
             this.filteredRows = [...this.cursoElist]; // Actualizar las filas filtradas
             Swal.fire('Eliminado', 'El curso ha sido eliminado.', 'success');
             this.loadCourses();
