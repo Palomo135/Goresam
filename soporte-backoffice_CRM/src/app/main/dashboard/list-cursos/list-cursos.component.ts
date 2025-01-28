@@ -5,7 +5,7 @@ import { Curso } from '../etiquetera/curso';
 import Swal from 'sweetalert2';
 import { EtiqueteraService } from '../service/etiquetera.service';
 import { ColumnMode, DatatableComponent, SelectionType } from '@swimlane/ngx-datatable';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; // Asegúrate de importar NgbModal
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EtiqueteraComponent } from '../etiquetera/etiquetera.component';
 import { FormGroup } from '@angular/forms';
 import { ModuloComponent } from 'app/main/modulo/R_modulo/modulo.component';
@@ -16,7 +16,7 @@ import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 import { CursoElistDTO } from '../etiquetera/cursosElist';
 import { ModuloService } from 'app/main/modulo/modulo.service';
 import { RClausulaComponent } from 'app/main/clausula/r-clausula/r-clausula.component';
-
+import { ModuloList } from 'app/main/modulo/R_modulo/moduloList';
 
 @Component({
   selector: 'app-list-cursos',
@@ -29,30 +29,30 @@ export class ListCursosComponent implements OnInit {
   cursos: Curso[] = [];
   availableModules: Modulo[] = [];
   availableClauses: Clausula[] = [];
-  //filteredRows: Curso[] = [];
   filteredRows: CursoElistDTO[] = [];
   searchTerm: string = '';
   basicSelectedOption: number = 10;
-  verModal: boolean = true;
+  verModal: boolean = false;
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
   courseForm: FormGroup;
+  moduloList: ModuloList[] = [];
+  selectedCursoId: number | null = null;
 
-  @Output() courseSaved = new EventEmitter<void>(); // Evento para notificar que un curso se guardó
+  @Output() courseSaved = new EventEmitter<void>();
   @Output() editCurso: EventEmitter<Curso> = new EventEmitter<Curso>();
-  //@Output() editCourse = new EventEmitter<Curso>();
   @ViewChild(DatatableComponent) table: DatatableComponent;
-  @ViewChild(EtiqueteraComponent) etiqueteraComponent: EtiqueteraComponent; // Referencia al componente de creación/edición de curso
-  @ViewChild(ModuloComponent) moduloComponent: ModuloComponent; // Referencia al componente de creación/edición de curso
+  @ViewChild(EtiqueteraComponent) etiqueteraComponent: EtiqueteraComponent;
+  @ViewChild(ModuloComponent) moduloComponent: ModuloComponent;
+  @ViewChild('courseModal') courseModal: any;
 
   searchTerm$: Subject<string> = new Subject<string>();
-
 
   constructor(
     private etiqueteraService: EtiqueteraService,
     private courseSharedService: CourseSharedService,
-
-    private modalService: NgbModal // Inyectar el servicio NgbModal
+    private modalService: NgbModal,
+    private moduloService: ModuloService
   ) { }
 
   ngOnInit(): void {
@@ -64,21 +64,41 @@ export class ListCursosComponent implements OnInit {
       next: (data) => {
         this.cursoElist = data;
         console.log(data);
-        //this.loadCourses();
-        this.filteredRows = [...this.cursoElist]; // Inicializar filas filtradas
-        this.verModal = false;
+        this.filteredRows = [...this.cursoElist];
       },
       error: (err) => console.error('Error al cargar los cursos:', err)
+    });
+  }
+
+  toggleModulePanel(row: any) {
+    this.selectedCursoId = row.id;
+    this.loadModulos(row.id);
+    
+    const modalRef = this.modalService.open(this.courseModal, {
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false
+    });
+
+    modalRef.componentInstance.curso = row;
+  }
+
+  loadModulos(cursoId: number): void {
+    this.moduloService.getModulosLista().subscribe({
+      next: (modulos) => {
+        this.moduloList = modulos.filter(modulo => modulo.idCurso === cursoId);
+        console.log('Módulos cargados:', this.moduloList);
+      },
+      error: (error) => {
+        console.error('Error al cargar los módulos:', error);
+      }
     });
   }
 
   onEdit(id: number): void {
     this.etiqueteraService.getCursoById(id).subscribe({
       next: (fullCourse: Curso) => {
-
-        this.courseSharedService.setCourse(fullCourse); // Enviar al servicio
-
-        // Abrimos el modal
+        this.courseSharedService.setCourse(fullCourse);
         const modalRef = this.modalService.open(EtiqueteraComponent, { size: 'lg' });
       },
       error: (err) => console.error('Error al obtener el curso completo:', err),
@@ -92,23 +112,19 @@ export class ListCursosComponent implements OnInit {
     );
   }
 
-  // Función para abrir el modal
   openCourseModal(): void {
-
     const modalRef = this.modalService.open(EtiqueteraComponent, { size: 'lg' });
-    // Escuchar el evento `courseSaved`
     this.courseSharedService.clearCourse();
-    modalRef.componentInstance.courseToEdit = null; // No se pasa ningún curso, así que se crea uno nuevo
-
+    modalRef.componentInstance.courseToEdit = null;
   }
-
 
   openModuloModal(cursoId: number): void {
     const modalRef = this.modalService.open(ModuloComponent, { size: 'lg' });
-    modalRef.componentInstance.cursoId = cursoId; // Pasar el ID del curso al modal
+    modalRef.componentInstance.cursoId = cursoId;
     modalRef.closed.subscribe(() => {
-      // Llama a un método en ListCursosComponent si necesitas refrescar algo aquí
-      console.log('Modal cerrado');
+      if (this.selectedCursoId) {
+        this.loadModulos(this.selectedCursoId);
+      }
     });
   }
 
@@ -131,7 +147,7 @@ export class ListCursosComponent implements OnInit {
         this.etiqueteraService.deleteCourse(id).subscribe({
           next: () => {
             this.cursos = this.cursos.filter((course) => course.id !== id);
-            this.filteredRows = [...this.cursoElist]; // Actualizar las filas filtradas
+            this.filteredRows = [...this.cursoElist];
             Swal.fire('Eliminado', 'El curso ha sido eliminado.', 'success');
           },
           error: () => Swal.fire('Error', 'No se pudo eliminar el curso.', 'error'),
@@ -142,7 +158,6 @@ export class ListCursosComponent implements OnInit {
 
   onLogoError(event: Event): void {
     const imgElement = event.target as HTMLImageElement;
-    imgElement.src = 'assets/placeholder.png'; // Ruta al placeholder
+    imgElement.src = 'assets/placeholder.png';
   }
-
 }
