@@ -27,7 +27,7 @@ export class ListCursosComponent implements OnInit {
   cursoElist: CursoElistDTO[] = [];
   logoBaseUrl: 'http://localhost:3200/api/curso/logo/'
   cursos: Curso[] = [];
-  availableModules: Modulo[] = [];
+  availableModules: ModuloList[] = [];
   availableClauses: Clausula[] = [];
   filteredRows: CursoElistDTO[] = [];
   searchTerm: string = '';
@@ -38,6 +38,7 @@ export class ListCursosComponent implements OnInit {
   courseForm: FormGroup;
   moduloList: ModuloList[] = [];
   selectedCursoId: number | null = null;
+  selectedModuloId: number | null = null;
 
   @Output() courseSaved = new EventEmitter<void>();
   @Output() editCurso: EventEmitter<Curso> = new EventEmitter<Curso>();
@@ -70,6 +71,15 @@ export class ListCursosComponent implements OnInit {
     });
   }
 
+  loadAvailableModules(): void {
+    this.moduloService.getModulosLista().subscribe({
+      next: (modulos) => {
+        this.availableModules = modulos;
+      },
+      error: (err) => console.error('Error al cargar los módulos:', err)
+    });
+  }
+
   toggleModulePanel(row: CursoElistDTO): void {
     console.log('Curso seleccionado:', row);
     this.selectedCursoId = row.id;
@@ -94,11 +104,27 @@ export class ListCursosComponent implements OnInit {
     });
   }
 
+  assingnModuleToCurso(): void {
+    if (this.selectedCursoId && this.selectedModuloId) {
+      this.moduloService.assignModuleToCurso(this.selectedCursoId, this.selectedModuloId).subscribe({
+        next: () => {
+          this.loadModulos(this.selectedCursoId);
+        },
+        error: (error) => {
+          console.error('Error al asignar el módulo:', error);
+        }
+      });
+    }
+  }
+
   onEdit(id: number): void {
     this.etiqueteraService.getCursoById(id).subscribe({
       next: (fullCourse: Curso) => {
         this.courseSharedService.setCourse(fullCourse);
         const modalRef = this.modalService.open(EtiqueteraComponent, { size: 'lg' });
+        modalRef.closed.subscribe(() => {
+          this.loadCourses();
+        });
       },
       error: (err) => console.error('Error al obtener el curso completo:', err),
     });
@@ -115,6 +141,9 @@ export class ListCursosComponent implements OnInit {
     const modalRef = this.modalService.open(EtiqueteraComponent, { size: 'lg' });
     this.courseSharedService.clearCourse();
     modalRef.componentInstance.courseToEdit = null;
+    modalRef.closed.subscribe(() => {
+      this.loadCourses();
+    });
   }
 
   openModuloModal(cursoId: number): void {
@@ -122,7 +151,6 @@ export class ListCursosComponent implements OnInit {
     modalRef.componentInstance.cursoId = cursoId;
     modalRef.closed.subscribe(() => {
       if (this.selectedCursoId) {
-        modalRef.dismiss();
         this.loadModulos(this.selectedCursoId);
       }
     });
@@ -149,6 +177,7 @@ export class ListCursosComponent implements OnInit {
             this.cursos = this.cursos.filter((course) => course.id !== id);
             this.filteredRows = [...this.cursoElist];
             Swal.fire('Eliminado', 'El curso ha sido eliminado.', 'success');
+            this.loadCourses();
           },
           error: () => Swal.fire('Error', 'No se pudo eliminar el curso.', 'error'),
         });
@@ -161,8 +190,14 @@ export class ListCursosComponent implements OnInit {
     imgElement.src = 'assets/placeholder.png';
   }
 
-  deleteModulo(moduloId: number): void {
-
-    console.log('Eliminar módulo:', moduloId);
+  removeModuleFromCurso(cursoId: number, moduloId: number): void {
+    this.moduloService.removeModuleFromCurso(cursoId, moduloId).subscribe({
+      next: () => {
+        this.loadModulos(cursoId);
+      },
+      error: (error) => {
+        console.error('Error al eliminar el módulo:', error);
+      }
+    });
   }
 }
