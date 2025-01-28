@@ -6,5 +6,5 @@ export interface ModuloList {
     estado: boolean;
     orden: number;
     //idCurso: number;
-    Curso: Curso;
+    curso: Curso;
 }

@@ -9,8 +9,6 @@ import { Clausula } from './clausula';
 import { Modulo } from 'app/main/modulo/R_modulo/modulo';
 import { id } from '@swimlane/ngx-datatable';
 
-declare var $: any;
-
 @Component({
   selector: 'app-r-clausula',
   templateUrl: './r-clausula.component.html',
@@ -28,7 +26,6 @@ export class RClausulaComponent implements OnInit {
     this.clausulaForm = this.fb.group({
       id: [null],
       nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
       moduloId: ['', Validators.required],
       estado: [true, Validators.required]
     })
@@ -41,37 +38,6 @@ export class RClausulaComponent implements OnInit {
       this.clausulaForm.patchValue(this.clausula);
 
       // Cargar contenido en Summernote
-      setTimeout(() => {
-        $('#summernote').summernote('code', this.clausula.descripcion);
-      }, 0);
-    }
-  }
-
-  ngAfterViewInit() {
-    $('#summernote').summernote({
-      placeholder: 'Escribe aquí...',
-      tabsize: 2,
-      height: 300,
-      toolbar: [
-        ['style', ['style']],
-        ['font', ['bold', 'underline', 'italic', 'clear']],
-        ['fontname', ['fontname']],
-        ['color', ['color']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['table', ['table']],
-        ['insert', ['link', 'video']],
-        ['view', ['fullscreen', 'codeview', 'help']]
-      ],
-      callbacks: {
-        onChange: (contents: string) => {
-          this.clausulaForm.get('descripcion')?.setValue(contents);
-        }
-      }
-    });
-    // Si ya hay una descripción prellenada, inicializa Summernote con su contenido
-    const initialDescripcion = this.clausulaForm.get('descripcion')?.value;
-    if (initialDescripcion) {
-      $('#summernote').summernote('code', initialDescripcion);
     }
   }
 
@@ -135,8 +101,7 @@ export class RClausulaComponent implements OnInit {
     }
 
     const clausulaData = {
-      ...this.clausulaForm.value,
-      descripcion: $('<div>').html(this.clausulaForm.get('descripcion')?.value).text() // Limpiar HTML
+      ...this.clausulaForm.value
     };
 
     // Si hay un ID, se actualiza; si no, se crea

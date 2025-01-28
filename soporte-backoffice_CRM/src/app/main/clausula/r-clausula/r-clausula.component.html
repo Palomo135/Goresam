@@ -22,30 +22,6 @@
     </div>
 
     <div class="form-group">
-      <label for="descripcion">Descripción</label>
-      <div id="summernote"></div>
-      <!-- Contenedor para Summernote -->
-      <div
-        *ngIf="
-          clausulaForm.get('descripcion')?.invalid &&
-          clausulaForm.get('descripcion')?.touched
-        "
-        class="text-danger"
-      >
-        La descripción es obligatoria.
-      </div>
-    </div>
-    <div
-      *ngIf="
-        clausulaForm.get('descripcion')?.invalid &&
-        clausulaForm.get('descripcion')?.touched
-      "
-      class="text-danger"
-    >
-      La descripción es obligatoria.
-    </div>
-
-    <div class="form-group">
       <label for="moduloId">Módulo</label>
       <select
         id="moduloId"
