@@ -162,7 +162,7 @@ export class ListCursosComponent implements OnInit {
   }
 
   deleteModulo(moduloId: number): void {
+
     console.log('Eliminar módulo:', moduloId);
-    // Aquí puedes agregar la lógica para eliminar un módulo
   }
 }
