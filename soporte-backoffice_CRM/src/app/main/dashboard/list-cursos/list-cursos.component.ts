@@ -16,6 +16,7 @@ import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 import { CursoElistDTO } from '../etiquetera/cursosElist';
 import { ModuloService } from 'app/main/modulo/modulo.service';
 import { RClausulaComponent } from 'app/main/clausula/r-clausula/r-clausula.component';
+import { ModuloList } from 'app/main/modulo/R_modulo/moduloList';
 
 @Component({
   selector: 'app-list-cursos',
@@ -35,6 +36,8 @@ export class ListCursosComponent implements OnInit {
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
   courseForm: FormGroup;
+  moduloList: ModuloList[] = [];
+  selectedCursoId: number | null = null;
 
   @Output() courseSaved = new EventEmitter<void>();
   @Output() editCurso: EventEmitter<Curso> = new EventEmitter<Curso>();
@@ -48,7 +51,8 @@ export class ListCursosComponent implements OnInit {
   constructor(
     private etiqueteraService: EtiqueteraService,
     private courseSharedService: CourseSharedService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private moduloService: ModuloService
   ) { }
 
   ngOnInit(): void {
@@ -67,6 +71,9 @@ export class ListCursosComponent implements OnInit {
   }
 
   toggleModulePanel(row: any) {
+    this.selectedCursoId = row.id;
+    this.loadModulos(row.id);
+    
     const modalRef = this.modalService.open(this.courseModal, {
       size: 'lg',
       backdrop: 'static',
@@ -74,6 +81,18 @@ export class ListCursosComponent implements OnInit {
     });
 
     modalRef.componentInstance.curso = row;
+  }
+
+  loadModulos(cursoId: number): void {
+    this.moduloService.getModulosLista().subscribe({
+      next: (modulos) => {
+        this.moduloList = modulos.filter(modulo => modulo.idCurso === cursoId);
+        console.log('Módulos cargados:', this.moduloList);
+      },
+      error: (error) => {
+        console.error('Error al cargar los módulos:', error);
+      }
+    });
   }
 
   onEdit(id: number): void {
@@ -103,7 +122,9 @@ export class ListCursosComponent implements OnInit {
     const modalRef = this.modalService.open(ModuloComponent, { size: 'lg' });
     modalRef.componentInstance.cursoId = cursoId;
     modalRef.closed.subscribe(() => {
-      console.log('Modal cerrado');
+      if (this.selectedCursoId) {
+        this.loadModulos(this.selectedCursoId);
+      }
     });
   }
 

@@ -98,7 +98,43 @@
     <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body">
-    <app-etiquetera>Lolo mamamela</app-etiquetera>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Lista de Módulos</h2>
+      <button class="btn btn-primary" (click)="openModuloModal(selectedCursoId)">
+        <i class="fas fa-plus-circle me-1"></i> Nuevo Módulo
+      </button>
+    </div>
+    
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Estado</th>
+          <th>Orden</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let modulo of moduloList; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ modulo.nombre }}</td>
+          <td>{{ modulo.estado ? "Activo" : "Inactivo" }}</td>
+          <td>{{ modulo.orden }}</td>
+          <td>
+            <button class="btn btn-sm btn-warning me-2" (click)="openModuloModal(modulo.id)">
+              <i class="fas fa-edit"></i> Editar
+            </button>
+            <button class="btn btn-sm btn-danger">
+              <i class="fas fa-trash"></i> Eliminar
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="moduloList.length === 0">
+          <td colspan="5" class="text-center">No hay módulos disponibles</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="modal.close()">Cerrar</button>
