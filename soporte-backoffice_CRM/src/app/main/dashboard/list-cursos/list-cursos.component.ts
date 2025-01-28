@@ -80,7 +80,7 @@ export class ListCursosComponent implements OnInit {
     this.moduloService.getModulosLista().subscribe({
       next: (modulos) => {
         console.log('Módulos cargados:', modulos);
-        this.moduloList = modulos.filter(modulo => modulo.Curso.id === cursoId);
+        this.moduloList = modulos.filter(modulo => modulo.Curso && modulo.Curso.id === cursoId);
         console.log('Módulos cargados:', this.moduloList);
         this.modalService.open(this.courseModal, {
           size: 'lg',
