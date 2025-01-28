@@ -70,24 +70,23 @@ export class ListCursosComponent implements OnInit {
     });
   }
 
-  toggleModulePanel(row: any) {
+  toggleModulePanel(row: CursoElistDTO): void {
+    console.log('Curso seleccionado:', row);
     this.selectedCursoId = row.id;
     this.loadModulos(row.id);
-
-    setTimeout(() => {
-      this.modalService.open(this.courseModal, {
-        size: 'lg',
-        backdrop: 'static',
-        keyboard: false
-      });
-    }, 100);
   }
 
   loadModulos(cursoId: number): void {
     this.moduloService.getModulosLista().subscribe({
       next: (modulos) => {
-        this.moduloList = modulos.filter(modulo => modulo.idCurso === cursoId);
+        console.log('Módulos cargados:', modulos);
+        this.moduloList = modulos.filter(modulo => modulo.Curso.id === cursoId);
         console.log('Módulos cargados:', this.moduloList);
+        this.modalService.open(this.courseModal, {
+          size: 'lg',
+          backdrop: 'static',
+          keyboard: false
+        });
       },
       error: (error) => {
         console.error('Error al cargar los módulos:', error);
