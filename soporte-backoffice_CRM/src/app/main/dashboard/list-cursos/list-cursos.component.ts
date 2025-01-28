@@ -81,7 +81,7 @@ export class ListCursosComponent implements OnInit {
       next: (modulos) => {
         console.log('Módulos cargados:', modulos);
         this.moduloList = modulos.filter(modulo => modulo.Curso && modulo.Curso.id === cursoId);
-        console.log('Módulos cargados:', this.moduloList);
+        console.log('Módulos filtrados:', this.moduloList);
         this.modalService.open(this.courseModal, {
           size: 'lg',
           backdrop: 'static',
@@ -160,4 +160,8 @@ export class ListCursosComponent implements OnInit {
     imgElement.src = 'assets/placeholder.png';
   }
 
+  deleteModulo(moduloId: number): void {
+    console.log('Eliminar módulo:', moduloId);
+    // Aquí puedes agregar la lógica para eliminar un módulo
+  }
 }
