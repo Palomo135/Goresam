@@ -39,6 +39,9 @@ export class Curso {
     fechaUpdate: Date;
 
     @Column({ nullable: true })
+    fechaInicio: Date;
+
+    @Column({ nullable: true })
     fechaCaducidad: Date;
 
     @Column()

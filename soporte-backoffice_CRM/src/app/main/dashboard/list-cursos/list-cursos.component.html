@@ -85,6 +85,15 @@
     </ngx-datatable-column>
 
     <!-- Fecha Caducidad Column -->
+    <ngx-datatable-column name="inicia" prop="fechaInicio" [width]="150">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <span class="fw-bold text-dark">{{
+          row.fechaInicio | date : "yyyy-MM-dd"
+        }}</span>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <!-- Fecha Caducidad Column -->
     <ngx-datatable-column name="Vence" prop="fechaCaducidad" [width]="150">
       <ng-template ngx-datatable-cell-template let-row="row">
         <span class="fw-bold text-dark">{{

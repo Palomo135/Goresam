@@ -35,6 +35,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
       logo: [null],
       recurso: ['', Validators.required],
       estado: [true, Validators.required],
+      fechaInicio: ['', Validators.required],
       fechaCaducidad: ['', Validators.required],
       encargado: ['', Validators.required],
       frase: [''],
@@ -44,54 +45,6 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
       reconocimiento: ['']
     });
   }
-
-  // ngOnInit(): void {
-  //   this.courseSharedService.course$.subscribe((course) => {
-  //     if (course) {
-
-  //       this.cursoForm.patchValue({
-  //         nombre: course.nombre,
-  //         descripcion: course.descripcion,
-  //         recurso: course.recurso, // Cargar el URL
-  //         estado: course.estado, // Cargar el estado
-  //         fechaCaducidad: course.fechaCaducidad,
-  //         encargado: course.encargado,
-  //       });
-
-  //       if (course.logo) {
-  //         this.logoPreview = `http://localhost:3200/api/curso/logo/${course.id}`;
-  //       }
-
-  //       // Cargamos las palabras clave
-  //       if (course.detallePalabrasClave) {
-  //         this.keywords = course.detallePalabrasClave.map((p) => p.nombre)
-  //       }
-
-  //       // Mandamos la id del curso al formulario
-  //       if (!this.cursoForm.contains('id')) {
-  //         this.cursoForm.addControl('id', this.fb.control(course.id));
-  //       }
-
-  //       // Iniciamos la descripción en el formulario summernote
-  //       $('#summernote').summernote('code', course.descripcion || '')
-  //       if (this.cursoForm.get('id')?.value) {
-  //         this.cursoForm.get('logo')?.clearValidators();
-  //         this.cursoForm.get('logo')?.updateValueAndValidity();
-  //       }
-  //     }
-  //     if (this.courseToEdit) {
-  //       this.cursoForm.patchValue({
-  //         id: this.courseToEdit.id,
-  //         nombre: this.courseToEdit.nombre,
-  //         descripcion: this.courseToEdit.descripcion,
-  //         recurso: this.courseToEdit.recurso,
-  //         estado: this.courseToEdit.estado,
-  //         fechaCaducidad: this.formatDate(this.courseToEdit.fechaCaducidad),
-  //         encargado: this.courseToEdit.encargado
-  //       });
-  //     };
-  //   });
-  // }
 
   ngOnInit(): void {
     this.courseSharedService.course$.subscribe((course) => {
@@ -134,6 +87,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
       descripcion: course.descripcion,
       recurso: course.recurso,
       estado: course.estado,
+      fechaInicio: this.formatDate(course.fechaInicio),
       fechaCaducidad: this.formatDate(course.fechaCaducidad),
       encargado: course.encargado
     });

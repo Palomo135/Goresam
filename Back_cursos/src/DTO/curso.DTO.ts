@@ -11,6 +11,7 @@ export class CursoDTO {
     requisitos?: string;
     reconocimiento?: string;
     recurso: string;
+    fechaInicio: Date;
     fechaCaducidad: Date;
     encargado: string;
     detallePalabraClave?: DetallePalabraClave[];

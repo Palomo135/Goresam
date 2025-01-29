@@ -43,6 +43,7 @@ export class CursoService {
       id: curso.id,
       nombre: curso.nombre,
       logo: curso.logo ? `http://localhost:3200/api/curso/logo/${curso.id}` : null,
+      fechaInicio: curso.fechaInicio,
       fechaCaducidad: curso.fechaCaducidad,
       encargado: curso.encargado
     }));
