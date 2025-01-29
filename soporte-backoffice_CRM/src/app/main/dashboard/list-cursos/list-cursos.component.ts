@@ -27,7 +27,7 @@ export class ListCursosComponent implements OnInit {
   cursoElist: CursoElistDTO[] = [];
   logoBaseUrl: 'http://localhost:3200/api/curso/logo/'
   cursos: Curso[] = [];
-  availableModules: Modulo[] = [];
+  availableModules: any[] = [];
   availableClauses: Clausula[] = [];
   filteredRows: CursoElistDTO[] = [];
   searchTerm: string = '';
@@ -73,13 +73,8 @@ export class ListCursosComponent implements OnInit {
   }
 
   loadAvailableModules(): void {
-    this.moduloService.getModulosSinCurso().subscribe({
-      next: (modulos) => {
-        this.availableModules = modulos;
-        console.log('Módulos sin curso:', modulos);
-
-      },
-      error: (err) => console.error('Error al cargar los módulos:', err)
+    this.moduloService.getModulosSinCurso().subscribe(modules => {
+      this.availableModules = modules;
     });
   }
 
@@ -148,7 +143,7 @@ export class ListCursosComponent implements OnInit {
       next: () => {
         Swal.fire('Asignado', 'El módulo ha sido asignado al curso.', 'success');
         this.loadAvailableModules(); // Recargar los módulos disponibles
-        this.loadCourses();
+        //this.loadCourses();
       },
       error: (err) => {
         console.error('Error al asignar el módulo:', err);
@@ -238,6 +233,14 @@ export class ListCursosComponent implements OnInit {
       error: (error) => {
         console.error('Error al eliminar el módulo:', error);
       }
+    });
+  }
+
+  deleteModulo(moduloId: number): void {
+    console.log('Eliminar módulo:', moduloId);
+    this.moduloService.deleteModulo(moduloId).subscribe(() => {
+      this.loadModulos(this.selectedCursoId);
+      this.loadAvailableModules();
     });
   }
 }

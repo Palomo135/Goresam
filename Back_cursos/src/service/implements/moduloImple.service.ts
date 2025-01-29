@@ -45,8 +45,8 @@ export class ModuloImpleService {
 
   async findModulosSinCurso(): Promise<Modulo[]> {
     return this.moduloRepository.find({
-      where: { curso: null },
-      order: { orden: 'ASC' }
+      where: { curso: null, estado: true },
+      order: { orden: 'ASC' },
     });
   }
 
