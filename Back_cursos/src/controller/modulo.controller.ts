@@ -21,14 +21,9 @@ export class ModuloController {
     return this.moduloService.findElistAll();
   }
 
-  @Get('curso')
-  findAll(@Query('cursoId') cursoId: number): Promise<Modulo[]> {
+  @Get('curso/:cursoId')
+  findAll(@Param('cursoId', ParseIntPipe) cursoId: number): Promise<Modulo[]> {
     return this.moduloService.findAll(cursoId);
-  }
-
-  @Get('sin-curso')
-  findModulosSinCurso(): Promise<Modulo[]> {
-    return this.moduloService.findModulosSinCurso();
   }
 
   // @Delete(':id/curso')

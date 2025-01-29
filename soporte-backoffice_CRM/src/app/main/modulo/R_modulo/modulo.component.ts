@@ -41,7 +41,7 @@ export class ModuloComponent implements OnInit {
     //     console.error('Error al cargar módulos:', err);
     //   });
     // }
-    this.moduloService.getTodosModulos().subscribe((modulos) => {
+    this.moduloService.getModulos(this.cursoId).subscribe((modulos) => {
       this.modulos = modulos;
     }, (err) => {
       console.error('Error al cargar módulos:', err);

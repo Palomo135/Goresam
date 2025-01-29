@@ -16,7 +16,7 @@ export class ModuloImpleService {
   ) { }
 
   findAll(cursoId: number): Promise<Modulo[]> {
-    return this.moduloRepository.find({ where: { curso: { id: cursoId } }, order: { orden: 'ASC' } });
+    return this.moduloRepository.find({ where: { curso: { id: cursoId } }, relations: ['curso'], order: { orden: 'ASC' } });
   }
 
   findAllModulos(): Promise<Modulo[]> {
@@ -43,9 +43,10 @@ export class ModuloImpleService {
     return modulos
   }
 
-  async findModulosSinCurso(): Promise<Modulo[]> {
+  async findModulosByCurso(cursoId: number): Promise<Modulo[]> {
     return this.moduloRepository.find({
-      where: { curso: null, estado: true },
+      where: { curso: { id: cursoId }, estado: true },
+      relations: ['curso', 'clausulas'],
       order: { orden: 'ASC' },
     });
   }
