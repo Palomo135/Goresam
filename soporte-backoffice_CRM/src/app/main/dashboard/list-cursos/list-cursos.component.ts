@@ -175,9 +175,9 @@ export class ListCursosComponent implements OnInit {
     this.loadCourses();
   }
 
-  openModuloModal(cursoId: number, moduloId: number | null): void {
+  openModuloModal(moduloId: number | null): void {
     const modalRef = this.modalService.open(ModuloComponent, { size: 'lg' });
-    modalRef.componentInstance.cursoId = cursoId;
+    modalRef.componentInstance.cursoId = this.selectedCursoId;
     modalRef.componentInstance.moduloId = moduloId;
     modalRef.dismissed.subscribe(() => {
       if (this.selectedCursoId) {

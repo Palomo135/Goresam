@@ -185,10 +185,7 @@
   <div class="modal-body">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h2>Lista de Módulos</h2>
-      <button
-        class="btn btn-primary"
-        (click)="openModuloModal(selectedCursoId)"
-      >
+      <button class="btn btn-primary" (click)="openModuloModal(null)">
         <i class="fas fa-plus-circle me-1"></i> Nuevo Módulo
       </button>
     </div>
@@ -224,7 +221,7 @@
           <td>
             <button
               class="btn btn-sm btn-warning me-2"
-              (click)="openModuloModal(selectedCursoId, modulo.id)"
+              (click)="openModuloModal(modulo.id)"
             >
               <i class="fas fa-edit"></i> Editar
             </button>

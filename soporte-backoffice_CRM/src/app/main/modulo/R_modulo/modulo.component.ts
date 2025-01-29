@@ -32,7 +32,6 @@ export class ModuloComponent implements OnInit {
     if (this.moduloId) {
       this.enableEditModulo(this.moduloId);
     }
-    this.loadModulos(); // Cargar los módulos existentes al iniciar
   }
 
   // Cargar los módulos del curso
