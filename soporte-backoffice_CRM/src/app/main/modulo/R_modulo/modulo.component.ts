@@ -4,7 +4,6 @@ import { ModuloService } from '../modulo.service';
 import { Modulo } from '../R_modulo/modulo';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-//import * as $ from 'jquery';
 
 declare var $: any;
 
@@ -17,10 +16,9 @@ declare var $: any;
 })
 export class ModuloComponent implements OnInit {
   @Input() cursoId!: number; // ID del curso asociado
-  //titulo: string = '';
   descripcion: string = ''; // Campo para agregar un módulo
   modulos: Modulo[] = []; // Lista de módulos
-  estado: true;
+  estado: boolean = true;
   editModuloId: number | null = null; // Para editar un módulo específico
   submitted = false;
 
@@ -46,21 +44,21 @@ export class ModuloComponent implements OnInit {
 
   // Agregar un nuevo módulo
   addModulo(): void {
-    //this.submitted = true;
     if (this.descripcion) {
       const nuevoModulo: Modulo = {
-        //descripcion: this.stripHtmlTags(this.descripcion), // Asignar descripcion a nombre
-        //nombre: this.titulo,
         nombre: this.stripHtmlTags(this.descripcion), // Asignar descripcion a nombre
-        cursoId: this.cursoId,
+        cursoId: this.cursoId, // No asignar cursoId automáticamente
         orden: this.modulos.length + 1, // Orden automático
         estado: this.estado ?? true
       };
+      console.log(nuevoModulo);
       this.moduloService.createModulo(nuevoModulo).subscribe((modulo) => {
         this.modulos.push(modulo);
         this.resetForm();
+        this.loadModulos(); // Recargar lista de módulos
       });
-      console.log(nuevoModulo)
+      console.log(nuevoModulo);
+
     }
   }
 
@@ -99,8 +97,6 @@ export class ModuloComponent implements OnInit {
     if (this.editModuloId !== null && this.descripcion) {
       const updatedModulo: Modulo = {
         id: this.editModuloId,
-        // nombre: this.titulo, // Asignar descripcion a nombre
-        // descripcion: this.descripcion,
         nombre: this.descripcion,
         cursoId: this.cursoId,
         orden: this.modulos.find(m => m.id === this.editModuloId)?.orden || 0, // Mantener el orden existente
@@ -112,6 +108,7 @@ export class ModuloComponent implements OnInit {
           this.modulos[index] = updatedModulo;
         }
         this.resetForm();
+        this.loadModulos(); // Recargar lista de módulos
       });
     }
   }
@@ -120,6 +117,7 @@ export class ModuloComponent implements OnInit {
   removeModulo(id: number): void {
     this.moduloService.deleteModulo(id).subscribe(() => {
       this.modulos = this.modulos.filter(m => m.id !== id);
+      this.loadModulos(); // Recargar lista de módulos
     });
   }
 

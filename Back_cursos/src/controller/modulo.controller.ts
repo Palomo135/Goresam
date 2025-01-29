@@ -19,9 +19,14 @@ export class ModuloController {
     return this.moduloService.findElistAll();
   }
 
-  @Get()
+  @Get('curso')
   findAll(@Query('cursoId') cursoId: number): Promise<Modulo[]> {
     return this.moduloService.findAll(cursoId);
+  }
+
+  @Get('sin-curso')
+  findModulosSinCurso(): Promise<Modulo[]> {
+    return this.moduloService.findModulosSinCurso();
   }
 
   @Post()

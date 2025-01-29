@@ -43,6 +43,13 @@ export class ModuloImpleService {
     return modulos
   }
 
+  async findModulosSinCurso(): Promise<Modulo[]> {
+    return this.moduloRepository.find({
+      where: { curso: null },
+      order: { orden: 'ASC' }
+    });
+  }
+
   // create(modulo: Modulo): Promise<Modulo> {
   //   return this.moduloRepository.save(modulo);
   // }
@@ -50,10 +57,13 @@ export class ModuloImpleService {
   async create(moduloDto: CreateModuloDTO): Promise<Modulo> {
     const { cursoId, ...moduloData } = moduloDto;
 
-    // Buscar el curso relacionado
-    const curso = await this.cursoRepository.findOne({ where: { id: cursoId } });
-    if (!curso) {
-      throw new NotFoundException(`Curso con ID ${cursoId} no encontrado`);
+    let curso: Curso | undefined;
+    if (cursoId) {
+      curso = await this.cursoRepository.findOne({ where: { id: cursoId } });
+      // Buscar el curso relacionado
+      if (!curso) {
+        throw new NotFoundException(`Curso con ID ${cursoId} no encontrado`);
+      }
     }
 
     // Crear el módulo y asignar el curso

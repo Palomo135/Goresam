@@ -27,7 +27,7 @@ export class ListCursosComponent implements OnInit {
   cursoElist: CursoElistDTO[] = [];
   logoBaseUrl: 'http://localhost:3200/api/curso/logo/'
   cursos: Curso[] = [];
-  availableModules: ModuloList[] = [];
+  availableModules: Modulo[] = [];
   availableClauses: Clausula[] = [];
   filteredRows: CursoElistDTO[] = [];
   searchTerm: string = '';
@@ -58,6 +58,7 @@ export class ListCursosComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCourses();
+    this.loadAvailableModules();
   }
 
   loadCourses(): void {
@@ -72,7 +73,7 @@ export class ListCursosComponent implements OnInit {
   }
 
   loadAvailableModules(): void {
-    this.moduloService.getModulosLista().subscribe({
+    this.moduloService.getModulosSinCurso().subscribe({
       next: (modulos) => {
         this.availableModules = modulos;
       },

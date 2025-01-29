@@ -16,6 +16,11 @@ export class ModuloService {
     return this.http.get<Modulo[]>(`${this.apiUrl}?cursoId=${cursoId}`);
   }
 
+  getModulosSinCurso(): Observable<Modulo[]> {
+    // Endpoint para obtener módulos sin curso asignado
+    return this.http.get<Modulo[]>(`${this.apiUrl}/sin-curso`);
+  }
+
   getTodosModulos(): Observable<Modulo[]> {
     return this.http.get<Modulo[]>(`${this.apiUrl}/todos`);
   }
