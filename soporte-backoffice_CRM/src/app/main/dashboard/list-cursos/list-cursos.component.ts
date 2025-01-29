@@ -82,7 +82,7 @@ export class ListCursosComponent implements OnInit {
     this.moduloService.getModulosLista().subscribe({
       next: (modulos) => {
         console.log('Módulos cargados:', modulos);
-        this.availableModules = modulos.filter(modulo => modulo.curso && modulo.curso === null);
+        this.availableModules = modulos.filter(modulo => !modulo.curso);
         console.log('Módulos sin curso:', this.availableModules);
       }
     });
@@ -254,6 +254,21 @@ export class ListCursosComponent implements OnInit {
     this.moduloService.deleteModulo(moduloId).subscribe(() => {
       this.loadModulos(this.selectedCursoId);
       this.loadAvailableModules();
+    });
+  }
+
+  deleteModuleFromCurso(cursoId: number, moduloId: number): void {
+    this.moduloService.removeModuleFromCurso(cursoId, moduloId).subscribe({
+      next: () => {
+        Swal.fire('Eliminado', 'El módulo ha sido eliminado del curso.', 'success');
+        // Actualiza la lista de módulos según sea necesario
+        this.loadAvailableModules();
+        this.loadModulos(cursoId);
+      },
+      error: (err) => {
+        console.error(`Error al eliminar el módulo ${moduloId} del curso ${cursoId}:`, err);
+        Swal.fire('Error', 'No se pudo eliminar el módulo del curso.', 'error');
+      }
     });
   }
 }

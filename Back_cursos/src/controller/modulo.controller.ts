@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, ParseIntPipe } from "@nestjs/common";
 import { Clausula } from "src/modelo/clausula.entity";
 import { Modulo } from "src/modelo/modulo.entity";
 import { CreateModuloDTO } from "src/DTO/modulo.DTO";
@@ -31,6 +31,12 @@ export class ModuloController {
     return this.moduloService.findModulosSinCurso();
   }
 
+  // @Delete(':id/curso')
+  // removeCurso(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  //   return this.moduloService.removeCurso(id);
+  // }
+
+
   @Post()
   create(@Body() modulo: CreateModuloDTO): Promise<Modulo> {
     if (modulo.estado === undefined) {
@@ -44,9 +50,12 @@ export class ModuloController {
     return this.moduloService.assignModuleToCurso(assignModuleDto.cursoId, assignModuleDto.moduloId);
   }
 
-  @Delete('remove')
-  removeModuleFromCurso(@Body() removeModuleDto: { cursoId: number; moduloId: number }): Promise<void> {
-    return this.moduloService.removeModuleFromCurso(removeModuleDto.cursoId, removeModuleDto.moduloId);
+  @Delete(':cursoId/modulo/:moduloId')
+  removeModuleFromCurso(
+    @Param('cursoId', ParseIntPipe) cursoId: number,
+    @Param('moduloId', ParseIntPipe) moduloId: number,
+  ): Promise<void> {
+    return this.moduloService.removeModuleFromCurso(cursoId, moduloId);
   }
 
   @Put(':id')

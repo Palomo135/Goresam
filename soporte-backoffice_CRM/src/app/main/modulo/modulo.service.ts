@@ -30,7 +30,7 @@ export class ModuloService {
   }
 
   removeModuleFromCurso(cursoId: number, moduloId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/remove`, { body: { cursoId, moduloId } });
+    return this.http.delete<void>(`${this.apiUrl}/${cursoId}/modulo/${moduloId}`);
   }
 
   getModulosLista(): Observable<ModuloList[]> {

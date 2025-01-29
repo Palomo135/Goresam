@@ -233,7 +233,12 @@
             </button>
             <button
               class="btn btn-sm btn-danger"
-              (click)="eeleteModulo(modulo.id)"
+              (click)="
+                deleteModuleFromCurso(
+                  modulo.curso ? modulo.curso.id : null,
+                  modulo.id
+                )
+              "
             >
               <i class="fas fa-trash"></i> Eliminar
             </button>

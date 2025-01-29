@@ -106,6 +106,15 @@ export class ModuloImpleService {
     await this.cursoRepository.save(curso);
   }
 
+  // async removeCurso(id: number): Promise<void> {
+  //   const modulo = await this.moduloRepository.findOne(id);
+  //   if (!modulo) {
+  //     throw new NotFoundException(`Modulo with ID ${id} not found`);
+  //   }
+  //   modulo.curso = null;
+  //   await this.moduloRepository.save(modulo);
+  // }
+
   async remove(id: number): Promise<void> {
     await this.moduloRepository.delete(id);
   }
