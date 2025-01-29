@@ -149,7 +149,7 @@ export class ListCursosComponent implements OnInit {
       next: (fullCourse: Curso) => {
         this.courseSharedService.setCourse(fullCourse);
         const modalRef = this.modalService.open(EtiqueteraComponent, { size: 'lg' });
-        modalRef.closed.subscribe(() => {
+        modalRef.dismissed.subscribe(() => {
           this.loadCourses();
         });
       },
@@ -168,24 +168,28 @@ export class ListCursosComponent implements OnInit {
     const modalRef = this.modalService.open(EtiqueteraComponent, { size: 'lg' });
     this.courseSharedService.clearCourse();
     modalRef.componentInstance.courseToEdit = null;
-    modalRef.closed.subscribe(() => {
+    modalRef.dismissed.subscribe(() => {
+      this.filteredRows = [...this.cursoElist];
       this.loadCourses();
     });
+    this.loadCourses();
   }
 
   openModuloModal(cursoId: number): void {
     const modalRef = this.modalService.open(ModuloComponent, { size: 'lg' });
     modalRef.componentInstance.cursoId = cursoId;
-    modalRef.closed.subscribe(() => {
+    modalRef.dismissed.subscribe(() => {
       if (this.selectedCursoId) {
         this.loadModulos(this.selectedCursoId);
       }
     });
+    this.loadCourses();
   }
 
   openClausulaModal(cursoId: number): void {
     const modalRef = this.modalService.open(RClausulaComponent, { size: 'lg' });
     modalRef.componentInstance.moduloId = cursoId;
+    this.loadCourses();
   }
 
   onDelete(id: number): void {
