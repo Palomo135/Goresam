@@ -47,18 +47,16 @@ export class ModuloComponent implements OnInit {
     if (this.descripcion) {
       const nuevoModulo: Modulo = {
         nombre: this.stripHtmlTags(this.descripcion), // Asignar descripcion a nombre
-        cursoId: this.cursoId, // No asignar cursoId automáticamente
+        cursoId: this.cursoId, // Asignar el cursoId
         orden: this.modulos.length + 1, // Orden automático
         estado: this.estado ?? true
       };
-      console.log(nuevoModulo);
       this.moduloService.createModulo(nuevoModulo).subscribe((modulo) => {
         this.modulos.push(modulo);
         this.resetForm();
         this.loadModulos(); // Recargar lista de módulos
       });
       console.log(nuevoModulo);
-
     }
   }
 
