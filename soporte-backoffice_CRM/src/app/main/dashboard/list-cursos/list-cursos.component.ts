@@ -76,6 +76,8 @@ export class ListCursosComponent implements OnInit {
     this.moduloService.getModulosSinCurso().subscribe({
       next: (modulos) => {
         this.availableModules = modulos;
+        console.log('Módulos sin curso:', modulos);
+
       },
       error: (err) => console.error('Error al cargar los módulos:', err)
     });

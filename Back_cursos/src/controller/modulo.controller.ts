@@ -7,7 +7,9 @@ import { ModuloListDTO } from "src/DTO/moduloList.DTO";
 
 @Controller('modulo')
 export class ModuloController {
-  constructor(private readonly moduloService: ModuloImpleService) { }
+  constructor(
+    private readonly moduloService: ModuloImpleService,
+  ) { }
 
   @Get('todos')
   findAllModulos(): Promise<Modulo[]> {

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Modulo } from 'src/modelo/modulo.entity';
+import { ModuloRepository } from 'src/repository/modulo.repository';
 import { CreateModuloDTO } from 'src/DTO/modulo.DTO';
 import { Curso } from 'src/modelo/curso.entity';
 import { ModuloListDTO } from 'src/DTO/moduloList.DTO';
@@ -11,6 +12,7 @@ export class ModuloImpleService {
   constructor(
     @InjectRepository(Modulo)
     private readonly moduloRepository: Repository<Modulo>,
+    private readonly moduloReposi: ModuloRepository,
     @InjectRepository(Curso)
     private readonly cursoRepository: Repository<Curso>,
   ) { }
@@ -44,10 +46,7 @@ export class ModuloImpleService {
   }
 
   async findModulosSinCurso(): Promise<Modulo[]> {
-    return this.moduloRepository.find({
-      where: { curso: null },
-      order: { orden: 'ASC' }
-    });
+    return this.moduloReposi.findWithoutCurso();
   }
 
   // create(modulo: Modulo): Promise<Modulo> {
