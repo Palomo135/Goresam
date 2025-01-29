@@ -5,7 +5,7 @@ import { Curso } from '../etiquetera/curso';
 import Swal from 'sweetalert2';
 import { EtiqueteraService } from '../service/etiquetera.service';
 import { ColumnMode, DatatableComponent, SelectionType } from '@swimlane/ngx-datatable';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { EtiqueteraComponent } from '../etiquetera/etiquetera.component';
 import { FormGroup } from '@angular/forms';
 import { ModuloComponent } from 'app/main/modulo/R_modulo/modulo.component';
@@ -39,6 +39,7 @@ export class ListCursosComponent implements OnInit {
   moduloList: ModuloList[] = [];
   selectedCursoId: number | null = null;
   selectedModuloId: number | null = null;
+  modalRef: NgbModalRef | null = null;
 
   @Output() courseSaved = new EventEmitter<void>();
   @Output() editCurso: EventEmitter<Curso> = new EventEmitter<Curso>();
@@ -103,7 +104,10 @@ export class ListCursosComponent implements OnInit {
         console.log('Módulos cargados:', modulos);
         this.moduloList = modulos.filter(modulo => modulo.curso && modulo.curso.id === cursoId);
         console.log('Módulos filtrados:', this.moduloList);
-        this.modalService.open(this.courseModal, {
+        if (this.modalRef) {
+          this.modalRef.close();
+        }
+        this.modalRef = this.modalService.open(this.courseModal, {
           size: 'lg',
           backdrop: 'static',
           keyboard: false
@@ -114,32 +118,6 @@ export class ListCursosComponent implements OnInit {
       }
     });
   }
-
-  // assingnModuleToCurso(): void {
-  //   if (this.selectedCursoId && this.selectedModuloId) {
-  //     this.moduloService.assignModuleToCurso(this.selectedCursoId, this.selectedModuloId).subscribe({
-  //       next: () => {
-  //         this.loadModulos(this.selectedCursoId);
-  //       },
-  //       error: (error) => {
-  //         console.error('Error al asignar el módulo:', error);
-  //       }
-  //     });
-  //   }
-  // }
-
-  // assignModuloToCurso(): void {
-  //   if (this.selectedCursoId && this.selectedModuloId) {
-  //     const modulo = this.availableModules.find(m => m.id === this.selectedModuloId);
-  //     if (modulo) {
-  //       modulo.cursoId = this.selectedCursoId;
-  //       this.moduloService.updateModulo(modulo).subscribe(() => {
-  //         this.loadModulos(this.selectedCursoId); // Recargar lista de módulos
-  //         this.loadAvailableModules(); // Recargar módulos disponibles
-  //       });
-  //     }
-  //   }
-  // }
 
   assignModuloToCurso(): void {
     if (!this.selectedCursoId || !this.selectedModuloId) {
@@ -156,7 +134,8 @@ export class ListCursosComponent implements OnInit {
       next: () => {
         Swal.fire('Asignado', 'El módulo ha sido asignado al curso.', 'success');
         this.loadAvailableModules(); // Recargar los módulos disponibles
-        //this.loadCourses();
+        this.loadCourses();
+        this.loadModulos(this.selectedCursoId);
       },
       error: (err) => {
         console.error('Error al asignar el módulo:', err);
