@@ -218,7 +218,7 @@ export class ListCursosComponent implements OnInit {
 
   onLogoError(event: Event): void {
     const imgElement = event.target as HTMLImageElement;
-    imgElement.src = 'assets/placeholder.png';
+    imgElement.src = 'assets/images/icons/unknown.png';
   }
 
   removeModuleFromCurso(cursoId: number, moduloId: number): void {
