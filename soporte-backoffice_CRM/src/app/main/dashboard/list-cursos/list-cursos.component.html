@@ -51,7 +51,7 @@
     [limit]="basicSelectedOption"
   >
     <!-- Nro Column -->
-    <ngx-datatable-column name="" [width]="50" [sortable]="false">
+    <ngx-datatable-column name="#" [width]="50" [sortable]="false">
       <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
         {{ rowIndex + 1 }}
       </ng-template>
@@ -85,11 +85,7 @@
     </ngx-datatable-column>
 
     <!-- Fecha Caducidad Column -->
-    <ngx-datatable-column
-      name="Fecha de Caducidad"
-      prop="fechaCaducidad"
-      [width]="200"
-    >
+    <ngx-datatable-column name="Vence" prop="fechaCaducidad" [width]="150">
       <ng-template ngx-datatable-cell-template let-row="row">
         <span class="fw-bold text-dark">{{
           row.fechaCaducidad | date : "yyyy-MM-dd"
@@ -122,14 +118,6 @@
               aria-labelledby="dropdownBrowserState"
               style="z-index: 1050"
             >
-              <a
-                href="javascript:void(0)"
-                ngbDropdownItem
-                class="d-flex align-items-center"
-                (click)="openModuloModal(row.id)"
-              >
-                <i data-feather="edit" class="me-2"></i> Modulo
-              </a>
               <a
                 href="javascript:void(0)"
                 ngbDropdownItem
