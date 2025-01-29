@@ -175,15 +175,16 @@ export class ListCursosComponent implements OnInit {
     this.loadCourses();
   }
 
-  openModuloModal(cursoId: number): void {
+  openModuloModal(cursoId: number, moduloId: number | null): void {
     const modalRef = this.modalService.open(ModuloComponent, { size: 'lg' });
     modalRef.componentInstance.cursoId = cursoId;
+    modalRef.componentInstance.moduloId = moduloId;
     modalRef.dismissed.subscribe(() => {
       if (this.selectedCursoId) {
         this.loadModulos(this.selectedCursoId);
       }
     });
-    this.loadCourses();
+    // this.loadCourses();
   }
 
   openClausulaModal(cursoId: number): void {

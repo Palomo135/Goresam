@@ -14,12 +14,14 @@ import { FormsModule } from '@angular/forms';
 })
 export class ModuloComponent implements OnInit {
   @Input() cursoId: number | null = null; // ID del curso asociado
+  @Input() moduloId: number | null = null; // Nombre del curso asociado
   //cursoId: number | null = null; // ID del curso asociado
   descripcion: string; // Campo para agregar un módulo
   modulos: Modulo[] = []; // Lista de módulos
   estado: boolean = true;
   editModuloId: number | null = null; // Para editar un módulo específico
   submitted = false;
+  isEditMode: boolean = false;
 
   constructor(
     public activeModal: NgbActiveModal, // Asegúrate de que NgbActiveModal esté inyectado
@@ -27,6 +29,9 @@ export class ModuloComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    if (this.moduloId) {
+      this.enableEditModulo(this.moduloId);
+    }
     this.loadModulos(); // Cargar los módulos existentes al iniciar
   }
 
@@ -52,6 +57,7 @@ export class ModuloComponent implements OnInit {
         this.modulos.push(modulo);
         this.resetForm();
         this.loadModulos(); // Recargar lista de módulos
+        this.activeModal.dismiss();
       });
       console.log(nuevoModulo);
     }
@@ -89,6 +95,7 @@ export class ModuloComponent implements OnInit {
         }
         this.resetForm();
         this.loadModulos(); // Recargar lista de módulos
+        this.activeModal.dismiss();
       });
     }
   }
@@ -104,6 +111,6 @@ export class ModuloComponent implements OnInit {
 
   // Cerrar el modal
   closeModal(): void {
-    this.resetForm();
+    this.activeModal.close();
   }
 }
