@@ -72,10 +72,23 @@ export class ListCursosComponent implements OnInit {
     });
   }
 
+  // loadAvailableModules(): void {
+  //   this.moduloService.getModulosSinCurso().subscribe(modules => {
+  //     this.availableModules = modules;
+  //   });
+  // }
+
   loadAvailableModules(): void {
-    this.moduloService.getModulosSinCurso().subscribe(modules => {
-      this.availableModules = modules;
+    this.moduloService.getModulosLista().subscribe({
+      next: (modulos) => {
+        console.log('Módulos cargados:', modulos);
+        this.availableModules = modulos.filter(modulo => modulo.curso && modulo.curso === null);
+        console.log('Módulos sin curso:', this.availableModules);
+      }
     });
+    (error) => {
+      console.error('Error al cargar los módulos:', error);
+    }
   }
 
   toggleModulePanel(row: CursoElistDTO): void {

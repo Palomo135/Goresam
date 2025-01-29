@@ -13,7 +13,7 @@
     <tr *ngFor="let modulo of moduloList; let i = index">
       <td>{{ i + 1 }}</td>
       <td>{{ modulo.nombre }}</td>
-      <td>{{ modulo.curso.id }}</td>
+      <td>{{ modulo.curso ? modulo.curso.id : "Sin Curso" }}</td>
       <td>{{ modulo.estado ? "Activo" : "Inactivo" }}</td>
       <td>{{ modulo.orden }}</td>
     </tr>

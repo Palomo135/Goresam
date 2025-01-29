@@ -15,7 +15,8 @@ declare var $: any;
   styleUrls: ['./modulo.component.scss'],
 })
 export class ModuloComponent implements OnInit {
-  @Input() cursoId!: number; // ID del curso asociado
+  @Input() cursoId: number | null = null; // ID del curso asociado
+  //cursoId: number | null = null; // ID del curso asociado
   descripcion: string = ''; // Campo para agregar un módulo
   modulos: Modulo[] = []; // Lista de módulos
   estado: boolean = true;
@@ -33,13 +34,18 @@ export class ModuloComponent implements OnInit {
 
   // Cargar los módulos del curso
   loadModulos(): void {
-    if (this.cursoId) {
-      this.moduloService.getModulos(this.cursoId).subscribe((modulos) => {
-        this.modulos = modulos;
-      }, (err) => {
-        console.error('Error al cargar módulos:', err);
-      });
-    }
+    // if (this.cursoId) {
+    //   this.moduloService.getModulos(this.cursoId).subscribe((modulos) => {
+    //     this.modulos = modulos;
+    //   }, (err) => {
+    //     console.error('Error al cargar módulos:', err);
+    //   });
+    // }
+    this.moduloService.getTodosModulos().subscribe((modulos) => {
+      this.modulos = modulos;
+    }, (err) => {
+      console.error('Error al cargar módulos:', err);
+    });
   }
 
   // Agregar un nuevo módulo
@@ -47,7 +53,7 @@ export class ModuloComponent implements OnInit {
     if (this.descripcion) {
       const nuevoModulo: Modulo = {
         nombre: this.stripHtmlTags(this.descripcion), // Asignar descripcion a nombre
-        cursoId: this.cursoId, // Asignar el cursoId
+        cursoId: this.cursoId || null, // Asignar el cursoId
         orden: this.modulos.length + 1, // Orden automático
         estado: this.estado ?? true
       };
@@ -122,7 +128,8 @@ export class ModuloComponent implements OnInit {
   // Restablecer el formulario
   resetForm(): void {
     this.descripcion = '';
-    this.editModuloId = null;
+    this.cursoId = null;
+    this.estado = true;
     ($('.summernote') as any).summernote('reset');
   }
 
