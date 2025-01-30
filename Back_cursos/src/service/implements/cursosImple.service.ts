@@ -15,8 +15,6 @@ export class CursoService {
   constructor(
     @InjectRepository(Curso)
     private readonly cursoRepository: Repository<Curso>,
-    @InjectRepository(DetallePalabraClave)
-    private readonly detallePalabraClaveRepository: Repository<DetallePalabraClave>,
     private dataSource: DataSource
   ) { }
 
@@ -34,7 +32,7 @@ export class CursoService {
 
   async findElistAll(): Promise<CursoElistDTO[]> {
     const cursos = await this.cursoRepository.find({
-      select: ['id', 'nombre', 'logo', 'fechaCaducidad', 'encargado'], // Seleccionamos solo los campos necesarios
+      select: ['id', 'nombre', 'logo', 'fechaCaducidad', 'fechaInicio', 'encargado'], // Seleccionamos solo los campos necesarios
       order: { fechaCreate: 'DESC' }
     });
 
@@ -86,8 +84,6 @@ export class CursoService {
 
 
   async update(id: number, updateDTO: CursoDTO): Promise<Curso> {
-    console.log('Service recibe:', updateDTO);
-
     // Buscar el curso por ID con relaciones necesarias
     const curso = await this.cursoRepository.findOne({
       where: { id },
@@ -103,6 +99,7 @@ export class CursoService {
     curso.descripcion = updateDTO.descripcion ?? curso.descripcion;
     curso.recurso = updateDTO.recurso ?? curso.recurso;
     curso.estado = updateDTO.estado ?? curso.estado;
+    curso.fechaInicio = updateDTO.fechaInicio ?? curso.fechaInicio;
     curso.fechaCaducidad = updateDTO.fechaCaducidad ?? curso.fechaCaducidad;
     curso.encargado = updateDTO.encargado ?? curso.encargado;
 

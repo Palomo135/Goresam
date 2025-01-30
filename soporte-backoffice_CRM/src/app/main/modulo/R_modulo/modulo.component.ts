@@ -4,6 +4,7 @@ import { ModuloService } from '../modulo.service';
 import { Modulo } from '../R_modulo/modulo';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modulo',
@@ -65,7 +66,7 @@ export class ModuloComponent implements OnInit {
         this.descripcion = modulo[0].nombre; // Asignar nombre a descripcion
         // this.estado = modulo[0].estado;
         // this.cursoId = modulo[0].curso.id;
-        // this.orden = modulo[0].orden;
+        this.orden = modulo[0].orden;
         this.isEditMode = true;
       }
     });
@@ -93,6 +94,7 @@ export class ModuloComponent implements OnInit {
         if (index !== -1) {
           this.modulos[index] = updatedModulo;
         }
+        Swal.fire('Modulo actualizado', 'El módulo ha sido actualizado correctamente', 'success');
         this.resetForm();
         this.activeModal.dismiss();
       });

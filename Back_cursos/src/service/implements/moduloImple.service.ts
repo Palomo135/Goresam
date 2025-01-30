@@ -45,9 +45,6 @@ export class ModuloImpleService {
       relations: ['curso'],
       order: { fechaCreate: 'DESC' }
     });
-
-    console.log(modulos)
-    // Mapear a CursoElistDTO con URLs de logo
     return modulos
   }
 
@@ -92,7 +89,6 @@ export class ModuloImpleService {
     updatedModulo.orden = modulo.orden;
     updatedModulo.estado = modulo.estado;
     updatedModulo.curso = modulo.curso;
-    console.log('Modulo actualizado con curso:', updatedModulo);
     return this.moduloRepository.save(updatedModulo);
   }
 

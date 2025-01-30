@@ -67,7 +67,6 @@ export class CursoController {
   @Put(':id')
   @UseInterceptors(FileInterceptor('logo', { storage: multerConfig.storage, fileFilter: multerOptions.fileFilter })) // Permite cargar un archivo (logo)
   async update(@Param('id') id: number, @UploadedFile() file: Express.Multer.File, @Body() body: CursoDTO) {
-    console.log('Controlador recibe:', body);
 
     if (file) {
       // Leer el archivo si se proporciona

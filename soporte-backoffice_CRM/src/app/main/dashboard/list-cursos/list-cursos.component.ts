@@ -66,7 +66,6 @@ export class ListCursosComponent implements OnInit {
     this.etiqueteraService.getCoursesElist().subscribe({
       next: (data) => {
         this.cursoElist = data;
-        console.log(data);
         this.filteredRows = [...this.cursoElist];
       },
       error: (err) => console.error('Error al cargar los cursos:', err)
@@ -82,9 +81,7 @@ export class ListCursosComponent implements OnInit {
   loadAvailableModules(): void {
     this.moduloService.getModulosLista().subscribe({
       next: (modulos) => {
-        console.log('Módulos cargados:', modulos);
         this.availableModules = modulos.filter(modulo => !modulo.curso);
-        console.log('Módulos sin curso:', this.availableModules);
       }
     });
     (error) => {
@@ -93,7 +90,6 @@ export class ListCursosComponent implements OnInit {
   }
 
   toggleModulePanel(row: CursoElistDTO): void {
-    console.log('Curso seleccionado:', row);
     this.selectedCursoId = row.id;
     this.loadModulos(row.id);
   }
