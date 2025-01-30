@@ -276,15 +276,15 @@
       </button>
     </div>
     <!-- <div class="form-group mb-3">
-      <label for="moduloSelect">Asignar Clausula:</label>
+      <label for="clausulaSelect">Asignar Clausula:</label>
       <select
-        id="moduloSelect"
+        id="clausulaSelect"
         class="form-control"
-        [(ngModel)]="selectedModuloId"
-        (change)="assignModuloToCurso()"
+        [(ngModel)]="selectedClausulaId"
+        (change)="assignClausulasToModulo()"
       >
-        <option *ngFor="let modulo of availableModules" [value]="modulo.id">
-          {{ modulo.nombre }}
+        <option *ngFor ="let clausula of availableClauses:" [value]="clausula.id">
+          {{ clausula.nombre }}
         </option>
       </select>
     </div> -->
@@ -311,7 +311,12 @@
             </button>
             <button
               class="btn btn-sm btn-danger me-2"
-              (click)="deleteClausula(clausula.id)"
+              (click)="
+                deleteClausulaFromModulo(
+                  clausula.moduloId ? clausula.moduloId.id : null,
+                  clausula.id
+                )
+              "
             >
               <i class="fas fa-trash"></i> Eliminar
             </button>

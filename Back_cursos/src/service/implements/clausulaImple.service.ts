@@ -27,6 +27,18 @@ export class ClausulaService implements IClausulaService {
         return this.clausulaRepository.findById(id);
     }
 
+    async findByModulo(moduloId: number): Promise<Clausula[]> {
+        return this.clausulaRepository.findByModulo(moduloId);
+    }
+
+    async assignClausulasToModulo(moduloId: number, clausulas: number[]): Promise<void> {
+        await this.clausulaRepository.assignClausulasToModulo(moduloId, clausulas);
+    }
+
+    async removeClausulaFromModulo(moduloId: number, clausulaId: number): Promise<void> {
+        await this.clausulaRepository.removeClausulaFromModulo(moduloId, clausulaId);
+    }
+
     //Crear una clausula
     // async create(clausula: Partial<Clausula>, recurso: Recursos): Promise<Clausula> {
     //     return this.clausulaRepository.create(clausula, recurso);

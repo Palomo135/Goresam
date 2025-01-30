@@ -61,7 +61,9 @@ export class ModuloImpleService {
   }
 
   async assignClausulasToModulo(moduloId: number, clausulas: number[]): Promise<void> {
-    await this.clausulaRepository.assignClausulasToModulo(moduloId, clausulas);
+    for (const clausulaId of clausulas) {
+      await this.clausulaRepository.update(clausulaId, {}, moduloId);
+    }
   }
 
   // create(modulo: Modulo): Promise<Modulo> {

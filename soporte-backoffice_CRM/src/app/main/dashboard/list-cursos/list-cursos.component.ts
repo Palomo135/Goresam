@@ -28,8 +28,9 @@ export class ListCursosComponent implements OnInit {
   cursoElist: CursoElistDTO[] = [];
   logoBaseUrl: 'http://localhost:3200/api/curso/logo/'
   cursos: Curso[] = [];
+  clausula: Clausula[] = [];
   availableModules: any[] = [];
-  availableClauses: Clausula[] = [];
+  availableClauses: any[] = [];
   filteredRows: CursoElistDTO[] = [];
   searchTerm: string = '';
   basicSelectedOption: number = 10;
@@ -65,6 +66,7 @@ export class ListCursosComponent implements OnInit {
   ngOnInit(): void {
     this.loadCourses();
     this.loadAvailableModules();
+    this.loadAvailableClauses();
   }
 
   loadCourses(): void {
@@ -94,6 +96,15 @@ export class ListCursosComponent implements OnInit {
     }
   }
 
+  loadAvailableClauses(): void {
+    this.clausulaService.getClausulas().subscribe({
+      next: (clausulas) => {
+        this.availableClauses = clausulas;
+      },
+      error: (err) => console.error('Error al cargar las cláusulas:', err)
+    });
+  }
+
   toggleModulePanel(row: CursoElistDTO): void {
     this.selectedCursoId = row.id;
     this.loadModulos(row.id);
@@ -117,12 +128,12 @@ export class ListCursosComponent implements OnInit {
           size: 'lg',
           backdrop: 'static',
           keyboard: false
-        });
+        })
       },
       error: (error) => {
         console.error('Error al cargar los módulos:', error);
       }
-    });
+    })
   }
 
   // Método para cargar cláusulas disponibles
@@ -140,7 +151,10 @@ export class ListCursosComponent implements OnInit {
           size: 'lg',
           backdrop: 'static',
           keyboard: false
-        });
+        })
+        this.modalRef.closed.subscribe(() => {
+          this.loadModulos(clausulas[0].moduloId.id);
+        })
       },
       error: (error) => {
         console.error('Error al cargar las cláusulas:', error);
@@ -174,7 +188,7 @@ export class ListCursosComponent implements OnInit {
   }
 
   assignClausulasToModulo(moduloId: number): void {
-    this.moduloService.assignClausulasToModulo(moduloId, this.selectedClausulas).subscribe({
+    this.clausulaService.assignClausulasToModulo(moduloId, this.selectedClausulas).subscribe({
       next: () => {
         console.log('Cláusulas asignadas exitosamente');
       },
@@ -212,7 +226,6 @@ export class ListCursosComponent implements OnInit {
       this.filteredRows = [...this.cursoElist];
       this.loadCourses();
     });
-    this.loadCourses();
   }
 
   openModuloModal(moduloId: number | null): void {
@@ -303,6 +316,20 @@ export class ListCursosComponent implements OnInit {
       error: (err) => {
         console.error(`Error al eliminar el módulo ${moduloId} del curso ${cursoId}:`, err);
         Swal.fire('Error', 'No se pudo eliminar el módulo del curso.', 'error');
+      }
+    });
+  }
+
+  deleteClausulaFromModulo(moduloId: number, clausulaId: number): void {
+    this.clausulaService.removeClausulaFromModulo(moduloId, clausulaId).subscribe({
+      next: () => {
+        Swal.fire('Eliminado', 'La cláusula ha sido eliminada del módulo.', 'success');
+        this.loadAvailableClauses();
+        this.loadClausulas(moduloId);
+      },
+      error: (err) => {
+        console.error('Error al eliminar la cláusula:', err);
+        Swal.fire('Error', 'No se pudo eliminar la cláusula del módulo.', 'error');
       }
     });
   }
