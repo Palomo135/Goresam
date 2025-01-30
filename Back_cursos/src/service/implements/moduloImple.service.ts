@@ -86,15 +86,13 @@ export class ModuloImpleService {
   }
 
   async update(id: number, modulo: Modulo): Promise<Modulo> {
-    //await this.moduloRepository.update(id, modulo);
     const updatedModulo = await this.moduloRepository.findOne({ where: { id: id } });
-    console.log('Modulo actualizado:', updatedModulo);
-    const curso = await this.cursoRepository.findOne({ where: { id: updatedModulo.curso.id } });
-    if (!curso) {
-      throw new NotFoundException(`Curso con ID ${updatedModulo.curso.id} no encontrado`);
-    }
-    updatedModulo.curso = curso;
-    Object.assign(updatedModulo, modulo);
+
+    updatedModulo.nombre = modulo.nombre;
+    updatedModulo.orden = modulo.orden;
+    updatedModulo.estado = modulo.estado;
+    updatedModulo.curso = modulo.curso;
+    console.log('Modulo actualizado con curso:', updatedModulo);
     return this.moduloRepository.save(updatedModulo);
   }
 
