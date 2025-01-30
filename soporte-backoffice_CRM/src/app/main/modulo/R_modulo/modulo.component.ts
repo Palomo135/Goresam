@@ -63,9 +63,9 @@ export class ModuloComponent implements OnInit {
       if (modulo.length > 0) {
         this.editModuloId = modulo[0].id;
         this.descripcion = modulo[0].nombre; // Asignar nombre a descripcion
-        this.estado = modulo[0].estado;
-        this.cursoId = modulo[0].curso.id;
-        this.orden = modulo[0].orden;
+        // this.estado = modulo[0].estado;
+        // this.cursoId = modulo[0].curso.id;
+        // this.orden = modulo[0].orden;
         this.isEditMode = true;
       }
     });
