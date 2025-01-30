@@ -19,6 +19,14 @@ export class ModuloImpleService {
     return this.moduloRepository.find({ where: { curso: { id: cursoId } }, relations: ['curso'], order: { orden: 'ASC' } });
   }
 
+  async getModulo(moduloId: number): Promise<Modulo> {
+    const modulo = await this.moduloRepository.findOne({ where: { id: moduloId } });
+    if (!modulo) {
+      throw new NotFoundException(`Modulo with ID ${moduloId} not found`);
+    }
+    return modulo;
+  }
+
   findAllModulos(): Promise<Modulo[]> {
     return this.moduloRepository.find({ relations: ['curso'], order: { orden: 'ASC' } })
   }
@@ -79,16 +87,14 @@ export class ModuloImpleService {
 
   async update(id: number, modulo: Modulo): Promise<Modulo> {
     //await this.moduloRepository.update(id, modulo);
-    const updatedModulo = await this.moduloRepository.findOneBy(modulo);
+    const updatedModulo = await this.moduloRepository.findOne({ where: { id: id } });
     console.log('Modulo actualizado:', updatedModulo);
     const curso = await this.cursoRepository.findOne({ where: { id: updatedModulo.curso.id } });
     if (!curso) {
       throw new NotFoundException(`Curso con ID ${updatedModulo.curso.id} no encontrado`);
     }
-    updatedModulo.nombre = modulo.nombre;
     updatedModulo.curso = curso;
-    updatedModulo.orden = modulo.orden;
-    updatedModulo.estado = modulo.estado;
+    Object.assign(updatedModulo, modulo);
     return this.moduloRepository.save(updatedModulo);
   }
 
