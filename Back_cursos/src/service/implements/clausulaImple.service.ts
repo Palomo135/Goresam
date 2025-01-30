@@ -1,4 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 import { IClausulaService } from "../interfaces/clausulaInterf.service";
 import { ClausulaRepository } from "src/repository/clausula.repository";
 import { Clausula } from "src/modelo/clausula.entity";
@@ -9,7 +11,11 @@ import { RecursosRepository } from "src/repository/recursos.repository";
 @Injectable()
 export class ClausulaService implements IClausulaService {
     private clausulas = [];
-    constructor(private readonly clausulaRepository: ClausulaRepository) { }
+    constructor(
+        private readonly clausulaRepository: ClausulaRepository,
+        // @InjectRepository(Clausula)
+        // private readonly clausulaRepository: Repository<Clausula>,        
+    ) { }
 
     //obtener todas las clausulas
     async findAll(): Promise<Clausula[]> {

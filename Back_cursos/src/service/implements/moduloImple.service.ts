@@ -5,6 +5,8 @@ import { Modulo } from 'src/modelo/modulo.entity';
 import { CreateModuloDTO } from 'src/DTO/modulo.DTO';
 import { Curso } from 'src/modelo/curso.entity';
 import { ModuloListDTO } from 'src/DTO/moduloList.DTO';
+import { ClausulaRepository } from 'src/repository/clausula.repository';
+import { Clausula } from 'src/modelo/clausula.entity';
 
 @Injectable()
 export class ModuloImpleService {
@@ -13,6 +15,8 @@ export class ModuloImpleService {
     private readonly moduloRepository: Repository<Modulo>,
     @InjectRepository(Curso)
     private readonly cursoRepository: Repository<Curso>,
+    private readonly clausulaRepository: ClausulaRepository
+
   ) { }
 
   findAll(cursoId: number): Promise<Modulo[]> {
@@ -54,6 +58,10 @@ export class ModuloImpleService {
       relations: ['curso', 'clausulas'],
       order: { orden: 'ASC' },
     });
+  }
+
+  async assignClausulasToModulo(moduloId: number, clausulas: number[]): Promise<void> {
+    await this.clausulaRepository.assignClausulasToModulo(moduloId, clausulas);
   }
 
   // create(modulo: Modulo): Promise<Modulo> {

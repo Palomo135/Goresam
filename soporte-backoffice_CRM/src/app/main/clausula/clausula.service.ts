@@ -12,6 +12,10 @@ export class ClausulaService {
 
   constructor(private http: HttpClient) { }
 
+  getClausulasByModulo(moduloId: number): Observable<Clausula[]> {
+    return this.http.get<Clausula[]>(`${this.apiUrl}/modulo/${moduloId}`);
+  }
+
   getClausulas(): Observable<Clausula[]> {
     return this.http.get<Clausula[]>(this.apiUrl);
   }

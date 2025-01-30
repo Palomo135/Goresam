@@ -236,10 +236,89 @@
             >
               <i class="fas fa-trash"></i> Eliminar
             </button>
+            <button
+              class="btn btn-sm btn-info"
+              (click)="openClausulaPanel(modulo.id)"
+            >
+              <i class="fas fa-file-alt"></i> Gestionar Cláusulas
+            </button>
           </td>
         </tr>
         <tr *ngIf="moduloList.length === 0">
           <td colspan="5" class="text-center">No hay módulos disponibles</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">
+      Cerrar
+    </button>
+  </div>
+</ng-template>
+
+<!-- Plantilla del Modal de Cláusulas -->
+<ng-template #clausulaModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Gestionar Cláusulas</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Cerrar"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Lista de Cláusulas</h2>
+      <button class="btn btn-primary" (click)="openClausulaModal(null)">
+        <i class="fas fa-plus-circle me-1"></i> Nueva Cláusula
+      </button>
+    </div>
+    <!-- <div class="form-group mb-3">
+      <label for="moduloSelect">Asignar Clausula:</label>
+      <select
+        id="moduloSelect"
+        class="form-control"
+        [(ngModel)]="selectedModuloId"
+        (change)="assignModuloToCurso()"
+      >
+        <option *ngFor="let modulo of availableModules" [value]="modulo.id">
+          {{ modulo.nombre }}
+        </option>
+      </select>
+    </div> -->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let clausula of clausulaList; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ clausula.nombre }}</td>
+          <td>{{ clausula.estado ? "Activo" : "Inactivo" }}</td>
+          <td>
+            <button
+              class="btn btn-sm btn-warning me-2"
+              (click)="openClausulaModal(clausula.id)"
+            >
+              <i class="fas fa-edit"></i> Editar
+            </button>
+            <button
+              class="btn btn-sm btn-danger me-2"
+              (click)="deleteClausula(clausula.id)"
+            >
+              <i class="fas fa-trash"></i> Eliminar
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="clausulaList.length === 0">
+          <td colspan="4" class="text-center">No hay cláusulas disponibles</td>
         </tr>
       </tbody>
     </table>

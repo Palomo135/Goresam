@@ -17,6 +17,7 @@ import { CursoElistDTO } from '../etiquetera/cursosElist';
 import { ModuloService } from 'app/main/modulo/modulo.service';
 import { RClausulaComponent } from 'app/main/clausula/r-clausula/r-clausula.component';
 import { ModuloList } from 'app/main/modulo/R_modulo/moduloList';
+import { ClausulaService } from 'app/main/clausula/clausula.service';
 
 @Component({
   selector: 'app-list-cursos',
@@ -37,8 +38,10 @@ export class ListCursosComponent implements OnInit {
   SelectionType = SelectionType;
   courseForm: FormGroup;
   moduloList: ModuloList[] = [];
+  clausulaList: any[] = [];
   selectedCursoId: number | null = null;
   selectedModuloId: number | null = null;
+  selectedClausulas: number[] = [];
   modalRef: NgbModalRef | null = null;
 
   @Output() courseSaved = new EventEmitter<void>();
@@ -47,12 +50,14 @@ export class ListCursosComponent implements OnInit {
   @ViewChild(EtiqueteraComponent) etiqueteraComponent: EtiqueteraComponent;
   @ViewChild(ModuloComponent) moduloComponent: ModuloComponent;
   @ViewChild('courseModal') courseModal: any;
+  @ViewChild('clausulaModal') clausulaModal: any;
 
   searchTerm$: Subject<string> = new Subject<string>();
 
   constructor(
     private etiqueteraService: EtiqueteraService,
     private courseSharedService: CourseSharedService,
+    private clausulaService: ClausulaService,
     private modalService: NgbModal,
     private moduloService: ModuloService
   ) { }
@@ -94,6 +99,11 @@ export class ListCursosComponent implements OnInit {
     this.loadModulos(row.id);
   }
 
+  openClausulaPanel(moduloId: number): void {
+    this.selectedModuloId = moduloId;
+    this.loadClausulas(moduloId);
+  }
+
   loadModulos(cursoId: number): void {
     this.moduloService.getModulosLista().subscribe({
       next: (modulos) => {
@@ -111,6 +121,29 @@ export class ListCursosComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al cargar los módulos:', error);
+      }
+    });
+  }
+
+  // Método para cargar cláusulas disponibles
+  loadClausulas(moduloId: number): void {
+    this.clausulaService.getClausulasByModulo(moduloId).subscribe({
+      next: (clausulas) => {
+        console.log('Cláusulas cargadas:', clausulas);
+        this.clausulaList = clausulas;
+
+        // Cerrar cualquier modal abierto antes de abrir uno nuevo
+        if (this.modalRef) {
+          this.modalRef.close();
+        }
+        this.modalRef = this.modalService.open(this.clausulaModal, {
+          size: 'lg',
+          backdrop: 'static',
+          keyboard: false
+        });
+      },
+      error: (error) => {
+        console.error('Error al cargar las cláusulas:', error);
       }
     });
   }
@@ -136,6 +169,17 @@ export class ListCursosComponent implements OnInit {
       error: (err) => {
         console.error('Error al asignar el módulo:', err);
         Swal.fire('Error', 'No se pudo asignar el módulo.', 'error');
+      }
+    });
+  }
+
+  assignClausulasToModulo(moduloId: number): void {
+    this.moduloService.assignClausulasToModulo(moduloId, this.selectedClausulas).subscribe({
+      next: () => {
+        console.log('Cláusulas asignadas exitosamente');
+      },
+      error: (err) => {
+        console.error('Error al asignar las cláusulas:', err);
       }
     });
   }
@@ -183,11 +227,22 @@ export class ListCursosComponent implements OnInit {
     // this.loadCourses();
   }
 
-  openClausulaModal(cursoId: number): void {
+  openClausulaModal(clausulaId: number | null): void {
     const modalRef = this.modalService.open(RClausulaComponent, { size: 'lg' });
-    modalRef.componentInstance.moduloId = cursoId;
-    this.loadCourses();
+    modalRef.componentInstance.moduloId = this.selectedModuloId;
+    modalRef.componentInstance.clausulaId = clausulaId;
+    modalRef.closed.subscribe(() => {
+      if (this.selectedModuloId) {
+        this.loadClausulas(this.selectedModuloId);
+      }
+    });
   }
+
+  // openClausulaModal(cursoId: number): void {
+  //   const modalRef = this.modalService.open(RClausulaComponent, { size: 'lg' });
+  //   modalRef.componentInstance.moduloId = cursoId;
+  //   this.loadCourses();
+  // }
 
   onDelete(id: number): void {
     Swal.fire({

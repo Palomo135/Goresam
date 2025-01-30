@@ -45,6 +45,14 @@ export class ModuloController {
     return this.moduloService.assignModuleToCurso(assignModuleDto.cursoId, assignModuleDto.moduloId);
   }
 
+  @Post('assign-clausulas/:moduloId')
+  assignClausulasToModulo(
+    @Param('moduloId', ParseIntPipe) moduloId: number,
+    @Body() clausulas: number[]
+  ): Promise<void> {
+    return this.moduloService.assignClausulasToModulo(moduloId, clausulas);
+  }
+
   @Delete(':cursoId/modulo/:moduloId')
   removeModuleFromCurso(
     @Param('cursoId', ParseIntPipe) cursoId: number,

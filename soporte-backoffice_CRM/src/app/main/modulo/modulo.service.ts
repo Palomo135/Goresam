@@ -28,6 +28,10 @@ export class ModuloService {
     return this.http.delete<void>(`${this.apiUrl}/${cursoId}/modulo/${moduloId}`);
   }
 
+  assignClausulasToModulo(moduloId: number, clausulas: number[]): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/assign-clausulas/${moduloId}`, clausulas);
+  }
+
   getModulosLista(): Observable<ModuloList[]> {
     return this.http.get<ModuloList[]>(`${this.apiUrl}`);
   }

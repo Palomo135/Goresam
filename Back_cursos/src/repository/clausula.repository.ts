@@ -97,4 +97,16 @@ export class ClausulaRepository {
     await this.clausulaRepository.update(id, { estado: false });
   }
 
+  // Asignar cláusulas a un módulo
+  async assignClausulasToModulo(moduloId: number, clausulas: number[]): Promise<void> {
+    const modulo = await this.moduloRepository.findOne({ where: { id: moduloId, estado: true }, relations: ['clausulas'] });
+    if (!modulo) {
+      throw new NotFoundException('Modulo no encontrado');
+    }
+
+    const clausulasEntities = await this.clausulaRepository.findByIds(clausulas);
+    modulo.clausulas = clausulasEntities;
+    await this.moduloRepository.save(modulo);
+  }
+
 }
