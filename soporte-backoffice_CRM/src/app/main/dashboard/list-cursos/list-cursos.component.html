@@ -65,6 +65,7 @@
           alt="Logo del Curso"
           class="rounded-circle shadow-sm border"
           style="height: 60px; width: 60px; object-fit: cover"
+          style="height: 40px; width: 40px; object-fit: cover"
           (error)="onLogoError($event)"
         />
       </ng-template>
@@ -154,6 +155,12 @@
             </div>
           </div>
         </div>
+        <button
+          class="btn btn-outline-primary btn-sm"
+          (click)="toggleModulePanel(row)"
+        >
+          Gestionar Módulos
+        </button>
       </ng-template>
     </ngx-datatable-column>
 
@@ -181,10 +188,14 @@
       aria-label="Cerrar"
       (click)="modal.dismiss()"
     ></button>
+
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button>
+
   </div>
   <div class="modal-body">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h2>Lista de Módulos</h2>
+
       <button class="btn btn-primary" (click)="openModuloModal(null)">
         <i class="fas fa-plus-circle me-1"></i> Nuevo Módulo
       </button>
@@ -202,6 +213,11 @@
         </option>
       </select>
     </div> -->
+      <button class="btn btn-primary" (click)="openModuloModal(selectedCursoId)">
+        <i class="fas fa-plus-circle me-1"></i> Nuevo Módulo
+      </button>
+    </div>
+   
     <table class="table table-striped">
       <thead>
         <tr>
@@ -241,6 +257,12 @@
               (click)="openClausulaPanel(modulo)"
             >
               <i class="fas fa-file-alt"></i> Gestionar Cláusulas
+            </button>
+            <button class="btn btn-sm btn-warning me-2" (click)="openModuloModal(modulo.id)">
+              <i class="fas fa-edit"></i> Editar
+            </button>
+            <button class="btn btn-sm btn-danger">
+              <i class="fas fa-trash"></i> Eliminar
             </button>
           </td>
         </tr>
@@ -332,5 +354,8 @@
     <button type="button" class="btn btn-secondary" (click)="modal.close()">
       Cerrar
     </button>
+  </div>
+</ng-template>
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">Cerrar</button>
   </div>
 </ng-template>
