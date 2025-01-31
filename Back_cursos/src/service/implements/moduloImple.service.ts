@@ -60,12 +60,6 @@ export class ModuloImpleService {
     });
   }
 
-  async assignClausulasToModulo(moduloId: number, clausulas: number[]): Promise<void> {
-    for (const clausulaId of clausulas) {
-      await this.clausulaRepository.update(clausulaId, {}, moduloId);
-    }
-  }
-
   // create(modulo: Modulo): Promise<Modulo> {
   //   return this.moduloRepository.save(modulo);
   // }

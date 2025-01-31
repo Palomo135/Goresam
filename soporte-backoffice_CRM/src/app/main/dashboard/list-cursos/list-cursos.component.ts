@@ -110,9 +110,9 @@ export class ListCursosComponent implements OnInit {
     this.loadModulos(row.id);
   }
 
-  openClausulaPanel(moduloId: number): void {
-    this.selectedModuloId = moduloId;
-    this.loadClausulas(moduloId);
+  openClausulaPanel(modulo: ModuloList): void {
+    this.selectedModuloId = modulo.id;
+    this.loadClausulas(modulo.id);
   }
 
   loadModulos(cursoId: number): void {
@@ -142,7 +142,7 @@ export class ListCursosComponent implements OnInit {
       next: (clausulas) => {
         console.log('Cláusulas cargadas:', clausulas);
         this.clausulaList = clausulas;
-
+        console.log('Cláusulas filtradas:', this.clausulaList);
         // Cerrar cualquier modal abierto antes de abrir uno nuevo
         if (this.modalRef) {
           this.modalRef.close();
@@ -151,9 +151,6 @@ export class ListCursosComponent implements OnInit {
           size: 'lg',
           backdrop: 'static',
           keyboard: false
-        })
-        this.modalRef.closed.subscribe(() => {
-          this.loadModulos(clausulas[0].moduloId.id);
         })
       },
       error: (error) => {
@@ -234,20 +231,18 @@ export class ListCursosComponent implements OnInit {
     modalRef.componentInstance.moduloId = moduloId;
     modalRef.dismissed.subscribe(() => {
       if (this.selectedCursoId) {
-        this.loadModulos(this.selectedCursoId);
+        this.loadCourses();
       }
     });
     // this.loadCourses();
   }
 
-  openClausulaModal(clausulaId: number | null): void {
+  openClausulaModal(moduloId: number, clausula: Clausula | null = null): void {
     const modalRef = this.modalService.open(RClausulaComponent, { size: 'lg' });
-    modalRef.componentInstance.moduloId = this.selectedModuloId;
-    modalRef.componentInstance.clausulaId = clausulaId;
+    modalRef.componentInstance.moduloId = moduloId;
+    modalRef.componentInstance.clausula = clausula;
     modalRef.closed.subscribe(() => {
-      if (this.selectedModuloId) {
-        this.loadClausulas(this.selectedModuloId);
-      }
+      this.loadClausulas(this.selectedModuloId);
     });
   }
 
@@ -286,17 +281,6 @@ export class ListCursosComponent implements OnInit {
     imgElement.src = 'assets/images/icons/unknown.png';
   }
 
-  removeModuleFromCurso(cursoId: number, moduloId: number): void {
-    this.moduloService.removeModuleFromCurso(cursoId, moduloId).subscribe({
-      next: () => {
-        this.loadModulos(cursoId);
-      },
-      error: (error) => {
-        console.error('Error al eliminar el módulo:', error);
-      }
-    });
-  }
-
   deleteModulo(moduloId: number): void {
     console.log('Eliminar módulo:', moduloId);
     this.moduloService.deleteModulo(moduloId).subscribe(() => {
@@ -321,6 +305,8 @@ export class ListCursosComponent implements OnInit {
   }
 
   deleteClausulaFromModulo(moduloId: number, clausulaId: number): void {
+    console.log('Eliminar cláusula:', clausulaId);
+    console.log('Módulo:', moduloId);
     this.clausulaService.removeClausulaFromModulo(moduloId, clausulaId).subscribe({
       next: () => {
         Swal.fire('Eliminado', 'La cláusula ha sido eliminada del módulo.', 'success');

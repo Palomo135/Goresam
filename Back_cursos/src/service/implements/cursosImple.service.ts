@@ -15,6 +15,8 @@ export class CursoService {
   constructor(
     @InjectRepository(Curso)
     private readonly cursoRepository: Repository<Curso>,
+    @InjectRepository(DetallePalabraClave)
+    private readonly DetallePalabraClaveReposi: Repository<DetallePalabraClave>,
     private dataSource: DataSource
   ) { }
 
@@ -78,8 +80,28 @@ export class CursoService {
     return curso;
   }
 
-  async create(curso: Curso): Promise<Curso> {
-    return await this.cursoRepository.save(curso)
+  async create(cursoDTO: CursoDTO): Promise<Curso> {
+    console.log(cursoDTO);
+    const { detallePalabraClave, ...cursoData } = cursoDTO;
+
+    const curso = this.cursoRepository.create(cursoData);
+    await this.cursoRepository.save(curso);
+
+    if (detallePalabraClave && detallePalabraClave.length > 0) {
+      const keywords = typeof detallePalabraClave === 'string'
+        ? JSON.parse(detallePalabraClave)
+        : detallePalabraClave;
+
+      const detalles = keywords.map(dto => {
+        const detalle = new DetallePalabraClave();
+        detalle.nombre = dto.nombre;
+        detalle.curso = curso;
+        return detalle;
+      });
+      await this.DetallePalabraClaveReposi.save(detalles);
+    }
+
+    return this.findOne(curso.id);
   }
 
 

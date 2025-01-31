@@ -26,18 +26,17 @@ export class RClausulaComponent implements OnInit {
     this.clausulaForm = this.fb.group({
       id: [null],
       nombre: ['', Validators.required],
-      moduloId: ['', Validators.required],
+      moduloId: [{ value: '', disabled: true }, Validators.required],
       estado: [true, Validators.required]
     })
   }
 
   ngOnInit(): void {
-    this.clausulaForm.patchValue({ moduleId: this.moduleId }),
-      this.openModulos()
+    this.openModulos();
     if (this.clausula) {
       this.clausulaForm.patchValue(this.clausula);
-
-      // Cargar contenido en Summernote
+    } else {
+      this.clausulaForm.patchValue({ moduloId: this.moduleId });
     }
   }
 
@@ -101,7 +100,8 @@ export class RClausulaComponent implements OnInit {
     }
 
     const clausulaData = {
-      ...this.clausulaForm.value
+      ...this.clausulaForm.value,
+      moduleId: this.moduleId
     };
 
     // Si hay un ID, se actualiza; si no, se crea
@@ -117,7 +117,9 @@ export class RClausulaComponent implements OnInit {
       this.clausulaService.createClausula(clausulaData).subscribe({
         next: () => {
           Swal.fire('Registrado', 'La cláusula ha sido registrada.', 'success');
-          this.activeModal.close(); // Cierra el modal
+          this.clausulaForm.reset(); // Limpia el formulario
+          this.activeModal.dismiss();
+          //this.activeModal.close(); // Cierra el modal
         },
         error: () => Swal.fire('Error', 'No se pudo registrar la cláusula.', 'error')
       });

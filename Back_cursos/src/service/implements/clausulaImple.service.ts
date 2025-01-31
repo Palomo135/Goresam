@@ -7,6 +7,7 @@ import { Clausula } from "src/modelo/clausula.entity";
 import { ClausulaUpdateDto } from "src/DTO/clausulaUpdate.DTO";
 import { Recursos } from "src/modelo/recursos.entity";
 import { RecursosRepository } from "src/repository/recursos.repository";
+import { clausulaListDTO } from "src/DTO/clausulaElist.DTO";
 
 @Injectable()
 export class ClausulaService implements IClausulaService {
@@ -27,7 +28,7 @@ export class ClausulaService implements IClausulaService {
         return this.clausulaRepository.findById(id);
     }
 
-    async findByModulo(moduloId: number): Promise<Clausula[]> {
+    async findByModulo(moduloId: number): Promise<clausulaListDTO[]> {
         return this.clausulaRepository.findByModulo(moduloId);
     }
 

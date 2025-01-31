@@ -52,7 +52,7 @@ export class CursoController {
 
   @Post()
   @UseInterceptors(FileInterceptor('logo', { storage: multerConfig.storage, fileFilter: multerOptions.fileFilter }))
-  async create(@UploadedFile() file: Express.Multer.File, @Body() body: Curso) {
+  async create(@UploadedFile() file: Express.Multer.File, @Body() body: CursoDTO) {
     // Si se sube un archivo, asignar el logo
     if (file) {
       //cursoEntity.logo = await fs.readFile(file.path); // Guardar el logo como Buffer

@@ -31,10 +31,29 @@ export class ClausulaRepository {
   }
 
   async findByModulo(moduloId: number): Promise<Clausula[]> {
+    // return this.clausulaRepository.find({
+    //   where: { modulo: { id: moduloId }, estado: true },
+    //   relations: ['modulo'],
+    // });
     return this.clausulaRepository.find({
+      select: {
+        id: true,
+        nombre: true,
+        estado: true,
+        fechaCreate: true,
+        fechaUpdate: true,
+        modulo: {
+          id: true,
+          nombre: true,
+          curso: {
+            id: true,
+          }
+        },
+      },
       where: { modulo: { id: moduloId }, estado: true },
       relations: ['modulo'],
-    });
+    },
+    );
   }
 
   //crear una nueva clausula

@@ -1,4 +1,5 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, ParseIntPipe } from "@nestjs/common";
+import { clausulaListDTO } from "src/DTO/clausulaElist.DTO";
 import { ClausulaUpdateDto } from "src/DTO/clausulaUpdate.DTO";
 import { Clausula } from "src/modelo/clausula.entity";
 import { ClausulaService } from "src/service/implements/clausulaImple.service";
@@ -22,7 +23,7 @@ export class ClausulaController {
   }
 
   @Get('modulo/:moduloId')
-  findByModulo(@Param('moduloId', ParseIntPipe) moduloId: number): Promise<Clausula[]> {
+  findByModulo(@Param('moduloId', ParseIntPipe) moduloId: number): Promise<clausulaListDTO[]> {
     return this.clausulaService.findByModulo(moduloId);
   }
 

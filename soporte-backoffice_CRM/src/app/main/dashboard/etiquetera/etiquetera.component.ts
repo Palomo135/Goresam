@@ -32,7 +32,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
     this.cursoForm = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      logo: [null],
+      logo: [null, Validators.required],
       recurso: ['', Validators.required],
       estado: [true, Validators.required],
       fechaInicio: ['', Validators.required],
