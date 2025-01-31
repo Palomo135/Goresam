@@ -1,10 +1,13 @@
+import { id } from '@swimlane/ngx-datatable';
 export interface Clausula {
   id: number;
   nombre: string;
-  descripcion: string;
   estado: boolean;
-  moduloId: {
+  modulo: {
     id: number;
     nombre: string;
+    curso: {
+      id: number;
+    };
   };
 }

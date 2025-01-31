@@ -13,11 +13,19 @@ export class ModuloService {
   constructor(private http: HttpClient) { }
 
   getModulos(cursoId: number): Observable<Modulo[]> {
-    return this.http.get<Modulo[]>(`${this.apiUrl}?cursoId=${cursoId}`);
+    return this.http.get<Modulo[]>(`${this.apiUrl}/curso/${cursoId}`);
   }
 
   getTodosModulos(): Observable<Modulo[]> {
     return this.http.get<Modulo[]>(`${this.apiUrl}/todos`);
+  }
+
+  assignModuleToCurso(cursoId: number, moduloId: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/assign`, { cursoId, moduloId });
+  }
+
+  removeModuleFromCurso(cursoId: number, moduloId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${cursoId}/modulo/${moduloId}`);
   }
 
   getModulosLista(): Observable<ModuloList[]> {

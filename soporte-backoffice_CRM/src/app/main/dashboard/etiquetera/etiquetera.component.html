@@ -27,7 +27,7 @@
         >
           <div class="row align-items-start">
             <!-- Campos del formulario -->
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="row g-3">
                 <!-- Campo Título -->
                 <div class="col-md-6">
@@ -44,7 +44,7 @@
                 </div>
 
                 <!-- Descripción Curso con Summernote -->
-                <div class="col-12">
+                <div class="col-18">
                   <div class="form-group">
                     <label for="descripcion">Descripción</label>
                     <div id="summernote"></div>
@@ -64,6 +64,63 @@
                   />
                 </div>
 
+                <!-- Sección del logo -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">
+                    <i data-feather="image" class="me-1"></i>Logo
+                  </label>
+                  <input
+                    type="file"
+                    class="form-control mb-2"
+                    formControlName="logo"
+                    (change)="onFileChange($event)"
+                    accept="image/*"
+                  />
+                  <div *ngIf="logoPreview" class="mt-3">
+                    <img
+                      [src]="logoPreview"
+                      alt="Vista previa del logo"
+                      class="img-fluid img-thumbnail shadow-sm"
+                      style="max-width: 200px; max-height: 200px"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">
+                    <i data-feather="calendar" class="me-1"></i>Fecha de inicio
+                  </label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    formControlName="fechaInicio"
+                  />
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">
+                    <i data-feather="calendar" class="me-1"></i>Fecha de
+                    Caducidad
+                  </label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    formControlName="fechaCaducidad"
+                  />
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">
+                    <i data-feather="user" class="me-1"></i>Encargado
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="encargado"
+                    placeholder="Ingrese el nombre del encargado"
+                  />
+                </div>
+
                 <!-- Campo Estado -->
                 <div class="col-md-6">
                   <label class="form-label fw-bold">
@@ -77,28 +134,6 @@
                     />
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <!-- Sección del logo -->
-            <div class="col-md-4 text-center">
-              <label class="form-label fw-bold">
-                <i data-feather="image" class="me-1"></i>Logo
-              </label>
-              <input
-                type="file"
-                class="form-control mb-2"
-                formControlName="logo"
-                (change)="onFileChange($event)"
-                accept="image/*"
-              />
-              <div *ngIf="logoPreview" class="mt-3">
-                <img
-                  [src]="logoPreview"
-                  alt="Vista previa del logo"
-                  class="img-fluid img-thumbnail shadow-sm"
-                  style="max-width: 200px; max-height: 200px"
-                />
               </div>
             </div>
           </div>

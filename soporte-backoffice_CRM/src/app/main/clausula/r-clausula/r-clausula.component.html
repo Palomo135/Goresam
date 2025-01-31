@@ -1,5 +1,15 @@
-<div class="container">
-  <h1>Crear Nueva Cláusula</h1>
+<div class="modal-header">
+  <h5 class="modal-title">
+    {{ clausula ? "Editar Cláusula" : "Registrar Cláusula" }}
+  </h5>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="activeModal.dismiss()"
+  ></button>
+</div>
+<div class="modal-body">
   <form [formGroup]="clausulaForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="nombre">Nombre</label>
@@ -19,30 +29,6 @@
       >
         El nombre es obligatorio.
       </div>
-    </div>
-
-    <div class="form-group">
-      <label for="descripcion">Descripción</label>
-      <div id="summernote"></div>
-      <!-- Contenedor para Summernote -->
-      <div
-        *ngIf="
-          clausulaForm.get('descripcion')?.invalid &&
-          clausulaForm.get('descripcion')?.touched
-        "
-        class="text-danger"
-      >
-        La descripción es obligatoria.
-      </div>
-    </div>
-    <div
-      *ngIf="
-        clausulaForm.get('descripcion')?.invalid &&
-        clausulaForm.get('descripcion')?.touched
-      "
-      class="text-danger"
-    >
-      La descripción es obligatoria.
     </div>
 
     <div class="form-group">
@@ -68,13 +54,20 @@
         Debe seleccionar un módulo.
       </div>
     </div>
+    <div class="form-group">
+      <label for="estado">Estado</label>
+      <select id="estado" formControlName="estado" class="form-control">
+        <option [value]="true">Activo</option>
+        <option [value]="false">Inactivo</option>
+      </select>
+    </div>
 
     <button
       type="submit"
-      class="btn btn-primary"
+      class="btn btn-primary mt-3"
       [disabled]="clausulaForm.invalid"
     >
-      Crear Cláusula
+      {{ clausula ? "Actualizar" : "Registrar" }}
     </button>
   </form>
 </div>

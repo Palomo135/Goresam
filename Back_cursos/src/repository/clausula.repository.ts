@@ -30,6 +30,32 @@ export class ClausulaRepository {
     });
   }
 
+  async findByModulo(moduloId: number): Promise<Clausula[]> {
+    // return this.clausulaRepository.find({
+    //   where: { modulo: { id: moduloId }, estado: true },
+    //   relations: ['modulo'],
+    // });
+    return this.clausulaRepository.find({
+      select: {
+        id: true,
+        nombre: true,
+        estado: true,
+        fechaCreate: true,
+        fechaUpdate: true,
+        modulo: {
+          id: true,
+          nombre: true,
+          curso: {
+            id: true,
+          }
+        },
+      },
+      where: { modulo: { id: moduloId }, estado: true },
+      relations: ['modulo'],
+    },
+    );
+  }
+
   //crear una nueva clausula
   // async create(clausula: Partial<Clausula>): Promise<Clausula> {
   //   const newClausula = this.clausulaRepository.create({ ...clausula, fechaCreate: new Date() });
@@ -95,6 +121,29 @@ export class ClausulaRepository {
   //eliminar clausula
   async delete(id: number): Promise<void> {
     await this.clausulaRepository.update(id, { estado: false });
+  }
+
+  // Asignar cláusulas a un módulo
+  async assignClausulasToModulo(moduloId: number, clausulas: number[]): Promise<void> {
+    const modulo = await this.moduloRepository.findOne({ where: { id: moduloId, estado: true }, relations: ['clausulas'] });
+    if (!modulo) {
+      throw new NotFoundException('Modulo no encontrado');
+    }
+
+    const clausulasEntities = await this.clausulaRepository.findByIds(clausulas);
+    modulo.clausulas = clausulasEntities;
+    await this.moduloRepository.save(modulo);
+  }
+
+
+  async removeClausulaFromModulo(moduloId: number, clausulaId: number): Promise<void> {
+    const modulo = await this.moduloRepository.findOne({ where: { id: moduloId }, relations: ['clausulas'] });
+    if (!modulo) {
+      throw new NotFoundException('Modulo no encontrado');
+    }
+
+    modulo.clausulas = modulo.clausulas.filter(clausula => clausula.id !== clausulaId);
+    await this.moduloRepository.save(modulo);
   }
 
 }

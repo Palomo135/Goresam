@@ -1,6 +1,6 @@
 import { DetallePalabraClave } from "src/modelo/detallePalabraClave.entity";
 export class CursoDTO {
-    //id: number;
+    id: number;
     nombre: string;
     descripcion: string;
     logo?: Buffer;
@@ -11,5 +11,8 @@ export class CursoDTO {
     requisitos?: string;
     reconocimiento?: string;
     recurso: string;
+    fechaInicio: Date;
+    fechaCaducidad: Date;
+    encargado: string;
     detallePalabraClave?: DetallePalabraClave[];
 }

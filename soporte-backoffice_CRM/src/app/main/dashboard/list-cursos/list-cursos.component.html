@@ -47,39 +47,114 @@
     [columnMode]="ColumnMode.force"
     [headerHeight]="50"
     [footerHeight]="50"
-    [rowHeight]="60"
+    [rowHeight]="80"
     [limit]="basicSelectedOption"
   >
     <!-- Nro Column -->
-    <ngx-datatable-column name="" [width]="10" [sortable]="false">
+    <ngx-datatable-column name="#" [width]="50" [sortable]="false">
       <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
         {{ rowIndex + 1 }}
       </ng-template>
     </ngx-datatable-column>
 
     <!-- Logo Column -->
-    <ngx-datatable-column name="Logo" [width]="10" [sortable]="false">
+    <!-- <ngx-datatable-column name="Logo" [width]="100" [sortable]="false">
       <ng-template ngx-datatable-cell-template let-row="row">
         <img
           [src]="'http://localhost:3200/api/curso/logo/' + row.id"
           alt="Logo del Curso"
           class="rounded-circle shadow-sm border"
+          style="height: 60px; width: 60px; object-fit: cover"
           style="height: 40px; width: 40px; object-fit: cover"
           (error)="onLogoError($event)"
         />
       </ng-template>
-    </ngx-datatable-column>
+    </ngx-datatable-column> -->
 
     <!-- Nombre del Curso Column -->
-    <ngx-datatable-column name="Nombre del Curso" prop="nombre" [width]="50">
+    <ngx-datatable-column name="Nombre del Curso" prop="nombre" [width]="200">
       <ng-template ngx-datatable-cell-template let-row="row">
         <span class="fw-bold text-dark">{{ row.nombre }}</span>
       </ng-template>
     </ngx-datatable-column>
 
-    <!-- Acciones Column -->
-    <ngx-datatable-column name="Acciones" [width]="30" [sortable]="false">
+    <!-- Encargado Column -->
+    <ngx-datatable-column name="Encargado" prop="encargado" [width]="150">
+      <ng-template ngx-datetable-cell-template let-row="row">
+        <span class="fw-bold text-dark">{{ row.encargado }}</span>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <!-- Fecha Caducidad Column -->
+    <ngx-datatable-column name="inicia" prop="fechaInicio" [width]="150">
       <ng-template ngx-datatable-cell-template let-row="row">
+        <span class="fw-bold text-dark">{{
+          row.fechaInicio | date : "yyyy-MM-dd"
+        }}</span>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <!-- Fecha Caducidad Column -->
+    <ngx-datatable-column name="Vence" prop="fechaCaducidad" [width]="150">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <span class="fw-bold text-dark">{{
+          row.fechaCaducidad | date : "yyyy-MM-dd"
+        }}</span>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <!-- Acciones Column -->
+    <ngx-datatable-column name="Acciones" [width]="60" [sortable]="false">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <div class="d-flex align-items-center">
+          <!-- Dropdown Menu -->
+          <div ngbDropdown container="body">
+            <a
+              ngbDropdownToggle
+              href="javascript:void(0);"
+              class="hide-arrow"
+              id="dropdownBrowserState"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i
+                data-feather="more-vertical"
+                class="text-primary cursor-pointer me-2"
+              ></i>
+            </a>
+            <div
+              ngbDropdownMenu
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="dropdownBrowserState"
+              style="z-index: 1050"
+            >
+              <a
+                href="javascript:void(0)"
+                ngbDropdownItem
+                class="d-flex align-items-center"
+                (click)="toggleModulePanel(row)"
+              >
+                <i data-feather="edit" class="me-2"></i> Gestionar Modulos
+              </a>
+              <a
+                href="javascript:void(0)"
+                ngbDropdownItem
+                class="d-flex align-items-center"
+                (click)="onEdit(row.id)"
+              >
+                <i data-feather="edit" class="me-2"></i> Editar
+              </a>
+              <a
+                href="javascript:void(0)"
+                ngbDropdownItem
+                class="d-flex align-items-center text-danger"
+                (click)="onDelete(row.id)"
+              >
+                <i data-feather="trash-2" class="me-2"></i> Eliminar
+              </a>
+            </div>
+          </div>
+        </div>
         <button
           class="btn btn-outline-primary btn-sm"
           (click)="toggleModulePanel(row)"
@@ -88,6 +163,18 @@
         </button>
       </ng-template>
     </ngx-datatable-column>
+
+    <!-- Gestionar Column -->
+    <!-- <ngx-datatable-column name="Gestionar" [width]="150" [sortable]="false">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <button
+          class="btn btn-outline-primary btn-sm"
+          (click)="toggleModulePanel(row)"
+        >
+          Gestionar Módulos
+        </button>
+      </ng-template>
+    </ngx-datatable-column> -->
   </ngx-datatable>
 </section>
 
@@ -95,16 +182,42 @@
 <ng-template #courseModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">Gestionar Módulos</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Cerrar"
+      (click)="modal.dismiss()"
+    ></button>
+
     <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button>
+
   </div>
   <div class="modal-body">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h2>Lista de Módulos</h2>
+
+      <button class="btn btn-primary" (click)="openModuloModal(null)">
+        <i class="fas fa-plus-circle me-1"></i> Nuevo Módulo
+      </button>
+    </div>
+    <!-- <div class="form-group mb-3">
+      <label for="moduloSelect">Asignar Módulo:</label>
+      <select
+        id="moduloSelect"
+        class="form-control"
+        [(ngModel)]="selectedModuloId"
+        (change)="assignModuloToCurso()"
+      >
+        <option *ngFor="let modulo of availableModules" [value]="modulo.id">
+          {{ modulo.nombre }}
+        </option>
+      </select>
+    </div> -->
       <button class="btn btn-primary" (click)="openModuloModal(selectedCursoId)">
         <i class="fas fa-plus-circle me-1"></i> Nuevo Módulo
       </button>
     </div>
-    
+   
     <table class="table table-striped">
       <thead>
         <tr>
@@ -122,6 +235,29 @@
           <td>{{ modulo.estado ? "Activo" : "Inactivo" }}</td>
           <td>{{ modulo.orden }}</td>
           <td>
+            <button
+              class="btn btn-sm btn-warning me-2"
+              (click)="openModuloModal(modulo.id)"
+            >
+              <i class="fas fa-edit"></i> Editar
+            </button>
+            <button
+              class="btn btn-sm btn-danger"
+              (click)="
+                deleteModuleFromCurso(
+                  modulo.curso ? modulo.curso.id : null,
+                  modulo.id
+                )
+              "
+            >
+              <i class="fas fa-trash"></i> Eliminar
+            </button>
+            <button
+              class="btn btn-sm btn-info"
+              (click)="openClausulaPanel(modulo)"
+            >
+              <i class="fas fa-file-alt"></i> Gestionar Cláusulas
+            </button>
             <button class="btn btn-sm btn-warning me-2" (click)="openModuloModal(modulo.id)">
               <i class="fas fa-edit"></i> Editar
             </button>
@@ -137,6 +273,89 @@
     </table>
   </div>
   <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">
+      Cerrar
+    </button>
+  </div>
+</ng-template>
+
+<!-- Plantilla del Modal de Cláusulas -->
+<ng-template #clausulaModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Gestionar Cláusulas</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Cerrar"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Lista de Cláusulas</h2>
+      <button class="btn btn-primary" (click)="openClausulaModal(null)">
+        <i class="fas fa-plus-circle me-1"></i> Nueva Cláusula
+      </button>
+    </div>
+    <!-- <div class="form-group mb-3">
+      <label for="clausulaSelect">Asignar Clausula:</label>
+      <select
+        id="clausulaSelect"
+        class="form-control"
+        [(ngModel)]="selectedClausulaId"
+        (change)="assignClausulasToModulo()"
+      >
+        <option *ngFor ="let clausula of availableClauses:" [value]="clausula.id">
+          {{ clausula.nombre }}
+        </option>
+      </select>
+    </div> -->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let clausula of clausulaList; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ clausula.nombre }}</td>
+          <td>{{ clausula.estado ? "Activo" : "Inactivo" }}</td>
+          <td>
+            <button
+              class="btn btn-sm btn-warning me-2"
+              (click)="openClausulaModal(clausula.modulo.id, clausula)"
+            >
+              <i class="fas fa-edit"></i> Editar
+            </button>
+            <button
+              class="btn btn-sm btn-danger"
+              (click)="
+                deleteClausulaFromModulo(
+                  clausula.modulo ? clausula.modulo.id : null,
+                  clausula.id
+                )
+              "
+            >
+              <i class="fas fa-trash"></i> Eliminar
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="clausulaList.length === 0">
+          <td colspan="4" class="text-center">No hay cláusulas disponibles</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">
+      Cerrar
+    </button>
+  </div>
+</ng-template>
     <button type="button" class="btn btn-secondary" (click)="modal.close()">Cerrar</button>
   </div>
 </ng-template>

@@ -4,9 +4,7 @@ import { ModuloService } from '../modulo.service';
 import { Modulo } from '../R_modulo/modulo';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-//import * as $ from 'jquery';
-
-declare var $: any;
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modulo',
@@ -16,13 +14,16 @@ declare var $: any;
   styleUrls: ['./modulo.component.scss'],
 })
 export class ModuloComponent implements OnInit {
-  @Input() cursoId!: number; // ID del curso asociado
-  //titulo: string = '';
-  descripcion: string = ''; // Campo para agregar un módulo
+  @Input() cursoId: number | null = null; // ID del curso asociado
+  @Input() moduloId: number | null = null; // Nombre del curso asociado
+  //cursoId: number | null = null; // ID del curso asociado
+  descripcion: string; // Campo para agregar un módulo
   modulos: Modulo[] = []; // Lista de módulos
-  estado: true;
+  estado: boolean = true;
   editModuloId: number | null = null; // Para editar un módulo específico
   submitted = false;
+  isEditMode: boolean = false;
+  orden: number | null = null;
 
   constructor(
     public activeModal: NgbActiveModal, // Asegúrate de que NgbActiveModal esté inyectado
@@ -30,68 +31,51 @@ export class ModuloComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadModulos(); // Cargar los módulos existentes al iniciar
-  }
-
-  // Cargar los módulos del curso
-  loadModulos(): void {
-    if (this.cursoId) {
-      this.moduloService.getModulos(this.cursoId).subscribe((modulos) => {
-        this.modulos = modulos;
-      }, (err) => {
-        console.error('Error al cargar módulos:', err);
-      });
+    if (this.moduloId) {
+      console.log(this.moduloId);
+      this.enableEditModulo(this.moduloId);
     }
   }
 
   // Agregar un nuevo módulo
   addModulo(): void {
-    //this.submitted = true;
     if (this.descripcion) {
       const nuevoModulo: Modulo = {
-        //descripcion: this.stripHtmlTags(this.descripcion), // Asignar descripcion a nombre
-        //nombre: this.titulo,
-        nombre: this.stripHtmlTags(this.descripcion), // Asignar descripcion a nombre
-        cursoId: this.cursoId,
+        nombre: this.descripcion, // Asignar descripcion a nombre
+        cursoId: this.cursoId || null, // Asignar el cursoId
         orden: this.modulos.length + 1, // Orden automático
         estado: this.estado ?? true
       };
       this.moduloService.createModulo(nuevoModulo).subscribe((modulo) => {
         this.modulos.push(modulo);
         this.resetForm();
+        this.activeModal.dismiss();
       });
-      console.log(nuevoModulo)
+      console.log(nuevoModulo);
     }
-  }
-
-  stripHtmlTags(content: string): string {
-    const div = document.createElement('div');
-    div.innerHTML = content;
-    return div.textContent || div.innerText || ''; // Retorna solo el texto
-  }
-
-  ngAfterViewInit(): void {
-    // Inicializar Summernote
-    ($('.summernote') as any).summernote({
-      placeholder: 'Escribe aquí la descripción del módulo...',
-      tabsize: 2,
-      height: 200,
-      callbacks: {
-        onChange: (contents: string) => {
-          this.descripcion = contents; // Sincronizar con el modelo
-        }
-      }
-    });
   }
 
   // Habilitar edición de un módulo
   enableEditModulo(id: number): void {
-    const modulo = this.modulos.find(m => m.id === id);
-    if (modulo) {
-      this.editModuloId = modulo.id;
-      this.descripcion = modulo.nombre; // Asignar nombre a descripcion
-      ($('.summernote') as any).summernote('code', this.descripcion);
-    }
+    console.log('id recibido: ', id);
+    this.moduloService.getModulosLista().subscribe((modulos) => {
+      const modulo = modulos.filter(modulo => modulo.id === id);
+      console.log('modulo encontrado: ', modulo);
+      if (modulo.length > 0) {
+        this.editModuloId = modulo[0].id;
+        this.descripcion = modulo[0].nombre; // Asignar nombre a descripcion
+        // this.estado = modulo[0].estado;
+        // this.cursoId = modulo[0].curso.id;
+        this.orden = modulo[0].orden;
+        this.isEditMode = true;
+      }
+    });
+    // const modulo = this.modulos.find(m => m.id === id);
+    // console.log('modulo encontrado: ', modulo);
+    // if (modulo) {
+    //   this.editModuloId = modulo.id;
+    //   this.descripcion = modulo.nombre; // Asignar nombre a descripcion
+    // }
   }
 
   // Actualizar un módulo
@@ -99,35 +83,31 @@ export class ModuloComponent implements OnInit {
     if (this.editModuloId !== null && this.descripcion) {
       const updatedModulo: Modulo = {
         id: this.editModuloId,
-        // nombre: this.titulo, // Asignar descripcion a nombre
-        // descripcion: this.descripcion,
         nombre: this.descripcion,
         cursoId: this.cursoId,
         orden: this.modulos.find(m => m.id === this.editModuloId)?.orden || 0, // Mantener el orden existente
         estado: true
       };
+      console.log('Modulo actualizado:', updatedModulo);
       this.moduloService.updateModulo(updatedModulo).subscribe(() => {
         const index = this.modulos.findIndex(m => m.id === this.editModuloId);
         if (index !== -1) {
           this.modulos[index] = updatedModulo;
         }
+        Swal.fire('Modulo actualizado', 'El módulo ha sido actualizado correctamente', 'success');
         this.resetForm();
+        this.activeModal.dismiss();
       });
     }
-  }
-
-  // Eliminar un módulo
-  removeModulo(id: number): void {
-    this.moduloService.deleteModulo(id).subscribe(() => {
-      this.modulos = this.modulos.filter(m => m.id !== id);
-    });
   }
 
   // Restablecer el formulario
   resetForm(): void {
     this.descripcion = '';
+    this.cursoId = null;
+    this.estado = true;
     this.editModuloId = null;
-    ($('.summernote') as any).summernote('reset');
+    this.submitted = false;
   }
 
   // Cerrar el modal

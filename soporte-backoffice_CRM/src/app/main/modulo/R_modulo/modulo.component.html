@@ -11,48 +11,22 @@
 <div class="modal-body">
   <div class="mb-3">
     <label for="descripcion" class="form-label">Descripción</label>
-    <div id="summernote" class="summernote"></div>
+    <input
+      type="text"
+      id="descripcion"
+      class="form-control"
+      [(ngModel)]="descripcion"
+      required
+    />
     <div *ngIf="submitted && !descripcion" class="text-danger">
       La descripción es obligatoria.
     </div>
-  </div>
-  <button
-    class="btn btn-primary"
-    (click)="editModuloId ? updateModulo() : addModulo()"
-  >
-    {{ editModuloId ? "Actualizar" : "Añadir +" }}
-  </button>
 
-  <!-- Tabla de módulos -->
-  <table class="table mt-3">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Descripción</th>
-        <th>Orden</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let modulo of modulos; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td [innerHTML]="modulo.nombre"></td>
-        <td>{{ modulo.orden }}</td>
-        <td>
-          <button
-            class="btn btn-warming btn-sm"
-            (click)="enableEditModulo(modulo.id)"
-          >
-            Editar
-          </button>
-          <button
-            class="btn btn-danger btn-sm"
-            (click)="removeModulo(modulo.id)"
-          >
-            Eliminar
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <button
+      class="btn btn-primary"
+      (click)="editModuloId ? updateModulo() : addModulo()"
+    >
+      {{ editModuloId ? "Actualizar" : "Añadir +" }}
+    </button>
+  </div>
 </div>

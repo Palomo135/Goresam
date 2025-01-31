@@ -12,6 +12,18 @@ export class ClausulaService {
 
   constructor(private http: HttpClient) { }
 
+  getClausulasByModulo(moduloId: number): Observable<Clausula[]> {
+    return this.http.get<Clausula[]>(`${this.apiUrl}/modulo/${moduloId}`);
+  }
+
+  assignClausulasToModulo(moduloId: number, clausulas: number[]): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/modulo/${moduloId}`, clausulas);
+  }
+
+  removeClausulaFromModulo(moduloId: number, clausulaId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${moduloId}/${clausulaId}`);
+  }
+
   getClausulas(): Observable<Clausula[]> {
     return this.http.get<Clausula[]>(this.apiUrl);
   }

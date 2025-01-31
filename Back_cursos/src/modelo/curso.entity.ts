@@ -38,6 +38,15 @@ export class Curso {
     @UpdateDateColumn()
     fechaUpdate: Date;
 
+    @Column({ nullable: true })
+    fechaInicio: Date;
+
+    @Column({ nullable: true })
+    fechaCaducidad: Date;
+
+    @Column()
+    encargado: string;
+
     @Column({ default: true })
     estado: boolean;
 

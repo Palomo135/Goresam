@@ -52,23 +52,7 @@ export class CursoController {
 
   @Post()
   @UseInterceptors(FileInterceptor('logo', { storage: multerConfig.storage, fileFilter: multerOptions.fileFilter }))
-  async create(@UploadedFile() file: Express.Multer.File, @Body() body: Curso) {
-    //const cursoEntity = new Curso();
-    // cursoEntity.nombre = body.nombre;
-    // cursoEntity.descripcion = body.descripcion;
-    // cursoEntity.estado = body.estado;
-    // cursoEntity.recurso = body.recurso;
-    // cursoEntity.frase = body.frase;
-    // cursoEntity.dirigido = body.dirigido;
-    // cursoEntity.aprendizaje = body.aprendizaje;
-    // cursoEntity.requisitos = body.requisitos;
-    // cursoEntity.reconocimiento = body.reconocimiento;
-    // cursoEntity.detallePalabrasClave = body.detallePalabraClave.map(dto => {
-    //   const detalle = new DetallePalabraClave();
-    //   detalle.nombre = dto.nombre;
-    //   detalle.curso = cursoEntity;
-    //   return detalle;
-    // }) ; 
+  async create(@UploadedFile() file: Express.Multer.File, @Body() body: CursoDTO) {
     // Si se sube un archivo, asignar el logo
     if (file) {
       //cursoEntity.logo = await fs.readFile(file.path); // Guardar el logo como Buffer
@@ -83,7 +67,6 @@ export class CursoController {
   @Put(':id')
   @UseInterceptors(FileInterceptor('logo', { storage: multerConfig.storage, fileFilter: multerOptions.fileFilter })) // Permite cargar un archivo (logo)
   async update(@Param('id') id: number, @UploadedFile() file: Express.Multer.File, @Body() body: CursoDTO) {
-    console.log('Controlador recibe:', body);
 
     if (file) {
       // Leer el archivo si se proporciona

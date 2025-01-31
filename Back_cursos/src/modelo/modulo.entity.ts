@@ -17,9 +17,6 @@ export class Modulo {
   @OneToMany(() => Clausula, (clausula) => clausula.modulo, { cascade: true })
   clausulas: Clausula[];
 
-  @ManyToOne(() => Clausula, (caches) => caches.modulo, { onDelete: 'CASCADE' })
-  clausula: Clausula;
-
   @CreateDateColumn()
   fechaCreate: Date;
 

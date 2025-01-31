@@ -10,6 +10,9 @@ export interface Curso {
   requisitos?: string;
   reconocimiento?: string;
   estado: boolean;
+  fechaInicio: Date;
+  fechaCaducidad: Date;
+  encargado: string;
   recurso: string;
   detallePalabrasClave?: DetallePalabraClave[];
 }

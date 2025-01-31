@@ -17,10 +17,7 @@ export class Clausula {
   @Column()
   nombre: string;
 
-  @Column()
-  descripcion: string;
-
-  @ManyToOne(() => Modulo, (modulo) => modulo, { onDelete: 'CASCADE', })
+  @ManyToOne(() => Modulo, (modulo) => modulo.clausulas, { onDelete: 'CASCADE', })
   modulo: Modulo;
 
   @CreateDateColumn()

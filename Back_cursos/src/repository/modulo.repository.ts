@@ -31,6 +31,15 @@ export class ModuloRepository {
       order: { orden: 'ASC' }, // Ordenar por campo 'orden'
     });
   }
+
+  async findWithoutCurso(): Promise<Modulo[]> {
+    return this.moduloRepository.find({
+      where: { curso: null, estado: true },
+      relations: ['clausulas'],
+      order: { orden: 'ASC' }, // Ordenar por campo 'orden'
+    });
+  }
+
   //obtener modulo por id
   async findById(id: number): Promise<Modulo> {
     return this.moduloRepository.findOne({
