@@ -21,14 +21,14 @@ export class ListarModuloComponent implements OnInit {
   constructor(private moduloService: ModuloService) { }
 
   ngOnInit(): void {
-    // this.moduloService.getModulos().subscribe((modulos) => {
+    // this.moduloService.getTodosModulos.subscribe((modulos) => {
     //   this.modulos = modulos;
     // });
     // Obtener todos los módulos al iniciar el componente
     this.moduloService.getModulosLista().subscribe(
       (modulos) => {
         this.moduloList = modulos;
-        console.log('Módulos cargados:', this.moduloList); // Verificar los datos recibidos
+        console.log('Módulos cargados:', this.moduloList);
       },
       (error) => {
         console.error('Error al cargar los módulos:', error);

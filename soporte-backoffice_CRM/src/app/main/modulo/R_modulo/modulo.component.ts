@@ -17,6 +17,7 @@ export class ModuloComponent implements OnInit {
   @Input() cursoId: number | null = null; // ID del curso asociado
   @Input() moduloId: number | null = null; // Nombre del curso asociado
   //cursoId: number | null = null; // ID del curso asociado
+  titulo: string;
   descripcion: string; // Campo para agregar un módulo
   modulos: Modulo[] = []; // Lista de módulos
   estado: boolean = true;
@@ -41,7 +42,8 @@ export class ModuloComponent implements OnInit {
   addModulo(): void {
     if (this.descripcion) {
       const nuevoModulo: Modulo = {
-        nombre: this.descripcion, // Asignar descripcion a nombre
+        nombre: this.titulo, // Asignar descripcion a nombre
+        descripcion: this.descripcion,
         cursoId: this.cursoId || null, // Asignar el cursoId
         orden: this.modulos.length + 1, // Orden automático
         estado: this.estado ?? true
@@ -63,7 +65,8 @@ export class ModuloComponent implements OnInit {
       console.log('modulo encontrado: ', modulo);
       if (modulo.length > 0) {
         this.editModuloId = modulo[0].id;
-        this.descripcion = modulo[0].nombre; // Asignar nombre a descripcion
+        this.titulo = modulo[0].nombre; // Asignar nombre a titulo
+        this.descripcion = modulo[0].descripcion;
         // this.estado = modulo[0].estado;
         // this.cursoId = modulo[0].curso.id;
         this.orden = modulo[0].orden;
@@ -83,10 +86,11 @@ export class ModuloComponent implements OnInit {
     if (this.editModuloId !== null && this.descripcion) {
       const updatedModulo: Modulo = {
         id: this.editModuloId,
-        nombre: this.descripcion,
+        nombre: this.titulo,
+        descripcion: this.descripcion,
         cursoId: this.cursoId,
         orden: this.modulos.find(m => m.id === this.editModuloId)?.orden || 0, // Mantener el orden existente
-        estado: true
+        estado: this.estado ?? true
       };
       console.log('Modulo actualizado:', updatedModulo);
       this.moduloService.updateModulo(updatedModulo).subscribe(() => {
@@ -103,6 +107,7 @@ export class ModuloComponent implements OnInit {
 
   // Restablecer el formulario
   resetForm(): void {
+    this.titulo = '';
     this.descripcion = '';
     this.cursoId = null;
     this.estado = true;

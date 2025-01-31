@@ -10,23 +10,37 @@
 
 <div class="modal-body">
   <div class="mb-3">
-    <label for="descripcion" class="form-label">Descripción</label>
+    <label for="titulo" class="form-label">Titulo</label>
     <input
       type="text"
       id="descripcion"
       class="form-control"
-      [(ngModel)]="descripcion"
+      [(ngModel)]="titulo"
       required
     />
+    <div *ngIf="submitted && !titulo" class="text-danger">
+      El titulo es obligatoria.
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="descripcion" class="form-label">Descripción</label>
+    <textarea
+      id="descripcion"
+      class="form-control"
+      [(ngModel)]="descripcion"
+      rows="4"
+      required
+    ></textarea>
     <div *ngIf="submitted && !descripcion" class="text-danger">
       La descripción es obligatoria.
     </div>
-
-    <button
-      class="btn btn-primary"
-      (click)="editModuloId ? updateModulo() : addModulo()"
-    >
-      {{ editModuloId ? "Actualizar" : "Añadir +" }}
-    </button>
   </div>
+
+  <button
+    class="btn btn-primary"
+    (click)="editModuloId ? updateModulo() : addModulo()"
+  >
+    {{ editModuloId ? "Actualizar" : "Añadir +" }}
+  </button>
 </div>

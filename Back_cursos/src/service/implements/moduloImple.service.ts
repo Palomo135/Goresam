@@ -15,8 +15,6 @@ export class ModuloImpleService {
     private readonly moduloRepository: Repository<Modulo>,
     @InjectRepository(Curso)
     private readonly cursoRepository: Repository<Curso>,
-    private readonly clausulaRepository: ClausulaRepository
-
   ) { }
 
   findAll(cursoId: number): Promise<Modulo[]> {
@@ -40,6 +38,7 @@ export class ModuloImpleService {
       select: {
         id: true,
         nombre: true,
+        descripcion: true,
         estado: true,
         orden: true,
         curso: {
@@ -59,10 +58,6 @@ export class ModuloImpleService {
       order: { orden: 'ASC' },
     });
   }
-
-  // create(modulo: Modulo): Promise<Modulo> {
-  //   return this.moduloRepository.save(modulo);
-  // }
 
   async create(moduloDto: CreateModuloDTO): Promise<Modulo> {
     const { cursoId, ...moduloData } = moduloDto;
@@ -90,6 +85,7 @@ export class ModuloImpleService {
     const updatedModulo = await this.moduloRepository.findOne({ where: { id: id } });
 
     updatedModulo.nombre = modulo.nombre;
+    updatedModulo.descripcion = modulo.descripcion;
     updatedModulo.orden = modulo.orden;
     updatedModulo.estado = modulo.estado;
     updatedModulo.curso = modulo.curso;
@@ -120,15 +116,6 @@ export class ModuloImpleService {
     curso.modulos = curso.modulos.filter(modulo => modulo.id !== moduloId);
     await this.cursoRepository.save(curso);
   }
-
-  // async removeCurso(id: number): Promise<void> {
-  //   const modulo = await this.moduloRepository.findOne(id);
-  //   if (!modulo) {
-  //     throw new NotFoundException(`Modulo with ID ${id} not found`);
-  //   }
-  //   modulo.curso = null;
-  //   await this.moduloRepository.save(modulo);
-  // }
 
   async remove(id: number): Promise<void> {
     await this.moduloRepository.delete(id);

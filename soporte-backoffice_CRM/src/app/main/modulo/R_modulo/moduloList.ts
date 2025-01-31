@@ -3,6 +3,7 @@ export interface ModuloList {
 
     id: number;
     nombre: string;
+    descripcion: string;
     estado: boolean;
     orden: number;
     //idCurso: number;
