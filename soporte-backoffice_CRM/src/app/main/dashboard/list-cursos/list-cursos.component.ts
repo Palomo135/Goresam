@@ -6,7 +6,6 @@ import Swal from 'sweetalert2';
 import { EtiqueteraService } from '../service/etiquetera.service';
 import { ColumnMode, DatatableComponent, SelectionType } from '@swimlane/ngx-datatable';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EtiqueteraComponent } from '../etiquetera/etiquetera.component';
 import { FormGroup } from '@angular/forms';
 import { ModuloComponent } from 'app/main/modulo/R_modulo/modulo.component';
@@ -20,7 +19,6 @@ import { RClausulaComponent } from 'app/main/clausula/r-clausula/r-clausula.comp
 import { ModuloList } from 'app/main/modulo/R_modulo/moduloList';
 import { ClausulaService } from 'app/main/clausula/clausula.service';
 
-
 @Component({
   selector: 'app-list-cursos',
   templateUrl: './list-cursos.component.html',
@@ -33,8 +31,6 @@ export class ListCursosComponent implements OnInit {
   clausula: Clausula[] = [];
   availableModules: any[] = [];
   availableClauses: any[] = [];
-  availableModules: Modulo[] = [];
-  availableClauses: Clausula[] = [];
   filteredRows: CursoElistDTO[] = [];
   searchTerm: string = '';
   basicSelectedOption: number = 10;
@@ -48,7 +44,6 @@ export class ListCursosComponent implements OnInit {
   selectedModuloId: number | null = null;
   selectedClausulas: number[] = [];
   modalRef: NgbModalRef | null = null;
-  selectedCursoId: number | null = null;
 
   @Output() courseSaved = new EventEmitter<void>();
   @Output() editCurso: EventEmitter<Curso> = new EventEmitter<Curso>();
@@ -78,12 +73,12 @@ export class ListCursosComponent implements OnInit {
     this.etiqueteraService.getCoursesElist().subscribe({
       next: (data) => {
         this.cursoElist = data;
-        console.log(data);
         this.filteredRows = [...this.cursoElist];
       },
       error: (err) => console.error('Error al cargar los cursos:', err)
     });
   }
+
   // loadAvailableModules(): void {
   //   this.moduloService.getModulosSinCurso().subscribe(modules => {
   //     this.availableModules = modules;
@@ -118,25 +113,13 @@ export class ListCursosComponent implements OnInit {
   openClausulaPanel(modulo: ModuloList): void {
     this.selectedModuloId = modulo.id;
     this.loadClausulas(modulo.id);
-
-  toggleModulePanel(row: any) {
-    this.selectedCursoId = row.id;
-    this.loadModulos(row.id);
-    
-    const modalRef = this.modalService.open(this.courseModal, {
-      size: 'lg',
-      backdrop: 'static',
-      keyboard: false
-    });
-
-    modalRef.componentInstance.curso = row;
   }
 
   loadModulos(cursoId: number): void {
     this.moduloService.getModulosLista().subscribe({
       next: (modulos) => {
         console.log('Módulos cargados:', modulos);
-        this.moduloList = modulos.filter(modulo => modulo.curso && modulo.curso.i= cursoId);
+        this.moduloList = modulos.filter(modulo => modulo.curso && modulo.curso.id === cursoId);
         console.log('Módulos filtrados:', this.moduloList);
         if (this.modalRef) {
           this.modalRef.close();
@@ -146,13 +129,10 @@ export class ListCursosComponent implements OnInit {
           backdrop: 'static',
           keyboard: false
         })
-        this.moduloList = modulos.filter(modulo => modulo.idCurso === cursoId);
-        console.log('Módulos cargados:', this.moduloList);
       },
       error: (error) => {
         console.error('Error al cargar los módulos:', error);
       }
-
     })
   }
 
@@ -252,14 +232,6 @@ export class ListCursosComponent implements OnInit {
     modalRef.dismissed.subscribe(() => {
       if (this.selectedCursoId) {
         this.loadCourses();
-  }
-
-  openModuloModal(cursoId: number): void {
-    const modalRef = this.modalService.open(ModuloComponent, { size: 'lg' });
-    modalRef.componentInstance.cursoId = cursoId;
-    modalRef.closed.subscribe(() => {
-      if (this.selectedCursoId) {
-        this.loadModulos(this.selectedCursoId);
       }
     });
     // this.loadCourses();
@@ -346,7 +318,5 @@ export class ListCursosComponent implements OnInit {
         Swal.fire('Error', 'No se pudo eliminar la cláusula del módulo.', 'error');
       }
     });
-  }
-    imgElement.src = 'assets/placeholder.png';
   }
 }
