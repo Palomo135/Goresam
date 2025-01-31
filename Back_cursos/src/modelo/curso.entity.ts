@@ -47,7 +47,7 @@ export class Curso {
     @Column()
     encargado: string;
 
-    @Column({ default: true })
+    @Column()
     estado: boolean;
 
     @Column()

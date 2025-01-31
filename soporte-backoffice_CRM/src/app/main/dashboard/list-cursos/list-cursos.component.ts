@@ -79,11 +79,19 @@ export class ListCursosComponent implements OnInit {
     });
   }
 
-  // loadAvailableModules(): void {
-  //   this.moduloService.getModulosSinCurso().subscribe(modules => {
-  //     this.availableModules = modules;
-  //   });
-  // }
+  getCursoEstado(curso: Curso): string {
+    const today = new Date();
+    const fechaInicio = new Date(curso.fechaInicio);
+    const fechaCaducidad = new Date(curso.fechaCaducidad);
+
+    if (today < fechaInicio) {
+      return 'Proximo';
+    } else if (today > fechaCaducidad) {
+      return 'Caducado';
+    } else {
+      return 'Disponible';
+    }
+  }
 
   loadAvailableModules(): void {
     this.moduloService.getModulosLista().subscribe({

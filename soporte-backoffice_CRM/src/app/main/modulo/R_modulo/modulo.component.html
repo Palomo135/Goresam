@@ -30,10 +30,14 @@
       class="form-control"
       [(ngModel)]="descripcion"
       rows="4"
+      (input)="checkWordLimit()"
       required
     ></textarea>
     <div *ngIf="submitted && !descripcion" class="text-danger">
       La descripción es obligatoria.
+    </div>
+    <div *ngIf="wordLimitExceeded" class="text-danger">
+      La descripción no puede exceder las 1000 palabras.
     </div>
   </div>
 

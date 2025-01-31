@@ -85,6 +85,7 @@ export class CursoService {
     const { detallePalabraClave, ...cursoData } = cursoDTO;
 
     const curso = this.cursoRepository.create(cursoData);
+    console.log(curso);
     await this.cursoRepository.save(curso);
 
     if (detallePalabraClave && detallePalabraClave.length > 0) {
@@ -142,6 +143,8 @@ export class CursoService {
         return detalle;
       });
     }
+
+    console.log(curso);
 
     // Guardar los cambios
     await this.cursoRepository.save(curso);

@@ -102,6 +102,21 @@
       </ng-template>
     </ngx-datatable-column>
 
+    <!-- Estado Column -->
+    <ngx-datatable-column name="Estado" [width]="100">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <span
+          class="badge rounded-pill text-white"
+          [ngClass]="{
+            'bg-success': getCursoEstado(row) === 'Disponible',
+            'bg-warning': getCursoEstado(row) === 'Proximo',
+            'bg-danger': getCursoEstado(row) === 'Caducado'
+          }"
+          >{{ getCursoEstado(row) }}</span
+        >
+      </ng-template>
+    </ngx-datatable-column>
+
     <!-- Acciones Column -->
     <ngx-datatable-column name="Acciones" [width]="60" [sortable]="false">
       <ng-template ngx-datatable-cell-template let-row="row">

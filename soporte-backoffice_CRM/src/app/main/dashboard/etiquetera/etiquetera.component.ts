@@ -86,7 +86,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
       nombre: course.nombre,
       descripcion: course.descripcion,
       recurso: course.recurso,
-      estado: course.estado,
+      estado: course.estado ? true : false,
       fechaInicio: this.formatDate(course.fechaInicio),
       fechaCaducidad: this.formatDate(course.fechaCaducidad),
       encargado: course.encargado

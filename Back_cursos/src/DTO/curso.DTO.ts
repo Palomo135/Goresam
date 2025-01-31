@@ -4,7 +4,7 @@ export class CursoDTO {
     nombre: string;
     descripcion: string;
     logo?: Buffer;
-    estado: boolean;
+    estado: boolean = true;
     frase?: string;
     dirigido?: string;
     aprendizaje?: string;

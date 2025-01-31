@@ -25,6 +25,7 @@ export class ModuloComponent implements OnInit {
   submitted = false;
   isEditMode: boolean = false;
   orden: number | null = null;
+  wordLimitExceeded: boolean = false;
 
   constructor(
     public activeModal: NgbActiveModal, // Asegúrate de que NgbActiveModal esté inyectado
@@ -40,7 +41,8 @@ export class ModuloComponent implements OnInit {
 
   // Agregar un nuevo módulo
   addModulo(): void {
-    if (this.descripcion) {
+    this.submitted = true;
+    if (this.titulo && this.descripcion && !this.wordLimitExceeded) {
       const nuevoModulo: Modulo = {
         nombre: this.titulo, // Asignar descripcion a nombre
         descripcion: this.descripcion,
@@ -49,6 +51,7 @@ export class ModuloComponent implements OnInit {
         estado: this.estado ?? true
       };
       this.moduloService.createModulo(nuevoModulo).subscribe((modulo) => {
+        Swal.fire('Modulo registrado', 'El módulo ha sido registrado correctamente', 'success');
         this.modulos.push(modulo);
         this.resetForm();
         this.activeModal.dismiss();
@@ -83,7 +86,7 @@ export class ModuloComponent implements OnInit {
 
   // Actualizar un módulo
   updateModulo(): void {
-    if (this.editModuloId !== null && this.descripcion) {
+    if (this.editModuloId !== null && this.descripcion && !this.wordLimitExceeded) {
       const updatedModulo: Modulo = {
         id: this.editModuloId,
         nombre: this.titulo,
@@ -113,10 +116,16 @@ export class ModuloComponent implements OnInit {
     this.estado = true;
     this.editModuloId = null;
     this.submitted = false;
+    this.wordLimitExceeded = false;
   }
 
   // Cerrar el modal
   closeModal(): void {
     this.activeModal.close();
   }
-}
+
+  checkWordLimit(): void {
+    const wordCount = this.descripcion ? this.descripcion.split(/\s+/).length : 0;
+    this.wordLimitExceeded = wordCount > 100;
+  }
+} 
