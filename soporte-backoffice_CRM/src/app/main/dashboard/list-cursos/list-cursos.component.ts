@@ -34,6 +34,7 @@ export class ListCursosComponent implements OnInit {
   filteredRows: CursoElistDTO[] = [];
   searchTerm: string = '';
   basicSelectedOption: number = 10;
+  loading: boolean = false;
   verModal: boolean = false;
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
@@ -74,6 +75,7 @@ export class ListCursosComponent implements OnInit {
       next: (data) => {
         this.cursoElist = data;
         this.filteredRows = [...this.cursoElist];
+        this.loading = false;
       },
       error: (err) => console.error('Error al cargar los cursos:', err)
     });
@@ -167,41 +169,41 @@ export class ListCursosComponent implements OnInit {
     });
   }
 
-  assignModuloToCurso(): void {
-    if (!this.selectedCursoId || !this.selectedModuloId) {
-      Swal.fire('Error', 'Debe seleccionar un curso y un módulo.', 'error');
-      return;
-    }
+  // assignModuloToCurso(): void {
+  //   if (!this.selectedCursoId || !this.selectedModuloId) {
+  //     Swal.fire('Error', 'Debe seleccionar un curso y un módulo.', 'error');
+  //     return;
+  //   }
 
-    const assignModuleDto = {
-      cursoId: this.selectedCursoId,
-      moduloId: this.selectedModuloId
-    };
+  //   const assignModuleDto = {
+  //     cursoId: this.selectedCursoId,
+  //     moduloId: this.selectedModuloId
+  //   };
 
-    this.moduloService.assignModuleToCurso(assignModuleDto.cursoId, assignModuleDto.moduloId).subscribe({
-      next: () => {
-        Swal.fire('Asignado', 'El módulo ha sido asignado al curso.', 'success');
-        this.loadAvailableModules(); // Recargar los módulos disponibles
-        this.loadCourses();
-        this.loadModulos(this.selectedCursoId);
-      },
-      error: (err) => {
-        console.error('Error al asignar el módulo:', err);
-        Swal.fire('Error', 'No se pudo asignar el módulo.', 'error');
-      }
-    });
-  }
+  //   this.moduloService.assignModuleToCurso(assignModuleDto.cursoId, assignModuleDto.moduloId).subscribe({
+  //     next: () => {
+  //       Swal.fire('Asignado', 'El módulo ha sido asignado al curso.', 'success');
+  //       this.loadAvailableModules(); // Recargar los módulos disponibles
+  //       this.loadCourses();
+  //       this.loadModulos(this.selectedCursoId);
+  //     },
+  //     error: (err) => {
+  //       console.error('Error al asignar el módulo:', err);
+  //       Swal.fire('Error', 'No se pudo asignar el módulo.', 'error');
+  //     }
+  //   });
+  // }
 
-  assignClausulasToModulo(moduloId: number): void {
-    this.clausulaService.assignClausulasToModulo(moduloId, this.selectedClausulas).subscribe({
-      next: () => {
-        console.log('Cláusulas asignadas exitosamente');
-      },
-      error: (err) => {
-        console.error('Error al asignar las cláusulas:', err);
-      }
-    });
-  }
+  // assignClausulasToModulo(moduloId: number): void {
+  //   this.clausulaService.assignClausulasToModulo(moduloId, this.selectedClausulas).subscribe({
+  //     next: () => {
+  //       console.log('Cláusulas asignadas exitosamente');
+  //     },
+  //     error: (err) => {
+  //       console.error('Error al asignar las cláusulas:', err);
+  //     }
+  //   });
+  // }
 
   onEdit(id: number): void {
     this.etiqueteraService.getCursoById(id).subscribe({

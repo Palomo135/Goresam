@@ -26,7 +26,6 @@
           class="needs-validation"
         >
           <div class="row align-items-start">
-            <!-- Campos del formulario -->
             <div class="col-md-12">
               <div class="row g-3">
                 <!-- Campo Título -->
@@ -44,7 +43,7 @@
                 </div>
 
                 <!-- Descripción Curso con Summernote -->
-                <div class="col-18">
+                <div class="col-12">
                   <div class="form-group">
                     <label for="descripcion">Descripción</label>
                     <div id="summernote"></div>
@@ -150,51 +149,50 @@
             </button>
           </div>
         </form>
-
-        <!-- Campo Palabras Clave -->
-        <div class="col-md-6">
-          <label class="form-label fw-bold">
-            <i data-feather="hash" class="me-1"></i>Palabras Clave
-          </label>
-          <div class="input-group mb-3">
-            <input
-              type="text"
-              class="form-control"
-              [(ngModel)]="newKeyword"
-              placeholder="Ingrese una palabra clave"
-            />
-            <button
-              class="btn btn-outline-secondary"
-              type="button"
-              (click)="addKeyword()"
-            >
-              Añadir
-            </button>
-          </div>
-          <table class="table mt-3">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Palabra Clave</th>
-                <th scope="col">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let keyword of keywords; let i = index">
-                <th scope="row">{{ i + 1 }}</th>
-                <td>{{ keyword }}</td>
-                <td>
-                  <button
-                    class="btn btn-sm btn-danger"
-                    (click)="removeKeyword(i)"
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      </div>
+      <!-- Campo Palabras Clave -->
+      <div class="col-md-12 mt-4">
+        <label class="form-label fw-bold">
+          <i data-feather="hash" class="me-1"></i>Palabras Clave
+        </label>
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="newKeyword"
+            placeholder="Ingrese una palabra clave"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            (click)="addKeyword()"
+          >
+            Añadir
+          </button>
         </div>
+        <table class="table mt-3">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Palabra Clave</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let keyword of keywords; let i = index">
+              <th scope="row">{{ i + 1 }}</th>
+              <td>{{ keyword }}</td>
+              <td>
+                <button
+                  class="btn btn-sm btn-danger"
+                  (click)="removeKeyword(i)"
+                >
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
