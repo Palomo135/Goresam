@@ -1,4 +1,5 @@
 import { DetallePalabraClave } from "./detallePalabraClave";
+import { Encargado } from "../Encargado/encargado";
 export interface CursoEdit {
     id: number;
     nombre: string;
@@ -8,6 +9,6 @@ export interface CursoEdit {
     recurso: string;
     fechaInicio: Date;
     fechaCaducidad: Date;
-    encargado: string;
+    encargado: Encargado;
     detallePalabrasClave?: DetallePalabraClave[];
 }

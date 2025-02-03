@@ -81,7 +81,7 @@
     <!-- Encargado Column -->
     <ngx-datatable-column name="Encargado" prop="encargado" [width]="150">
       <ng-template ngx-datetable-cell-template let-row="row">
-        <span class="fw-bold text-dark">{{ row.encargado }}</span>
+        <span class="fw-bold text-dark">{{ row.encargado.nombre }}</span>
       </ng-template>
     </ngx-datatable-column>
 

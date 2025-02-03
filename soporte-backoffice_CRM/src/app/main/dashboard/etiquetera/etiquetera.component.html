@@ -108,7 +108,7 @@
                   />
                 </div>
 
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                   <label class="form-label fw-bold">
                     <i data-feather="user" class="me-1"></i>Encargado
                   </label>
@@ -118,6 +118,29 @@
                     formControlName="encargado"
                     placeholder="Ingrese el nombre del encargado"
                   />
+                </div> -->
+
+                <!-- compo encargado -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">
+                    <i data-feather="user" class="me-1"></i>Encargado
+                  </label>
+                  <select
+                    class="form-control"
+                    formControlName="encargado"
+                    (change)="onEncargadoChange($event)"
+                  >
+                    <option value="" disabled selected>
+                      Seleccione un encargado
+                    </option>
+                    <option value="new">Añadir Encargado</option>
+                    <option
+                      *ngFor="let encargado of encargados"
+                      [value]="encargado.id"
+                    >
+                      {{ encargado.nombre }}
+                    </option>
+                  </select>
                 </div>
 
                 <!-- Campo Estado -->
@@ -149,7 +172,69 @@
             </button>
           </div>
         </form>
+
+        <!-- Modal para registrar encargado -->
+        <ng-template #encargadoModal let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title">Registrar Encargado</h4>
+            <button
+              type="button"
+              class="btn-close"
+              aria-label="Close"
+              (click)="modal.dismiss()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="encargadoForm" (ngSubmit)="onEncargadoSubmit()">
+              <div class="row g-3">
+                <div class="col-md-12">
+                  <label class="form-label">Nombre</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="nombre"
+                  />
+                </div>
+                <div class="col-md-12">
+                  <label class="form-label">Descripción</label>
+                  <textarea
+                    class="form-control"
+                    formControlName="descripcion"
+                  ></textarea>
+                </div>
+                <div class="col-md-12">
+                  <label class="form-label">Imagen</label>
+                  <input
+                    type="file"
+                    class="form-control"
+                    formControlName="imagen"
+                    (change)="onEncargadoImageChange($event)"
+                    accept="image/*"
+                  />
+                  <div *ngIf="encargadoImagePreview" class="mt-3">
+                    <img
+                      [src]="encargadoImagePreview"
+                      alt="Vista previa de la imagen"
+                      class="img-fluid img-thumbnail shadow-sm"
+                      style="max-width: 200px; max-height: 200px"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-end mt-4">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  [disabled]="!encargadoForm.dirty || encargadoForm.invalid"
+                >
+                  Registrar
+                </button>
+              </div>
+            </form>
+          </div>
+        </ng-template>
       </div>
+
       <!-- Campo Palabras Clave -->
       <div class="col-md-12 mt-4">
         <label class="form-label fw-bold">

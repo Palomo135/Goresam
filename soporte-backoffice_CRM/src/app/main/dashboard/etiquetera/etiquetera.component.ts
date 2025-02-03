@@ -1,11 +1,12 @@
 import { CourseSharedService } from '../service/course-shared.service';
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, } from '@angular/core';
 import { EtiqueteraService } from '../service/etiquetera.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; // Para usar el modal
-import { Curso } from './curso';
+import { Encargado } from '../Encargado/encargado';
 import { CursoEdit } from './cursoEdit';
+import { EncargadoService } from '../Encargado/encargado.service';
 
 declare var $: any;
 
@@ -19,14 +20,21 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
   @Input() courseToEdit: CursoEdit | null = null;
   //cursoToEdit: Curso | null = null; // Recibe el curso para editar
 
+  encargadoForm: FormGroup;
+  encargados: Encargado[] = [];
+  encargadoImagePreview: string;
+
   cursoForm: FormGroup;
   logoPreview: string | ArrayBuffer | null = null;
   newKeyword: string = '';
   keywords: string[] = [];
 
+  @ViewChild('encargadoModal', { static: false }) encargadoModal: any;
+
   constructor(
     private courseSharedService: CourseSharedService,
     private etiqueteraService: EtiqueteraService,
+    private encargadoService: EncargadoService,
     private fb: FormBuilder,
     private modalService: NgbModal) {
     this.cursoForm = this.fb.group({
@@ -34,7 +42,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
       descripcion: ['', Validators.required],
       logo: [null, Validators.required],
       recurso: ['', Validators.required],
-      estado: [true, Validators.required],
+      estado: [false, Validators.required],
       fechaInicio: ['', Validators.required],
       fechaCaducidad: ['', Validators.required],
       encargado: ['', Validators.required],
@@ -44,6 +52,14 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
       requisitos: [''],
       reconocimiento: ['']
     });
+
+    this.encargadoForm = this.fb.group({
+      nombre: [''],
+      descripcion: [''],
+      imagen: ['']
+    });
+
+    this.loadEncargados();
   }
 
   ngOnInit(): void {
@@ -182,6 +198,47 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
       });
     }
   }
+
+  // Parte encargado
+  loadEncargados(): void {
+    this.encargadoService.getEncargados().subscribe(encargados => {
+      this.encargados = encargados;
+    });
+  }
+
+  onEncargadoChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    if (selectElement.value === 'new') {
+      this.openEncargadoModal();
+    }
+  }
+
+  openEncargadoModal(): void {
+    this.modalService.open(this.encargadoModal);
+  }
+
+
+  onEncargadoImageChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        this.encargadoImagePreview = e.target.result as string;
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  onEncargadoSubmit(): void {
+    if (this.encargadoForm.valid) {
+      const encargado: Encargado = this.encargadoForm.value;
+      this.encargadoService.createEncargado(encargado).subscribe(() => {
+        this.loadEncargados();
+        this.modalService.dismissAll();
+      });
+    }
+  }
+
 
 
   onFileChange(event: any): void {
