@@ -1,4 +1,5 @@
 import { DetallePalabraClaveDTO } from "./detallePalabraClave.DTO";
+import { Encargado } from "src/modelo/encargado.entity";
 export class CursoEditDTO {
     id: number;
     nombre: string;
@@ -6,7 +7,7 @@ export class CursoEditDTO {
     estado: boolean;
     fechaInicio: Date;
     fechaCaducidad: Date;
-    encargado: string;
+    encargado: Encargado;
     recurso: string;
     detallePalabraClave: DetallePalabraClaveDTO[];
     logo: string;

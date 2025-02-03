@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; // Para usar el modal
 import { Encargado } from '../Encargado/encargado';
 import { CursoEdit } from './cursoEdit';
 import { EncargadoService } from '../Encargado/encargado.service';
+import { error } from 'console';
 
 declare var $: any;
 
@@ -232,9 +233,17 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
   onEncargadoSubmit(): void {
     if (this.encargadoForm.valid) {
       const encargado: Encargado = this.encargadoForm.value;
-      this.encargadoService.createEncargado(encargado).subscribe(() => {
-        this.loadEncargados();
-        this.modalService.dismissAll();
+      console.log('Encargado registrado', encargado)
+      this.encargadoService.createEncargado(encargado).subscribe({
+        next: () => {
+          this.loadEncargados();
+          this.modalService.dismissAll();
+          Swal.fire('Registrado', 'El Encargado ha sido registrado.', 'success');
+        },
+        error: (error) => {
+          Swal.fire('Error', 'No se pudo registrar el curso.', 'error');
+          console.log(error)
+        }
       });
     }
   }

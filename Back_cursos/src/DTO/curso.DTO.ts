@@ -1,4 +1,5 @@
 import { DetallePalabraClave } from "src/modelo/detallePalabraClave.entity";
+import { Encargado } from "src/modelo/encargado.entity";
 export class CursoDTO {
     id: number;
     nombre: string;
@@ -13,6 +14,6 @@ export class CursoDTO {
     recurso: string;
     fechaInicio: Date;
     fechaCaducidad: Date;
-    encargado: string;
+    encargado: Encargado;
     detallePalabraClave?: DetallePalabraClave[];
 }

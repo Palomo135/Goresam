@@ -4,6 +4,8 @@ import { CursoElistDTO } from "src/DTO/cursoElist.DTO";
 import { Curso } from "src/modelo/curso.entity";
 import { DetallePalabraClave } from "src/modelo/detallePalabraClave.entity";
 import { Repository, DataSource } from "typeorm";
+import { EncargadoService } from "./encargadoImple.service";
+import { Encargado } from "src/modelo/encargado.entity";
 import { CursoEditDTO } from "src/DTO/cursoEdit.DTO";
 import { MulterModule } from "@nestjs/platform-express";
 import { Response } from "express";
@@ -17,7 +19,8 @@ export class CursoService {
     private readonly cursoRepository: Repository<Curso>,
     @InjectRepository(DetallePalabraClave)
     private readonly DetallePalabraClaveReposi: Repository<DetallePalabraClave>,
-    private dataSource: DataSource
+    private dataSource: DataSource,
+    private readonly encargadoService: EncargadoService
   ) { }
 
   // findAll(): Promise<Curso[]> {
@@ -26,7 +29,7 @@ export class CursoService {
 
   async findAll(): Promise<Curso[]> {
     const cursos = await this.cursoRepository.find({
-      relations: ['detallePalabrasClave'],
+      relations: ['detallePalabrasClave', 'encargado'],
       order: { fechaCreate: 'DESC' }
     });
     return cursos
@@ -35,6 +38,7 @@ export class CursoService {
   async findElistAll(): Promise<CursoElistDTO[]> {
     const cursos = await this.cursoRepository.find({
       select: ['id', 'nombre', 'logo', 'fechaCaducidad', 'fechaInicio', 'encargado'], // Seleccionamos solo los campos necesarios
+      relations: ['encargado'],
       order: { fechaCreate: 'DESC' }
     });
 
@@ -45,7 +49,7 @@ export class CursoService {
       logo: curso.logo ? `http://localhost:3200/api/curso/logo/${curso.id}` : null,
       fechaInicio: curso.fechaInicio,
       fechaCaducidad: curso.fechaCaducidad,
-      encargado: curso.encargado
+      encargado: curso.encargado.nombre
     }));
   }
 
@@ -110,7 +114,7 @@ export class CursoService {
     // Buscar el curso por ID con relaciones necesarias
     const curso = await this.cursoRepository.findOne({
       where: { id },
-      relations: ['detallePalabrasClave'],
+      relations: ['detallePalabrasClave', 'encargado'],
     });
 
     if (!curso) {
@@ -124,7 +128,14 @@ export class CursoService {
     curso.estado = updateDTO.estado ?? curso.estado;
     curso.fechaInicio = updateDTO.fechaInicio ?? curso.fechaInicio;
     curso.fechaCaducidad = updateDTO.fechaCaducidad ?? curso.fechaCaducidad;
-    curso.encargado = updateDTO.encargado ?? curso.encargado;
+
+    if (updateDTO.encargado) {
+      const encargado = await this.encargadoService.findOne(updateDTO.encargado.id)
+      if (!encargado) {
+        throw new NotFoundException('Encargado no encontrado')
+      }
+      curso.encargado = encargado;
+    }
 
     if (updateDTO.logo) {
       curso.logo = updateDTO.logo;

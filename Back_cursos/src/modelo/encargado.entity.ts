@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Curso } from './curso.entity';
 
 @Entity()
 export class Encargado {
@@ -16,4 +17,7 @@ export class Encargado {
 
     @Column({ default: 'docente' })
     rol: string;
+
+    @OneToMany(() => Curso, curso => curso.encargado)
+    curso: Curso[];
 }

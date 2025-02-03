@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Modulo } from './modulo.entity';
+import { Encargado } from './encargado.entity';
 import { DetallePalabraClave } from './detallePalabraClave.entity';
 
 @Entity('cursos')
@@ -44,8 +45,9 @@ export class Curso {
     @Column({ nullable: true })
     fechaCaducidad: Date;
 
-    @Column()
-    encargado: string;
+    @ManyToOne(() => Encargado, encargado => encargado.curso)
+    @JoinColumn({ name: 'encargadoId' })
+    encargado: Encargado;
 
     @Column()
     estado: boolean;

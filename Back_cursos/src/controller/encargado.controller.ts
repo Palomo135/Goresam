@@ -1,4 +1,3 @@
-// encargado.controller.ts
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { EncargadoService } from 'src/service/implements/encargadoImple.service';
 import { Encargado } from 'src/modelo/encargado.entity';

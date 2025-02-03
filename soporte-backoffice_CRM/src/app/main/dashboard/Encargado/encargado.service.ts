@@ -7,7 +7,7 @@ import { Encargado } from './encargado';
     providedIn: 'root'
 })
 export class EncargadoService {
-    private baseUrl = 'http://localhost:3000/encargado';
+    private baseUrl = 'http://localhost:3000/api/encargado';
 
     constructor(private http: HttpClient) { }
 
