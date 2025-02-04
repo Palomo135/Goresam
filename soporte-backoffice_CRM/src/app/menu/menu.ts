@@ -38,77 +38,77 @@ export const menu: CoreMenu[] = [
     ]
   },
   // MODULO
-  {
-    id: 'modulo',
-    title: 'Modulo',
-    translate: 'Modulo',
-    type: 'collapsible',
-    // role: ['Admin'], //? To hide collapsible based on user role
+  // {
+  //   id: 'modulo',
+  //   title: 'Modulo',
+  //   translate: 'Modulo',
+  //   type: 'collapsible',
+  //   // role: ['Admin'], //? To hide collapsible based on user role
 
-    icon: 'home',
-    badge: {
-      title: '2',
-    },
+  //   icon: 'home',
+  //   badge: {
+  //     title: '2',
+  //   },
 
-    children: [
+  //   children: [
 
-      {
+  //     {
 
-        id: 'modulo',
-        title: 'modulo',
-        translate: 'Registrar Modulo',
-        type: 'item',
-        icon: 'circle',
-        url: 'modulo/registrar-modulo'
-      },
-      {
+  //       id: 'modulo',
+  //       title: 'modulo',
+  //       translate: 'Registrar Modulo',
+  //       type: 'item',
+  //       icon: 'circle',
+  //       url: 'modulo/registrar-modulo'
+  //     },
+  //     {
 
-        id: 'modulos',
-        title: 'modulos',
-        translate: 'Listar Modulos',
-        type: 'item',
-        icon: 'circle',
-        url: 'modulo/list-modulos'
-      }
-    ]
-  },
+  //       id: 'modulos',
+  //       title: 'modulos',
+  //       translate: 'Listar Modulos',
+  //       type: 'item',
+  //       icon: 'circle',
+  //       url: 'modulo/list-modulos'
+  //     }
+  //   ]
+  // },
 
-  //CLAUSULA
-  {
-    id: 'clausula',
-    title: 'Clausula',
-    translate: 'Clausula',
-    type: 'collapsible',
-    // role: ['Admin'], //? To hide collapsible based on user role
+  // //CLAUSULA
+  // {
+  //   id: 'clausula',
+  //   title: 'Clausula',
+  //   translate: 'Clausula',
+  //   type: 'collapsible',
+  //   // role: ['Admin'], //? To hide collapsible based on user role
 
-    icon: 'home',
-    badge: {
-      title: '2',
-    },
+  //   icon: 'home',
+  //   badge: {
+  //     title: '2',
+  //   },
 
-    children: [
+  //   children: [
 
-      {
+  //     {
 
-        id: 'clausula',
-        title: 'clausula',
-        translate: 'Registrar Clausula',
-        type: 'item',
-        icon: 'circle',
-        url: 'clausula/registrar-clausula'
-      },
-      {
+  //       id: 'clausula',
+  //       title: 'clausula',
+  //       translate: 'Registrar Clausula',
+  //       type: 'item',
+  //       icon: 'circle',
+  //       url: 'clausula/registrar-clausula'
+  //     },
+  //     {
 
-        id: 'listarclausula',
-        title: 'listarclausula',
-        translate: 'Listar Clausula',
-        type: 'item',
-        icon: 'circle',
-        url: 'clausula/listar-clausula'
-      },
+  //       id: 'listarclausula',
+  //       title: 'listarclausula',
+  //       translate: 'Listar Clausula',
+  //       type: 'item',
+  //       icon: 'circle',
+  //       url: 'clausula/listar-clausula'
+  //     },
 
-    ]
-  },
+  //   ]
+  // },
   // Apps & Pages
   {
     id: 'apps',

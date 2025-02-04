@@ -3,10 +3,11 @@ import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, View
 import { EtiqueteraService } from '../service/etiquetera.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; // Para usar el modal
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap'; // Para usar el modal
 import { Encargado } from '../Encargado/encargado';
 import { CursoEdit } from './cursoEdit';
 import { EncargadoService } from '../Encargado/encargado.service';
+import { Curso } from './curso';
 import { error } from 'console';
 import { id, selectRows } from '@swimlane/ngx-datatable';
 
@@ -32,8 +33,10 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
   keywords: string[] = [];
   submitted: boolean = false;
 
+  private encargadoModalRef: NgbModalRef | undefined;
+
   @ViewChild('encargadoModal', { static: false }) encargadoModal: any;
-  @ViewChild('cursoModal', { static: false }) cursoModal: any;
+  //@ViewChild('cursoModal', { static: false }) cursoModal: any;
 
   constructor(
     private courseSharedService: CourseSharedService,
@@ -64,10 +67,10 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
       imagen: ['']
     });
 
-    this.loadEncargados();
   }
 
   ngOnInit(): void {
+    this.loadEncargados();
     this.courseSharedService.course$.subscribe((course) => {
       if (course) {
         this.setFormValues(course);
@@ -184,7 +187,6 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
           next: () => {
             Swal.fire('Actualizado', 'El curso ha sido actualizado.', 'success');
             this.resetForm();
-            this.closeModal();
           },
           error: () => {
             Swal.fire('Error', 'Ha ocurrido un error al actualizar el curso.', 'error');
@@ -195,7 +197,6 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
         next: () => {
           Swal.fire('Registrado', 'El curso ha sido registrado.', 'success');
           this.resetForm();
-          this.closeModal();
         },
         error: () => {
           Swal.fire('Error', 'No se pudo registrar el curso.', 'error');
@@ -223,11 +224,10 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
   }
 
   openEncargadoModal(): void {
-    this.modalService.open(this.encargadoModal);
+    this.encargadoModalRef = this.modalService.open(this.encargadoModal);
   }
 
-
-  onEncargadoImageChange(event: Event): void {
+  onEncargadoImageChange(): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const reader = new FileReader();
@@ -241,23 +241,18 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
   onEncargadoSubmit(): void {
     if (this.encargadoForm.valid) {
       const encargado: Encargado = this.encargadoForm.value;
-      console.log('Encargado registrado', encargado)
-      this.encargadoService.createEncargado(encargado).subscribe({
-        next: () => {
-          this.loadEncargados();
-          this.modalService.dismissAll();
-          this.modalService.open(this.cursoModal)
-          Swal.fire('Registrado', 'El Encargado ha sido registrado.', 'success');
-        },
-        error: (error) => {
-          Swal.fire('Error', 'No se pudo registrar el curso.', 'error');
-          console.log(error)
-        }
+      this.encargadoService.createEncargado(encargado).subscribe(() => {
+        console.log('Encargado registrado', encargado);
+        Swal.fire('Registrado', 'El Responsable del curso ha sido registrado', 'success');
+        this.loadEncargados();
+        this.encargadoModalRef?.close();
+        this.resetEnForm();
+      }, error => {
+        console.log('Error registrando encargado', error)
+        Swal.fire('Error', 'No se pudo registrar el encargado.', 'error')
       });
     }
   }
-
-
 
   onFileChange(event: any): void {
     const file = event.target.files[0];
@@ -282,6 +277,11 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
     this.keywords = [];
     this.logoPreview = null;
     $('#summernote').summernote('reset');
+  }
+
+  resetEnForm(): void {
+    this.encargadoForm.reset();
+    this.encargadoImagePreview = null;
   }
 
   //cerrar modal

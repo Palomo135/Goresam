@@ -7,7 +7,7 @@ import { EtiqueteraService } from '../service/etiquetera.service';
 import { ColumnMode, DatatableComponent, SelectionType } from '@swimlane/ngx-datatable';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { EtiqueteraComponent } from '../etiquetera/etiquetera.component';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { ModuloComponent } from 'app/main/modulo/R_modulo/modulo.component';
 import { Modulo } from 'app/main/modulo/R_modulo/modulo';
 import { Clausula } from 'app/main/clausula/r-clausula/clausula';
@@ -45,6 +45,7 @@ export class ListCursosComponent implements OnInit {
   selectedModuloId: number | null = null;
   selectedClausulas: number[] = [];
   modalRef: NgbModalRef | null = null;
+  //private cursoModalRef: NgbModalRef | undefined;
 
   @Output() courseSaved = new EventEmitter<void>();
   @Output() editCurso: EventEmitter<Curso> = new EventEmitter<Curso>();
@@ -239,6 +240,7 @@ export class ListCursosComponent implements OnInit {
     modalRef.componentInstance.moduloId = moduloId;
     modalRef.dismissed.subscribe(() => {
       if (this.selectedCursoId) {
+        this.loadModulos(this.selectedCursoId);
         this.loadCourses();
       }
     });
