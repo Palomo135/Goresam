@@ -32,6 +32,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
   newKeyword: string = '';
   keywords: string[] = [];
   submitted: boolean = false;
+  loading: boolean = false;
 
   private encargadoModalRef: NgbModalRef | undefined;
 
@@ -178,6 +179,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
     }
 
     const cursoId = this.cursoForm.get('id')?.value
+    this.loading = true;
     if (cursoId) {
       // Si estamos editando, enviamos el ID en el formData
       formData.append('id', cursoId);
@@ -187,9 +189,11 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
           next: () => {
             Swal.fire('Actualizado', 'El curso ha sido actualizado.', 'success');
             this.resetForm();
+            this.loading = false;
           },
           error: () => {
             Swal.fire('Error', 'Ha ocurrido un error al actualizar el curso.', 'error');
+            this.loading = false;
           },
         });
     } else {
@@ -197,9 +201,11 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
         next: () => {
           Swal.fire('Registrado', 'El curso ha sido registrado.', 'success');
           this.resetForm();
+          this.loading = false;
         },
         error: () => {
           Swal.fire('Error', 'No se pudo registrar el curso.', 'error');
+          this.loading = true;
         },
       });
     }
@@ -207,11 +213,14 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
 
   // Parte encargado
   loadEncargados(): void {
+    this.loading = true;
     this.encargadoService.getEncargados().subscribe((encargados) => {
       this.encargados = encargados;
+      this.loading = false;
     },
       (err) => {
         console.error('Error al cargar encargados:', err)
+        this.loading = false;
       }
     )
   }
@@ -241,15 +250,18 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
   onEncargadoSubmit(): void {
     if (this.encargadoForm.valid) {
       const encargado: Encargado = this.encargadoForm.value;
+      this.loading = true;
       this.encargadoService.createEncargado(encargado).subscribe(() => {
         console.log('Encargado registrado', encargado);
         Swal.fire('Registrado', 'El Responsable del curso ha sido registrado', 'success');
         this.loadEncargados();
+        this.loading = false;
         this.encargadoModalRef?.close();
         this.resetEnForm();
       }, error => {
         console.log('Error registrando encargado', error)
         Swal.fire('Error', 'No se pudo registrar el encargado.', 'error')
+        this.loading = false;
       });
     }
   }

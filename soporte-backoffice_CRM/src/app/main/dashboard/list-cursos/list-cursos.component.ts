@@ -59,13 +59,17 @@ export class ListCursosComponent implements OnInit {
   }
 
   loadCourses(): void {
+    this.loading = true;
     this.etiqueteraService.getCoursesElist().subscribe({
       next: (data) => {
         this.cursoElist = data;
         this.filteredRows = [...this.cursoElist];
         this.loading = false;
       },
-      error: (err) => console.error('Error al cargar los cursos:', err)
+      error: (err) => {
+        console.error('Error al cargar los cursos:', err),
+          this.loading = false;
+      }
     });
   }
 
@@ -89,9 +93,11 @@ export class ListCursosComponent implements OnInit {
   }
 
   loadModulos(cursoId: number): void {
+    this.loading = true;
     this.moduloService.getModulosLista().subscribe({
       next: (modulos) => {
         console.log('Módulos cargados:', modulos);
+        this.loading = false;
         this.moduloList = modulos.filter(modulo => modulo.curso && modulo.curso.id === cursoId);
         console.log('Módulos filtrados:', this.moduloList);
         if (this.modalRef) {
@@ -105,6 +111,7 @@ export class ListCursosComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al cargar los módulos:', error);
+        this.loading = false;
       }
     })
   }
@@ -150,6 +157,7 @@ export class ListCursosComponent implements OnInit {
 
 
   onDelete(id: number): void {
+    this.loading = true;
     Swal.fire({
       title: '¿Estás seguro?',
       text: 'Esto eliminará el curso de forma permanente.',
@@ -162,12 +170,16 @@ export class ListCursosComponent implements OnInit {
       if (result.isConfirmed) {
         this.etiqueteraService.deleteCourse(id).subscribe({
           next: () => {
+            this.loading = false;
             this.cursos = this.cursos.filter((course) => course.id !== id);
             this.filteredRows = [...this.cursoElist];
             Swal.fire('Eliminado', 'El curso ha sido eliminado.', 'success');
             this.loadCourses();
           },
-          error: () => Swal.fire('Error', 'No se pudo eliminar el curso.', 'error'),
+          error: () => {
+            this.loading = false;
+            Swal.fire('Error', 'No se pudo eliminar el curso.', 'error');
+          },
         });
       }
     });

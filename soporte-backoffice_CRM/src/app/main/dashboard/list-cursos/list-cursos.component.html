@@ -1,7 +1,7 @@
-<app-loader *ngIf="verModal"></app-loader>
 <app-loader *ngIf="loading"></app-loader>
+<app-loader *ngIf="verModal"></app-loader>
 
-<section class="container mt-5">
+<section class="container mt-5" *ngIf="!loading">
   <!-- Header -->
   <div class="row align-items-center mb-4">
     <div class="col-md-6">
