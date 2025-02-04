@@ -40,12 +40,6 @@
                     formControlName="nombre"
                     placeholder="Ingrese el título del curso"
                   />
-                  <div
-                    *ngIf="submitted && cursoForm.controls.nombre.errors"
-                    class="text-danger"
-                  >
-                    El nombre es obligatorio.
-                  </div>
                 </div>
 
                 <!-- Descripción Curso con Summernote -->
@@ -53,12 +47,6 @@
                   <div class="form-group">
                     <label for="descripcion">Descripción</label>
                     <div id="summernote"></div>
-                  </div>
-                  <div
-                    *ngIf="submitted && cursoForm.controls.descripcion.errors"
-                    class="text-danger"
-                  >
-                    La descripcion es obligatoria
                   </div>
                 </div>
 
@@ -73,12 +61,6 @@
                     formControlName="recurso"
                     placeholder="Ingrese la URL del recurso"
                   />
-                  <div
-                    *ngIf="submitted && cursoForm.controls.recurso.errors"
-                    class="text-danger"
-                  >
-                    El recurso es obligatorio
-                  </div>
                 </div>
 
                 <!-- Sección del logo -->
@@ -101,12 +83,6 @@
                       style="max-width: 200px; max-height: 200px"
                     />
                   </div>
-                  <div
-                    *ngIf="submitted && cursoForm.controls.logo.errors"
-                    class="text-danger"
-                  >
-                    El logo es obligatorio
-                  </div>
                 </div>
 
                 <div class="col-md-6">
@@ -118,12 +94,6 @@
                     class="form-control"
                     formControlName="fechaInicio"
                   />
-                  <div
-                    *ngIf="submitted && cursoForm.controls.fechaInicio.errors"
-                    class="text-danger"
-                  >
-                    La fecha de inicio es obligatoria.
-                  </div>
                 </div>
 
                 <div class="col-md-6">
@@ -136,14 +106,6 @@
                     class="form-control"
                     formControlName="fechaCaducidad"
                   />
-                  <div
-                    *ngIf="
-                      submitted && cursoForm.controls.fechaCaducidad.errors
-                    "
-                    class="text-danger"
-                  >
-                    La fecha de caducidad es obligatoria.
-                  </div>
                 </div>
 
                 <!-- <div class="col-md-6">
@@ -180,12 +142,6 @@
                       {{ encargado.nombre }}
                     </option>
                   </select>
-                  <div
-                    *ngIf="submitted && cursoForm.controls.encargado.errors"
-                    class="text-danger"
-                  >
-                    El responsable del curso es obligatorio
-                  </div>
                 </div>
 
                 <!-- Campo Estado -->

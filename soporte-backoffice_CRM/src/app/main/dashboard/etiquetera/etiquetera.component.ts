@@ -33,6 +33,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
   submitted: boolean = false;
 
   @ViewChild('encargadoModal', { static: false }) encargadoModal: any;
+  @ViewChild('cursoModal', { static: false }) cursoModal: any;
 
   constructor(
     private courseSharedService: CourseSharedService,
@@ -245,6 +246,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
         next: () => {
           this.loadEncargados();
           this.modalService.dismissAll();
+          this.modalService.open(this.cursoModal)
           Swal.fire('Registrado', 'El Encargado ha sido registrado.', 'success');
         },
         error: (error) => {
