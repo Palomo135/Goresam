@@ -9,7 +9,6 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { EtiqueteraComponent } from '../etiquetera/etiquetera.component';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ModuloComponent } from 'app/main/modulo/R_modulo/modulo.component';
-import { Modulo } from 'app/main/modulo/R_modulo/modulo';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 import { CursoElistDTO } from '../etiquetera/cursosElist';
@@ -26,7 +25,6 @@ export class ListCursosComponent implements OnInit {
   cursoElist: CursoElistDTO[] = [];
   logoBaseUrl: 'http://localhost:3200/api/curso/logo/'
   cursos: Curso[] = [];
-  availableModules: any[] = [];
   filteredRows: CursoElistDTO[] = [];
   searchTerm: string = '';
   basicSelectedOption: number = 10;
@@ -82,17 +80,6 @@ export class ListCursosComponent implements OnInit {
       return 'Caducado';
     } else {
       return 'Disponible';
-    }
-  }
-
-  loadAvailableModules(): void {
-    this.moduloService.getModulosLista().subscribe({
-      next: (modulos) => {
-        this.availableModules = modulos.filter(modulo => !modulo.curso);
-      }
-    });
-    (error) => {
-      console.error('Error al cargar los módulos:', error);
     }
   }
 
@@ -195,22 +182,6 @@ export class ListCursosComponent implements OnInit {
     console.log('Eliminar módulo:', moduloId);
     this.moduloService.deleteModulo(moduloId).subscribe(() => {
       this.loadModulos(this.selectedCursoId);
-      this.loadAvailableModules();
-    });
-  }
-
-  deleteModuleFromCurso(cursoId: number, moduloId: number): void {
-    this.moduloService.removeModuleFromCurso(cursoId, moduloId).subscribe({
-      next: () => {
-        Swal.fire('Eliminado', 'El módulo ha sido eliminado del curso.', 'success');
-        // Actualiza la lista de módulos según sea necesario
-        this.loadAvailableModules();
-        this.loadModulos(cursoId);
-      },
-      error: (err) => {
-        console.error(`Error al eliminar el módulo ${moduloId} del curso ${cursoId}:`, err);
-        Swal.fire('Error', 'No se pudo eliminar el módulo del curso.', 'error');
-      }
     });
   }
 

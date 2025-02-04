@@ -172,18 +172,6 @@
         </div>
       </ng-template>
     </ngx-datatable-column>
-
-    <!-- Gestionar Column -->
-    <!-- <ngx-datatable-column name="Gestionar" [width]="150" [sortable]="false">
-      <ng-template ngx-datatable-cell-template let-row="row">
-        <button
-          class="btn btn-outline-primary btn-sm"
-          (click)="toggleModulePanel(row)"
-        >
-          Gestionar Módulos
-        </button>
-      </ng-template>
-    </ngx-datatable-column> -->
   </ngx-datatable>
 </section>
 
@@ -205,19 +193,7 @@
         <i class="fas fa-plus-circle me-1"></i> Nuevo Módulo
       </button>
     </div>
-    <!-- <div class="form-group mb-3">
-      <label for="moduloSelect">Asignar Módulo:</label>
-      <select
-        id="moduloSelect"
-        class="form-control"
-        [(ngModel)]="selectedModuloId"
-        (change)="assignModuloToCurso()"
-      >
-        <option *ngFor="let modulo of availableModules" [value]="modulo.id">
-          {{ modulo.nombre }}
-        </option>
-      </select>
-    </div> -->
+
     <table class="table table-striped">
       <thead>
         <tr>
@@ -243,12 +219,7 @@
             </button>
             <button
               class="btn btn-sm btn-danger"
-              (click)="
-                deleteModuleFromCurso(
-                  modulo.curso ? modulo.curso.id : null,
-                  modulo.id
-                )
-              "
+              (click)="deleteModulo(modulo.id)"
             >
               <i class="fas fa-trash"></i> Eliminar
             </button>
