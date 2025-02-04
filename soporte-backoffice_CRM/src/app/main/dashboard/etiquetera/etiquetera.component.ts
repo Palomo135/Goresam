@@ -46,7 +46,6 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private modalService: NgbModal) {
     this.cursoForm = this.fb.group({
-      id: [null],
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
       logo: [null, Validators.required],
