@@ -37,8 +37,8 @@ export class CursoService {
 
   async findElistAll(): Promise<CursoElistDTO[]> {
     const cursos = await this.cursoRepository.find({
-      select: ['id', 'nombre', 'logo', 'fechaCaducidad', 'fechaInicio', 'encargado'], // Seleccionamos solo los campos necesarios
       relations: ['encargado'],
+      select: ['id', 'nombre', 'logo', 'fechaCaducidad', 'fechaInicio', 'encargado'], // Seleccionamos solo los campos necesarios
       order: { fechaCreate: 'DESC' }
     });
 
@@ -85,17 +85,34 @@ export class CursoService {
   }
 
   async create(cursoDTO: CursoDTO): Promise<Curso> {
-    console.log(cursoDTO);
-    const { detallePalabraClave, ...cursoData } = cursoDTO;
+    // const { detallePalabraClave, ...cursoData } = cursoDTO;
 
-    const curso = this.cursoRepository.create(cursoData);
-    console.log(curso);
-    await this.cursoRepository.save(curso);
+    // const curso = this.cursoRepository.create(cursoData);
+    // await this.cursoRepository.save(curso);
+    const curso = new Curso();
+    curso.nombre = cursoDTO.nombre;
+    curso.descripcion = cursoDTO.descripcion;
+    curso.recurso = cursoDTO.recurso;
+    curso.estado = cursoDTO.estado;
+    curso.fechaInicio = cursoDTO.fechaInicio;
+    curso.fechaCaducidad = cursoDTO.fechaCaducidad;
 
-    if (detallePalabraClave && detallePalabraClave.length > 0) {
-      const keywords = typeof detallePalabraClave === 'string'
-        ? JSON.parse(detallePalabraClave)
-        : detallePalabraClave;
+    if (cursoDTO.encargado) {
+      const encargado = await this.encargadoService.findOne(cursoDTO.encargado.id);
+      if (!encargado) {
+        throw new NotFoundException('Encargado no encontrado');
+      }
+      curso.encargado = encargado;
+    }
+
+    if (cursoDTO.logo) {
+      curso.logo = cursoDTO.logo;
+    }
+
+    if (cursoDTO.detallePalabraClave && cursoDTO.detallePalabraClave.length > 0) {
+      const keywords = typeof cursoDTO.detallePalabraClave === 'string'
+        ? JSON.parse(cursoDTO.detallePalabraClave)
+        : cursoDTO.detallePalabraClave;
 
       const detalles = keywords.map(dto => {
         const detalle = new DetallePalabraClave();
@@ -105,7 +122,7 @@ export class CursoService {
       });
       await this.DetallePalabraClaveReposi.save(detalles);
     }
-
+    console.log(curso)
     return this.findOne(curso.id);
   }
 

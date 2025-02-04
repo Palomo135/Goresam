@@ -213,14 +213,14 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
 
   // Parte encargado
   loadEncargados(): void {
-    this.loading = true;
+    //this.loading = true;
     this.encargadoService.getEncargados().subscribe((encargados) => {
       this.encargados = encargados;
-      this.loading = false;
+      //this.loading = false;
     },
       (err) => {
         console.error('Error al cargar encargados:', err)
-        this.loading = false;
+        //this.loading = false;
       }
     )
   }
@@ -252,7 +252,6 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
       const encargado: Encargado = this.encargadoForm.value;
       this.loading = true;
       this.encargadoService.createEncargado(encargado).subscribe(() => {
-        console.log('Encargado registrado', encargado);
         Swal.fire('Registrado', 'El Responsable del curso ha sido registrado', 'success');
         this.loadEncargados();
         this.loading = false;
