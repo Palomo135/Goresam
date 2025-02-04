@@ -8,6 +8,7 @@ import { Encargado } from '../Encargado/encargado';
 import { CursoEdit } from './cursoEdit';
 import { EncargadoService } from '../Encargado/encargado.service';
 import { error } from 'console';
+import { id, selectRows } from '@swimlane/ngx-datatable';
 
 declare var $: any;
 
@@ -29,6 +30,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
   logoPreview: string | ArrayBuffer | null = null;
   newKeyword: string = '';
   keywords: string[] = [];
+  submitted: boolean = false;
 
   @ViewChild('encargadoModal', { static: false }) encargadoModal: any;
 
@@ -39,14 +41,15 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private modalService: NgbModal) {
     this.cursoForm = this.fb.group({
+      id: [null],
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
       logo: [null, Validators.required],
       recurso: ['', Validators.required],
-      estado: [false, Validators.required],
+      estado: [true, Validators.required],
       fechaInicio: ['', Validators.required],
       fechaCaducidad: ['', Validators.required],
-      encargado: ['', Validators.required],
+      encargado: [null, Validators.required],
       frase: [''],
       dirigido: [''],
       aprendizaje: [''],
@@ -106,7 +109,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
       estado: course.estado ? true : false,
       fechaInicio: this.formatDate(course.fechaInicio),
       fechaCaducidad: this.formatDate(course.fechaCaducidad),
-      encargado: course.encargado
+      encargado: course.encargado ? course.encargado.id : null
     });
 
     if (course.logo) {
@@ -202,9 +205,13 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
 
   // Parte encargado
   loadEncargados(): void {
-    this.encargadoService.getEncargados().subscribe(encargados => {
+    this.encargadoService.getEncargados().subscribe((encargados) => {
       this.encargados = encargados;
-    });
+    },
+      (err) => {
+        console.error('Error al cargar encargados:', err)
+      }
+    )
   }
 
   onEncargadoChange(event: Event): void {

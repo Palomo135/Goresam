@@ -49,7 +49,7 @@ export class CursoService {
       logo: curso.logo ? `http://localhost:3200/api/curso/logo/${curso.id}` : null,
       fechaInicio: curso.fechaInicio,
       fechaCaducidad: curso.fechaCaducidad,
-      encargado: curso.encargado.nombre
+      encargado: curso.encargado ? curso.encargado.nombre : null
     }));
   }
 
@@ -76,7 +76,7 @@ export class CursoService {
     //return this.cursoRepository.findOne({ where: { id } });
     const curso = await this.cursoRepository.findOne({
       where: { id },
-      relations: ['detallePalabrasClave']
+      relations: ['encargado', 'detallePalabrasClave']
     });
     if (!curso) {
       throw new NotFoundException('Curso no encontrado');
@@ -134,7 +134,7 @@ export class CursoService {
       if (!encargado) {
         throw new NotFoundException('Encargado no encontrado')
       }
-      curso.encargado = encargado;
+      curso.encargado = encargado ?? curso.encargado;
     }
 
     if (updateDTO.logo) {
@@ -154,8 +154,6 @@ export class CursoService {
         return detalle;
       });
     }
-
-    console.log(curso);
 
     // Guardar los cambios
     await this.cursoRepository.save(curso);

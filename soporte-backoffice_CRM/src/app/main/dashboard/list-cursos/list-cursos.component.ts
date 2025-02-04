@@ -66,8 +66,6 @@ export class ListCursosComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCourses();
-    this.loadAvailableModules();
-    this.loadAvailableClauses();
   }
 
   loadCourses(): void {
