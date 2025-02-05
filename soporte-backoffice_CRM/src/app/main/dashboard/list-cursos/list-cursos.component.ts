@@ -14,7 +14,7 @@ import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 import { CursoElistDTO } from '../etiquetera/cursosElist';
 import { ModuloService } from 'app/main/modulo/modulo.service';
 import { ModuloList } from 'app/main/modulo/R_modulo/moduloList';
-import { error } from 'console';
+import * as moment from 'moment';
 
 
 @Component({
@@ -38,6 +38,7 @@ export class ListCursosComponent implements OnInit {
   selectedCursoId: number | null = null;
   selectedModuloId: number | null = null;
   modalRef: NgbModalRef | null = null;
+  duracionDias: Date;
 
   @Output() courseSaved = new EventEmitter<void>();
   @Output() editCurso: EventEmitter<Curso> = new EventEmitter<Curso>();
@@ -72,6 +73,12 @@ export class ListCursosComponent implements OnInit {
           this.loading = false;
       }
     });
+  }
+
+  calcularDuracion(fechaInicio: string, fechaFin: string): number {
+    const inicio = moment(fechaInicio);
+    const fin = moment(fechaFin);
+    return fin.diff(inicio, 'days');
   }
 
   getCursoEstado(curso: Curso): string {

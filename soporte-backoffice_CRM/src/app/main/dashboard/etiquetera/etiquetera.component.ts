@@ -48,7 +48,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
     this.cursoForm = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      logo: [null, Validators.required],
+      logo: ['', Validators.required],
       recurso: ['', Validators.required],
       estado: [true, Validators.required],
       fechaInicio: ['', Validators.required],
@@ -110,6 +110,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
       nombre: course.nombre,
       descripcion: course.descripcion,
       recurso: course.recurso,
+      // logo: course.logo,
       estado: course.estado ? true : false,
       fechaInicio: this.formatDate(course.fechaInicio),
       fechaCaducidad: this.formatDate(course.fechaCaducidad),
@@ -189,6 +190,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
             Swal.fire('Actualizado', 'El curso ha sido actualizado.', 'success');
             this.resetForm();
             this.loading = false;
+            this.modalService.dismissAll();
           },
           error: () => {
             Swal.fire('Error', 'Ha ocurrido un error al actualizar el curso.', 'error');
@@ -201,6 +203,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
           Swal.fire('Registrado', 'El curso ha sido registrado.', 'success');
           this.resetForm();
           this.loading = false;
+          this.modalService.dismissAll();
         },
         error: () => {
           Swal.fire('Error', 'No se pudo registrar el curso.', 'error');

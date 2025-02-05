@@ -95,10 +95,10 @@
     </ngx-datatable-column>
 
     <!-- Fecha Caducidad Column -->
-    <ngx-datatable-column name="Vence" prop="fechaCaducidad" [width]="150">
+    <ngx-datatable-column name="Vence" prop="duracionDias" [width]="150">
       <ng-template ngx-datatable-cell-template let-row="row">
         <span class="fw-bold text-dark">{{
-          row.fechaCaducidad | date : "dd-MM-yyyy"
+          calcularDuracion(row.fechaInicio, row.fechaCaducidad)
         }}</span>
       </ng-template>
     </ngx-datatable-column>
