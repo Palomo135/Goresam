@@ -109,6 +109,16 @@
                     class="form-control"
                     formControlName="fechaCaducidad"
                   />
+                  <div
+                    *ngIf="
+                      cursoForm.hasError('dateRangeInvalid') &&
+                      cursoForm.get('fechaCaducidad')?.touched
+                    "
+                    class="text-danger"
+                  >
+                    La fecha de caducidad debe ser posterior a la fecha de
+                    inicio.
+                  </div>
                 </div>
 
                 <!-- <div class="col-md-6">
@@ -150,7 +160,7 @@
                 <!-- Campo Estado -->
                 <div class="col-md-6">
                   <label class="form-label fw-bold">
-                    <i data-feather="check" class="me-1"></i>Estado
+                    <i data-feather="check" class="me-1"></i>Publicado
                   </label>
                   <div class="form-check">
                     <input

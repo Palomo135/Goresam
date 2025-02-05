@@ -1,7 +1,7 @@
 import { CourseSharedService } from '../service/course-shared.service';
 import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, } from '@angular/core';
 import { EtiqueteraService } from '../service/etiquetera.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap'; // Para usar el modal
 import { Encargado } from '../Encargado/encargado';
@@ -10,6 +10,7 @@ import { EncargadoService } from '../Encargado/encargado.service';
 import { Curso } from './curso';
 import { error } from 'console';
 import { id, selectRows } from '@swimlane/ngx-datatable';
+import * as moment from 'moment';
 
 declare var $: any;
 
@@ -59,6 +60,8 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
       aprendizaje: [''],
       requisitos: [''],
       reconocimiento: ['']
+    }, {
+      validators: this.dateValidator('fechaInicio', 'fechaCaducidad'),
     });
 
     this.encargadoForm = this.fb.group({
@@ -137,6 +140,22 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
 
     return [year, month.padStart(2, '0'), day.padStart(2, '0')].join('-');
   } // Formatea la fecha
+
+  dateValidator(startDateKey: string, endDateKey: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const startDate = control.get(startDateKey)?.value;
+      const endDate = control.get(endDateKey)?.value;
+
+      if (startDate && endDate) {
+        const start = moment(startDate);
+        const end = moment(endDate);
+        if (end.isBefore(start)) {
+          return { dateRangeInvalid: true };
+        }
+      }
+      return null;
+    }
+  };
 
   addKeyword(): void {
     if (this.newKeyword && !this.keywords.includes(this.newKeyword)) {
