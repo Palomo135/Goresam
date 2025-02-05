@@ -82,6 +82,7 @@ export class ListCursosComponent implements OnInit {
     return fin.diff(inicio, 'days');
   }
 
+
   getCursoEstado(curso: Curso): string {
     const today = new Date();
     const fechaInicio = new Date(curso.fechaInicio);
