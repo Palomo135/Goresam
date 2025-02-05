@@ -116,47 +116,6 @@ export class CursoService {
     return this.findOne(curso.id);
   }
 
-  // async registrar(cursoDTO: CursoDTO): Promise<Curso>{
-  //   const curso = new Curso();
-  //   curso.nombre = cursoDTO.nombre;
-  //   curso.descripcion = cursoDTO.descripcion;
-  //   curso.recurso = cursoDTO.recurso;
-  //   curso.estado = cursoDTO.estado;
-  //   curso.fechaInicio = cursoDTO.fechaInicio;
-  //   curso.fechaCaducidad = cursoDTO.fechaCaducidad;
-
-  //   if (cursoDTO.encargado) {
-  //     const encargado = await this.encargadoService.findOne(cursoDTO.encargado.id);
-  //     if (!encargado) {
-  //       throw new NotFoundException('Encargado no encontrado');
-  //     }
-  //     curso.encargado = encargado;
-  //   }
-
-  //   if (cursoDTO.logo) {
-  //     curso.logo = cursoDTO.logo;
-  //   }
-
-  //   const savedCurso = await this.cursoRepository.save(curso);
-
-  //   if (cursoDTO.detallePalabraClave && cursoDTO.detallePalabraClave.length > 0) {
-  //     const keywords = typeof cursoDTO.detallePalabraClave === 'string'
-  //       ? JSON.parse(cursoDTO.detallePalabraClave)
-  //       : cursoDTO.detallePalabraClave;
-
-  //     const detalles = keywords.map(dto => {
-  //       const detalle = new DetallePalabraClave();
-  //       detalle.nombre = dto.nombre;
-  //       detalle.curso = savedCurso;
-  //       return detalle;
-  //     });
-  //     await this.DetallePalabraClaveReposi.save(detalles);
-  //   }
-  //   console.log(curso)
-  //   return this.findOne(curso.id);
-  // }
-
-
   async update(id: number, updateDTO: CursoDTO): Promise<Curso> {
     // Buscar el curso por ID con relaciones necesarias
     const curso = await this.cursoRepository.findOne({

@@ -1,6 +1,6 @@
 import { CursoEdit } from '../etiquetera/cursoEdit';
 import { CourseSharedService } from './../service/course-shared.service';
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ErrorHandler, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { Curso } from '../etiquetera/curso';
 import Swal from 'sweetalert2';
 import { EtiqueteraService } from '../service/etiquetera.service';
@@ -50,6 +50,7 @@ export class ListCursosComponent implements OnInit {
   searchTerm$: Subject<string> = new Subject<string>();
 
   constructor(
+    private errorHandlerService: ErrorHandler,
     private etiqueteraService: EtiqueteraService,
     private courseSharedService: CourseSharedService,
     private modalService: NgbModal,
@@ -69,8 +70,8 @@ export class ListCursosComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error al cargar los cursos:', err),
-          this.loading = false;
+        console.error('Error al cargar los cursos:', err);
+        this.loading = false;
       }
     });
   }
@@ -150,56 +151,68 @@ export class ListCursosComponent implements OnInit {
   }
 
   openCourseModal(): void {
-    this.loading = true;
-    const modalRef = this.modalService.open(EtiqueteraComponent, { size: 'lg' });
-    this.courseSharedService.clearCourse();
-    modalRef.componentInstance.courseToEdit = null;
-    this.loading = false;
-    modalRef.dismissed.subscribe(() => {
-      this.filteredRows = [...this.cursoElist];
-      this.loadCourses();
-    });
+    try {
+      this.loading = true;
+      const modalRef = this.modalService.open(EtiqueteraComponent, { size: 'lg' });
+      this.courseSharedService.clearCourse();
+      modalRef.componentInstance.courseToEdit = null;
+      this.loading = false;
+      modalRef.dismissed.subscribe(() => {
+        this.filteredRows = [...this.cursoElist];
+        this.loadCourses();
+      });
+    } catch (error) {
+      this.errorHandlerService.handleError(error);
+    }
   }
 
   openModuloModal(moduloId: number | null): void {
-    this.loading = true;
-    const modalRef = this.modalService.open(ModuloComponent, { size: 'lg' });
-    modalRef.componentInstance.cursoId = this.selectedCursoId;
-    modalRef.componentInstance.moduloId = moduloId;
-    this.loading = false;
-    modalRef.dismissed.subscribe(() => {
-      this.loadModulos(this.selectedCursoId);
-    });
+    try {
+      this.loading = true;
+      const modalRef = this.modalService.open(ModuloComponent, { size: 'lg' });
+      modalRef.componentInstance.cursoId = this.selectedCursoId;
+      modalRef.componentInstance.moduloId = moduloId;
+      this.loading = false;
+      modalRef.dismissed.subscribe(() => {
+        this.loadModulos(this.selectedCursoId);
+      });
+    } catch (error) {
+      this.errorHandlerService.handleError(error);
+    }
   }
 
 
   onDelete(id: number): void {
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'Esto eliminará el curso de forma permanente.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminar',
-    }).then((result) => {
-      this.loading = true;
-      if (result.isConfirmed) {
-        this.etiqueteraService.deleteCourse(id).subscribe({
-          next: () => {
-            this.loading = false;
-            this.cursos = this.cursos.filter((course) => course.id !== id);
-            this.filteredRows = [...this.cursoElist];
-            Swal.fire('Eliminado', 'El curso ha sido eliminado.', 'success');
-            this.loadCourses();
-          },
-          error: () => {
-            this.loading = false;
-            Swal.fire('Error', 'No se pudo eliminar el curso.', 'error');
-          },
-        });
-      }
-    });
+    try {
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Esto eliminará el curso de forma permanente.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+      }).then((result) => {
+        this.loading = true;
+        if (result.isConfirmed) {
+          this.etiqueteraService.deleteCourse(id).subscribe({
+            next: () => {
+              this.loading = false;
+              this.cursos = this.cursos.filter((course) => course.id !== id);
+              this.filteredRows = [...this.cursoElist];
+              Swal.fire('Eliminado', 'El curso ha sido eliminado.', 'success');
+              this.loadCourses();
+            },
+            error: () => {
+              this.loading = false;
+              Swal.fire('Error', 'No se pudo eliminar el curso.', 'error');
+            },
+          });
+        }
+      });
+    } catch (error) {
+      this.errorHandlerService.handleError(error);
+    }
   }
 
   onLogoError(event: Event): void {
@@ -208,17 +221,22 @@ export class ListCursosComponent implements OnInit {
   }
 
   deleteModulo(moduloId: number): void {
-    this.loading = true;
-    console.log('Eliminar módulo:', moduloId);
-    this.loading = false;
-    this.moduloService.deleteModulo(moduloId).subscribe(() => {
-      Swal.fire('Eliminado', 'El modulo ha sido eliminado.', 'success');
-      this.loadModulos(this.selectedCursoId);
-    },
-      () => {
-        Swal.fire('Error', 'El modulo ha sido eliminado.', 'error');
-      }
-    );
+    try {
+      this.loading = true;
+      console.log('Eliminar módulo:', moduloId);
+      this.loading = false;
+      this.moduloService.deleteModulo(moduloId).subscribe(() => {
+        Swal.fire('Eliminado', 'El modulo ha sido eliminado.', 'success');
+        this.loadModulos(this.selectedCursoId);
+      },
+        () => {
+          Swal.fire('Error', 'El modulo ha sido eliminado.', 'error');
+        }
+      );
+    }
+    catch (error) {
+      this.errorHandlerService.handleError(error);
+    }
   }
 
 }
