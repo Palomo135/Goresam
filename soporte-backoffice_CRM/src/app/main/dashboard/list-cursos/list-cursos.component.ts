@@ -14,6 +14,7 @@ import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 import { CursoElistDTO } from '../etiquetera/cursosElist';
 import { ModuloService } from 'app/main/modulo/modulo.service';
 import { ModuloList } from 'app/main/modulo/R_modulo/moduloList';
+import { error } from 'console';
 
 
 @Component({
@@ -117,15 +118,20 @@ export class ListCursosComponent implements OnInit {
   }
 
   onEdit(id: number): void {
+    this.loading = true;
     this.etiqueteraService.getCursoById(id).subscribe({
       next: (fullCourse: Curso) => {
+        this.loading = false;
         this.courseSharedService.setCourse(fullCourse);
         const modalRef = this.modalService.open(EtiqueteraComponent, { size: 'lg' });
         modalRef.dismissed.subscribe(() => {
           this.loadCourses();
         });
       },
-      error: (err) => console.error('Error al obtener el curso completo:', err),
+      error: (err) => {
+        this.loading = false;
+        console.error('Error al obtener el curso completo:', err);
+      }
     });
   }
 
@@ -137,9 +143,11 @@ export class ListCursosComponent implements OnInit {
   }
 
   openCourseModal(): void {
+    this.loading = true;
     const modalRef = this.modalService.open(EtiqueteraComponent, { size: 'lg' });
     this.courseSharedService.clearCourse();
     modalRef.componentInstance.courseToEdit = null;
+    this.loading = false;
     modalRef.dismissed.subscribe(() => {
       this.filteredRows = [...this.cursoElist];
       this.loadCourses();
@@ -147,9 +155,11 @@ export class ListCursosComponent implements OnInit {
   }
 
   openModuloModal(moduloId: number | null): void {
+    this.loading = true;
     const modalRef = this.modalService.open(ModuloComponent, { size: 'lg' });
     modalRef.componentInstance.cursoId = this.selectedCursoId;
     modalRef.componentInstance.moduloId = moduloId;
+    this.loading = false;
     modalRef.dismissed.subscribe(() => {
       this.loadModulos(this.selectedCursoId);
     });
@@ -157,7 +167,6 @@ export class ListCursosComponent implements OnInit {
 
 
   onDelete(id: number): void {
-    this.loading = true;
     Swal.fire({
       title: '¿Estás seguro?',
       text: 'Esto eliminará el curso de forma permanente.',
@@ -167,6 +176,7 @@ export class ListCursosComponent implements OnInit {
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Sí, eliminar',
     }).then((result) => {
+      this.loading = true;
       if (result.isConfirmed) {
         this.etiqueteraService.deleteCourse(id).subscribe({
           next: () => {
@@ -191,10 +201,17 @@ export class ListCursosComponent implements OnInit {
   }
 
   deleteModulo(moduloId: number): void {
+    this.loading = true;
     console.log('Eliminar módulo:', moduloId);
+    this.loading = false;
     this.moduloService.deleteModulo(moduloId).subscribe(() => {
+      Swal.fire('Eliminado', 'El modulo ha sido eliminado.', 'success');
       this.loadModulos(this.selectedCursoId);
-    });
+    },
+      () => {
+        Swal.fire('Error', 'El modulo ha sido eliminado.', 'error');
+      }
+    );
   }
 
 }

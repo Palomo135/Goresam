@@ -24,7 +24,7 @@ export const menu: CoreMenu[] = [
         translate: 'Registrar Curso',
         type: 'item',
         icon: 'circle',
-        url: 'dashboard/registrar-curso'
+        url: 'curso/registrar-curso'
       },
       {
 
@@ -33,7 +33,7 @@ export const menu: CoreMenu[] = [
         translate: 'Lista Cursos',
         type: 'item',
         icon: 'circle',
-        url: 'dashboard/list-cursos'
+        url: 'curso/list-cursos'
       }
     ]
   },
