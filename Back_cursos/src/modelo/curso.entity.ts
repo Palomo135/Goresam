@@ -49,7 +49,7 @@ export class Curso {
     @JoinColumn({ name: 'encargadoId' })
     encargado: Encargado;
 
-    @Column()
+    @Column({ default: true })
     estado: boolean;
 
     @Column()

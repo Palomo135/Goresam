@@ -49,9 +49,9 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
     this.cursoForm = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      logo: ['', Validators.required],
+      logo: [true, Validators.required],
       recurso: ['', Validators.required],
-      estado: [true, Validators.required],
+      estado: [Boolean, Validators.required],
       fechaInicio: ['', Validators.required],
       fechaCaducidad: ['', Validators.required],
       encargado: [null, Validators.required],
@@ -60,8 +60,6 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
       aprendizaje: [''],
       requisitos: [''],
       reconocimiento: ['']
-    }, {
-      validators: this.dateValidator('fechaInicio', 'fechaCaducidad'),
     });
 
     this.encargadoForm = this.fb.group({
@@ -141,21 +139,6 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
     return [year, month.padStart(2, '0'), day.padStart(2, '0')].join('-');
   } // Formatea la fecha
 
-  dateValidator(startDateKey: string, endDateKey: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const startDate = control.get(startDateKey)?.value;
-      const endDate = control.get(endDateKey)?.value;
-
-      if (startDate && endDate) {
-        const start = moment(startDate);
-        const end = moment(endDate);
-        if (end.isBefore(start)) {
-          return { dateRangeInvalid: true };
-        }
-      }
-      return null;
-    }
-  };
 
   addKeyword(): void {
     if (this.newKeyword && !this.keywords.includes(this.newKeyword)) {
@@ -175,6 +158,21 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
     const descripcion = $('#summernote').summernote('code');
     this.cursoForm.patchValue({ descripcion });
 
+    this.cursoForm.patchValue({ estado: this.cursoForm.get('estado')?.value === true });
+
+    const fechaInicio = this.cursoForm.get('fechaInicio')?.value;
+    const fechaCaducidad = this.cursoForm.get('fechaCaducidad')?.value;
+
+    if (fechaInicio && fechaCaducidad) {
+      const start = moment(fechaInicio);
+      const end = moment(fechaCaducidad);
+
+      if (end.isBefore(start)) {
+        Swal.fire('Error', 'La fecha de caducidad debe ser posterior a la fecha de inicio.', 'error');
+        return;
+      }
+    }
+
     const formData = new FormData();
 
     // Agregar todos los campos al FormData
@@ -192,7 +190,6 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
 
     // Agregar palabras clave
     if (this.keywords && this.keywords.length > -1) {
-      // Convertir el array de palabras clave al formato esperado
       const palabrasClaveFormateadas = this.keywords.map(keyword => ({ nombre: keyword }));
       formData.append('detallePalabraClave', JSON.stringify(palabrasClaveFormateadas));
     }

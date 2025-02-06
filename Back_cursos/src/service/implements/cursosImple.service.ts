@@ -81,6 +81,7 @@ export class CursoService {
     if (!curso) {
       throw new NotFoundException('Curso no encontrado');
     }
+    console.log(curso);
     return curso;
   }
 
@@ -112,7 +113,7 @@ export class CursoService {
       });
       await this.DetallePalabraClaveReposi.save(detalles);
     }
-
+    console.log('curso registrado: ', curso);
     return this.findOne(curso.id);
   }
 
@@ -161,6 +162,7 @@ export class CursoService {
       });
     }
 
+    console.log('curso actualizado: ', curso)
     // Guardar los cambios
     await this.cursoRepository.save(curso);
 
