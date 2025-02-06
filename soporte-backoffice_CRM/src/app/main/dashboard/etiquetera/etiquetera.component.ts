@@ -154,11 +154,75 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
     this.keywords.splice(index, 1);
   }
 
+  // onSubmit(): void {
+  //   const descripcion = $('#summernote').summernote('code');
+  //   this.cursoForm.patchValue({ descripcion });
+
+  //   // Convertir el estado a booleano
+  //   const estado = this.cursoForm.get('estado')?.value === 'true' || this.cursoForm.get('estado')?.value === true;
+
+  //   if (this.cursoForm.invalid) {
+  //     Swal.fire('Error', 'Por favor corrige los errores en el formulario.', 'error');
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+
+  //   // Agregar todos los campos al FormData
+  //   Object.keys(this.cursoForm.value).forEach(key => {
+  //     if (key === 'logo') {
+  //       // Solo agregar el logo si hay un nuevo archivo
+  //       const fileInput = this.cursoForm.get('logo')?.value;
+  //       if (fileInput instanceof File) {
+  //         formData.append('logo', fileInput);
+  //       }
+  //     } else {
+  //       let value = this.cursoForm.get(key)?.value
+  //       if (key === 'estado') {
+  //         value = value === 'true' || value === true;
+  //       }
+  //       formData.append(key, value);
+  //     }
+  //   });
+
+  //   const logo = formData.get('logo')
+
+  //   const curso: Curso = {
+  //     ...this.cursoForm.value,
+  //     logo,
+  //     estado,
+  //     detallePalabrasClave: this.keywords.map(keyword => ({ nombre: keyword }))
+  //   };
+
+  //   const cursoId = this.cursoForm.get('id')?.value;
+  //   if (cursoId) {
+  //     this.etiqueteraService.updateCourse(cursoId, curso).subscribe({
+  //       next: () => {
+  //         Swal.fire('Actualizado', 'El curso ha sido actualizado.', 'success');
+  //         this.resetForm();
+  //         this.closeModal();
+  //       },
+  //       error: () => {
+  //         Swal.fire('Error', 'Ha ocurrido un error al actualizar el curso.', 'error');
+  //       }
+  //     });
+  //   } else {
+  //     this.etiqueteraService.createCourse(curso).subscribe({
+  //       next: () => {
+  //         Swal.fire('Registrado', 'El curso ha sido registrado.', 'success');
+  //         this.resetForm();
+  //         this.closeModal();
+  //       },
+  //       error: () => {
+  //         Swal.fire('Error', 'No se pudo registrar el curso.', 'error');
+  //       }
+  //     });
+  //   }
+  // }
+
   onSubmit(): void {
     const descripcion = $('#summernote').summernote('code');
     this.cursoForm.patchValue({ descripcion });
-
-    this.cursoForm.patchValue({ estado: this.cursoForm.get('estado')?.value === true });
 
     const fechaInicio = this.cursoForm.get('fechaInicio')?.value;
     const fechaCaducidad = this.cursoForm.get('fechaCaducidad')?.value;
@@ -184,7 +248,11 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
           formData.append('logo', fileInput);
         }
       } else {
-        formData.append(key, this.cursoForm.get(key)?.value);
+        let value = this.cursoForm.get(key)?.value
+        if (key === 'estado') {
+          value = value === 'true' || value === true;
+        }
+        formData.append(key, value);
       }
     });
 

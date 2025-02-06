@@ -23,11 +23,7 @@
       <!-- {{courseForm.value|json}} -->
       <!-- Cuerpo del formulario -->
       <div class="card-body">
-        <form
-          [formGroup]="cursoForm"
-          (ngSubmit)="onSubmit()"
-          class="needs-validation"
-        >
+        <form [formGroup]="cursoForm" (ngSubmit)="onSubmit()">
           <div class="row align-items-start">
             <div class="col-md-12">
               <div class="row g-3">
