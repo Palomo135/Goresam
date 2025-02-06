@@ -85,25 +85,47 @@ export class CursoService {
     return curso;
   }
 
-  async create(cursoDTO: CursoDTO): Promise<Curso> {
-    const { detallePalabraClave, ...cursoData } = cursoDTO;
-    console.log(cursoData);
-    const curso = this.cursoRepository.create(cursoData);
-    await this.cursoRepository.save(curso);
+  async create(cursoDTO: CursoEditDTO): Promise<Curso> {
+    console.log('curso del fornt', cursoDTO)
+    const cursoData: Curso = new Curso();
+    cursoData.nombre = cursoDTO.nombre;
+    cursoData.descripcion = cursoDTO.descripcion;
+    cursoData.fechaInicio = cursoDTO.fechaInicio;
+    cursoData.fechaCaducidad = cursoDTO.fechaCaducidad;
+    cursoData.recurso = cursoDTO.recurso;
+    cursoData.frase = cursoDTO.frase;
+    cursoData.aprendizaje = cursoDTO.aprendizaje;
+    cursoData.dirigido = cursoDTO.dirigido;
+    cursoData.requisitos = cursoDTO.requisitos;
+    cursoData.reconocimiento = cursoDTO.reconocimiento;
 
-    if (curso.encargado) {
-      const responsable = await this.encargadoService.findOne(curso.encargado.id)
-      console.log('encargado encontrado', responsable)
+    if (cursoDTO.estado == 'true') {
+      cursoData.estado = true;
+    }
+    else {
+      cursoData.estado = false;
+    }
+
+    if (cursoDTO.logo) {
+      cursoData.logo = cursoDTO.logo;
+    }
+    if (cursoDTO.encargado) {
+      console.log('numero del responsable', cursoDTO.encargado)
+      const encargadoId = parseInt(cursoDTO.encargado);
+      const responsable = await this.encargadoService.findOne(encargadoId)
       if (!responsable) {
         throw new NotFoundException('Encargado no encontrado');
       }
-      curso.encargado = responsable;
+      cursoData.encargado = responsable;
     }
 
-    if (detallePalabraClave && detallePalabraClave.length > 0) {
-      const keywords = typeof detallePalabraClave === 'string'
-        ? JSON.parse(detallePalabraClave)
-        : detallePalabraClave;
+    const curso = this.cursoRepository.create(cursoData);
+    await this.cursoRepository.save(curso);
+
+    if (cursoDTO.detallePalabraClave && cursoDTO.detallePalabraClave.length > 0) {
+      const keywords = typeof cursoDTO.detallePalabraClave === 'string'
+        ? JSON.parse(cursoDTO.detallePalabraClave)
+        : cursoDTO.detallePalabraClave;
 
       const detalles = keywords.map(dto => {
         const detalle = new DetallePalabraClave();
@@ -117,7 +139,7 @@ export class CursoService {
     return this.findOne(curso.id);
   }
 
-  async update(id: number, updateDTO: CursoDTO): Promise<Curso> {
+  async update(id: number, updateDTO: CursoEditDTO): Promise<Curso> {
     // Buscar el curso por ID con relaciones necesarias
     const curso = await this.cursoRepository.findOne({
       where: { id },
@@ -132,12 +154,19 @@ export class CursoService {
     curso.nombre = updateDTO.nombre ?? curso.nombre;
     curso.descripcion = updateDTO.descripcion ?? curso.descripcion;
     curso.recurso = updateDTO.recurso ?? curso.recurso;
-    curso.estado = updateDTO.estado ?? curso.estado;
     curso.fechaInicio = updateDTO.fechaInicio ?? curso.fechaInicio;
     curso.fechaCaducidad = updateDTO.fechaCaducidad ?? curso.fechaCaducidad;
 
+    if (updateDTO.estado == 'true') {
+      curso.estado = true;
+    }
+    else {
+      curso.estado = false;
+    }
+
     if (updateDTO.encargado) {
-      const encargado = await this.encargadoService.findOne(updateDTO.encargado.id)
+      const encargadoId = parseInt(updateDTO.encargado);
+      const encargado = await this.encargadoService.findOne(encargadoId)
       if (!encargado) {
         throw new NotFoundException('Encargado no encontrado')
       }
