@@ -24,12 +24,12 @@ export class EtiqueteraService {
     return this.http.get<CursoEdit>(`${this.apiUrl}/${id}`);
   }
 
-  getCoursesElist(): Observable<CursoElistDTO[]> {
-    return this.http.get<CursoElistDTO[]>(this.apiUrl);
-  }
-
   getCourses(): Observable<Curso[]> {
     return this.http.get<Curso[]>(this.apiUrl);
+  }
+
+  getCoursesElist(): Observable<CursoElistDTO[]> {
+    return this.http.get<CursoElistDTO[]>(`${this.apiUrl}/lista`);
   }
 
   createCourse(formData: FormData): Observable<Curso> {

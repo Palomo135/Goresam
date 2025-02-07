@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EtiqueteraService } from './main/curso/service/etiquetera.service';
+import { EtiqueteraService } from './main/dashboard/service/etiquetera.service';
 
 describe('EtiqueteraService', () => {
   let service: EtiqueteraService;

@@ -35,7 +35,7 @@ import { SubMenuCustomContextMenuComponent } from './main/extensions/context-men
 
 const appRoutes: Routes = [
   {
-    path: 'dashboard',
+    path: 'curso',
     loadChildren: () => import('./main/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
   {
@@ -96,11 +96,11 @@ const appRoutes: Routes = [
   //   redirectTo: '/dashboard/etiquetera',
   //   pathMatch: 'full'
   // },
-  {
-    path: '',
-    redirectTo: '/dashboard/list-cursos',
-    pathMatch: 'full'
-  },
+  // {
+  //   path: '',
+  //   redirectTo: '/dashboard/list-cursos',
+  //   pathMatch: 'full'
+  // },
 
 
 

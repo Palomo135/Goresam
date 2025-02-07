@@ -7,7 +7,7 @@ import { CursoService } from "src/service/implements/cursosImple.service";
 import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { CursoDTO } from "src/DTO/curso.DTO";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CursoEditDTO } from 'src/DTO/cursoEdit.DTO';
+import { CursoEditDTO } from "src/DTO/cursoEdit.DTO";
 import { DetallePalabraClaveDTO } from "src/DTO/detallePalabraClave.DTO";
 import { CursoElistDTO } from 'src/DTO/cursoElist.DTO';
 import { Repository } from 'typeorm';
@@ -34,15 +34,14 @@ export class CursoController {
     res.send(curso.logo);
   }
 
-
-  @Get()
-  findElistAll(): Promise<CursoElistDTO[]> {
-    return this.cursoService.findElistAll();
-  }
-
   @Get()
   findAll(): Promise<Curso[]> {
     return this.cursoService.findAll();
+  }
+
+  @Get('lista')
+  findElistAll(): Promise<CursoElistDTO[]> {
+    return this.cursoService.findElistAll();
   }
 
   @Get(':id')
@@ -52,7 +51,7 @@ export class CursoController {
 
   @Post()
   @UseInterceptors(FileInterceptor('logo', { storage: multerConfig.storage, fileFilter: multerOptions.fileFilter }))
-  async create(@UploadedFile() file: Express.Multer.File, @Body() body: CursoDTO) {
+  async create(@UploadedFile() file: Express.Multer.File, @Body() body: CursoEditDTO) {
     // Si se sube un archivo, asignar el logo
     if (file) {
       //cursoEntity.logo = await fs.readFile(file.path); // Guardar el logo como Buffer
@@ -66,7 +65,7 @@ export class CursoController {
 
   @Put(':id')
   @UseInterceptors(FileInterceptor('logo', { storage: multerConfig.storage, fileFilter: multerOptions.fileFilter })) // Permite cargar un archivo (logo)
-  async update(@Param('id') id: number, @UploadedFile() file: Express.Multer.File, @Body() body: CursoDTO) {
+  async update(@Param('id') id: number, @UploadedFile() file: Express.Multer.File, @Body() body: CursoEditDTO) {
 
     if (file) {
       // Leer el archivo si se proporciona

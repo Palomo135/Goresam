@@ -17,6 +17,7 @@ export class ModuloComponent implements OnInit {
   @Input() cursoId: number | null = null; // ID del curso asociado
   @Input() moduloId: number | null = null; // Nombre del curso asociado
   //cursoId: number | null = null; // ID del curso asociado
+  titulo: string;
   descripcion: string; // Campo para agregar un módulo
   modulos: Modulo[] = []; // Lista de módulos
   estado: boolean = true;
@@ -24,6 +25,7 @@ export class ModuloComponent implements OnInit {
   submitted = false;
   isEditMode: boolean = false;
   orden: number | null = null;
+  wordLimitExceeded: boolean = false;
 
   constructor(
     public activeModal: NgbActiveModal, // Asegúrate de que NgbActiveModal esté inyectado
@@ -39,14 +41,17 @@ export class ModuloComponent implements OnInit {
 
   // Agregar un nuevo módulo
   addModulo(): void {
-    if (this.descripcion) {
+    this.submitted = true;
+    if (this.titulo && this.descripcion && !this.wordLimitExceeded) {
       const nuevoModulo: Modulo = {
-        nombre: this.descripcion, // Asignar descripcion a nombre
+        nombre: this.titulo, // Asignar descripcion a nombre
+        descripcion: this.descripcion,
         cursoId: this.cursoId || null, // Asignar el cursoId
         orden: this.modulos.length + 1, // Orden automático
         estado: this.estado ?? true
       };
       this.moduloService.createModulo(nuevoModulo).subscribe((modulo) => {
+        Swal.fire('Modulo registrado', 'El módulo ha sido registrado correctamente', 'success');
         this.modulos.push(modulo);
         this.resetForm();
         this.activeModal.dismiss();
@@ -63,7 +68,8 @@ export class ModuloComponent implements OnInit {
       console.log('modulo encontrado: ', modulo);
       if (modulo.length > 0) {
         this.editModuloId = modulo[0].id;
-        this.descripcion = modulo[0].nombre; // Asignar nombre a descripcion
+        this.titulo = modulo[0].nombre; // Asignar nombre a titulo
+        this.descripcion = modulo[0].descripcion;
         // this.estado = modulo[0].estado;
         // this.cursoId = modulo[0].curso.id;
         this.orden = modulo[0].orden;
@@ -80,13 +86,14 @@ export class ModuloComponent implements OnInit {
 
   // Actualizar un módulo
   updateModulo(): void {
-    if (this.editModuloId !== null && this.descripcion) {
+    if (this.editModuloId !== null && this.descripcion && !this.wordLimitExceeded) {
       const updatedModulo: Modulo = {
         id: this.editModuloId,
-        nombre: this.descripcion,
+        nombre: this.titulo,
+        descripcion: this.descripcion,
         cursoId: this.cursoId,
         orden: this.modulos.find(m => m.id === this.editModuloId)?.orden || 0, // Mantener el orden existente
-        estado: true
+        estado: this.estado ?? true
       };
       console.log('Modulo actualizado:', updatedModulo);
       this.moduloService.updateModulo(updatedModulo).subscribe(() => {
@@ -103,15 +110,22 @@ export class ModuloComponent implements OnInit {
 
   // Restablecer el formulario
   resetForm(): void {
+    this.titulo = '';
     this.descripcion = '';
     this.cursoId = null;
     this.estado = true;
     this.editModuloId = null;
     this.submitted = false;
+    this.wordLimitExceeded = false;
   }
 
   // Cerrar el modal
   closeModal(): void {
     this.activeModal.close();
   }
-}
+
+  checkWordLimit(): void {
+    const wordCount = this.descripcion ? this.descripcion.split(/\s+/).length : 0;
+    this.wordLimitExceeded = wordCount > 100;
+  }
+} 

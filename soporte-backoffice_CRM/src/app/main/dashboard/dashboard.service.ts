@@ -8,7 +8,7 @@ import { Curso } from './etiquetera/curso';
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = 'http://localhost:3200/dashboard';
+  private apiUrl = 'http://localhost:3200/api/dashboard';
 
   // Public
   public apiData: any;
