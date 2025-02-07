@@ -17,8 +17,8 @@ export class Modulo {
   @ManyToOne(() => Curso, (curso) => curso.modulos, { onDelete: 'CASCADE' }) // Relación con Curso
   curso: Curso;
 
-  @OneToMany(() => Clausula, (clausula) => clausula.modulo, { cascade: true })
-  clausulas: Clausula[];
+  // @OneToMany(() => Clausula, (clausula) => clausula.modulo, { cascade: true })
+  // clausulas: Clausula[];
 
   @CreateDateColumn()
   fechaCreate: Date;

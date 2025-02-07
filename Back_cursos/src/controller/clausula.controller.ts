@@ -22,10 +22,10 @@ export class ClausulaController {
     return this.clausulaService.findById(id);
   }
 
-  @Get('modulo/:moduloId')
-  findByModulo(@Param('moduloId', ParseIntPipe) moduloId: number): Promise<clausulaListDTO[]> {
-    return this.clausulaService.findByModulo(moduloId);
-  }
+  // @Get('modulo/:moduloId')
+  // findByModulo(@Param('moduloId', ParseIntPipe) moduloId: number): Promise<clausulaListDTO[]> {
+  //   return this.clausulaService.findByModulo(moduloId);
+  // }
 
   @Post()
   async create(@Body() clausula: Partial<Clausula>, @Body('moduloId') moduloId: number): Promise<Clausula> {

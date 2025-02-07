@@ -28,9 +28,9 @@ export class ClausulaService implements IClausulaService {
         return this.clausulaRepository.findById(id);
     }
 
-    async findByModulo(moduloId: number): Promise<clausulaListDTO[]> {
-        return this.clausulaRepository.findByModulo(moduloId);
-    }
+    // async findByModulo(moduloId: number): Promise<clausulaListDTO[]> {
+    //     return this.clausulaRepository.findByModulo(moduloId);
+    // }
 
     async assignClausulasToModulo(moduloId: number, clausulas: number[]): Promise<void> {
         await this.clausulaRepository.assignClausulasToModulo(moduloId, clausulas);

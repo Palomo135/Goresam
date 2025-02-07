@@ -30,32 +30,6 @@ export class ClausulaRepository {
     });
   }
 
-  async findByModulo(moduloId: number): Promise<Clausula[]> {
-    // return this.clausulaRepository.find({
-    //   where: { modulo: { id: moduloId }, estado: true },
-    //   relations: ['modulo'],
-    // });
-    return this.clausulaRepository.find({
-      select: {
-        id: true,
-        nombre: true,
-        estado: true,
-        fechaCreate: true,
-        fechaUpdate: true,
-        modulo: {
-          id: true,
-          nombre: true,
-          curso: {
-            id: true,
-          }
-        },
-      },
-      where: { modulo: { id: moduloId }, estado: true },
-      relations: ['modulo'],
-    },
-    );
-  }
-
   //crear una nueva clausula
   // async create(clausula: Partial<Clausula>): Promise<Clausula> {
   //   const newClausula = this.clausulaRepository.create({ ...clausula, fechaCreate: new Date() });
@@ -67,7 +41,7 @@ export class ClausulaRepository {
     if (!modulo) {
       throw new NotFoundException('Modulo no encontrado');
     }
-    const newClausula = this.clausulaRepository.create({ ...clausula, modulo, fechaCreate: new Date() });
+    const newClausula = this.clausulaRepository.create({ ...clausula, fechaCreate: new Date() });
     return this.clausulaRepository.save(newClausula);
   }
 
@@ -106,13 +80,6 @@ export class ClausulaRepository {
       throw new NotFoundException(`Cláusula con ID ${id} no encontrada`);
     }
 
-    if (moduloId) {
-      const modulo = await this.moduloRepository.findOne({ where: { id: moduloId } });
-      if (!modulo) {
-        throw new NotFoundException(`Módulo con ID ${moduloId} no encontrado`);
-      }
-      clausulaToUpdate.modulo = modulo; // Actualizamos la relación
-    }
 
     await this.clausulaRepository.save({ ...clausulaToUpdate, ...clausula, fechaUpdate: new Date() });
     return this.findById(id);
@@ -131,7 +98,6 @@ export class ClausulaRepository {
     }
 
     const clausulasEntities = await this.clausulaRepository.findByIds(clausulas);
-    modulo.clausulas = clausulasEntities;
     await this.moduloRepository.save(modulo);
   }
 
@@ -142,7 +108,7 @@ export class ClausulaRepository {
       throw new NotFoundException('Modulo no encontrado');
     }
 
-    modulo.clausulas = modulo.clausulas.filter(clausula => clausula.id !== clausulaId);
+
     await this.moduloRepository.save(modulo);
   }
 

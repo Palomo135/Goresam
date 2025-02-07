@@ -34,15 +34,14 @@ export class CursoController {
     res.send(curso.logo);
   }
 
-
-  @Get()
-  findElistAll(): Promise<CursoElistDTO[]> {
-    return this.cursoService.findElistAll();
-  }
-
   @Get()
   findAll(): Promise<Curso[]> {
     return this.cursoService.findAll();
+  }
+
+  @Get('lista')
+  findElistAll(): Promise<CursoElistDTO[]> {
+    return this.cursoService.findElistAll();
   }
 
   @Get(':id')

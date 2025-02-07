@@ -5,8 +5,6 @@ import { Modulo } from 'src/modelo/modulo.entity';
 import { CreateModuloDTO } from 'src/DTO/modulo.DTO';
 import { Curso } from 'src/modelo/curso.entity';
 import { ModuloListDTO } from 'src/DTO/moduloList.DTO';
-import { ClausulaRepository } from 'src/repository/clausula.repository';
-import { Clausula } from 'src/modelo/clausula.entity';
 
 @Injectable()
 export class ModuloImpleService {
@@ -54,7 +52,7 @@ export class ModuloImpleService {
   async findModulosByCurso(cursoId: number): Promise<Modulo[]> {
     return this.moduloRepository.find({
       where: { curso: { id: cursoId }, estado: true },
-      relations: ['curso', 'clausulas'],
+      relations: ['curso'],
       order: { orden: 'ASC' },
     });
   }
