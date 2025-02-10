@@ -26,7 +26,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
 
   encargadoForm: FormGroup;
   encargados: Encargado[] = [];
-  encargadoImagePreview: string;
+  encargadoImagePreview: string | ArrayBuffer | null = null;
 
   cursoForm: FormGroup;
   logoPreview: string | ArrayBuffer | null = null;
@@ -45,7 +45,8 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
     private etiqueteraService: EtiqueteraService,
     private encargadoService: EncargadoService,
     private fb: FormBuilder,
-    private modalService: NgbModal) {
+    private modalService: NgbModal
+  ) {
     this.cursoForm = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
@@ -322,7 +323,7 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
     this.encargadoModalRef = this.modalService.open(this.encargadoModal);
   }
 
-  onEncargadoImageChange(): void {
+  onEncargadoImageChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const reader = new FileReader();
@@ -336,17 +337,25 @@ export class EtiqueteraComponent implements OnInit, AfterViewInit {
   onEncargadoSubmit(): void {
     if (this.encargadoForm.valid) {
       const encargado: Encargado = this.encargadoForm.value;
-      this.loading = true;
-      this.encargadoService.createEncargado(encargado).subscribe(() => {
+      const formData = new FormData();
+
+      Object.keys(encargado).forEach(key => {
+        formData.append(key, encargado[key]);
+      });
+
+      const fileInput = this.encargadoForm.get('imagen')?.value;
+      if (fileInput instanceof File) {
+        formData.append('imagen', fileInput);
+      }
+
+      this.encargadoService.createEncargado(formData).subscribe(() => {
         Swal.fire('Registrado', 'El Responsable del curso ha sido registrado', 'success');
         this.loadEncargados();
-        this.loading = false;
         this.encargadoModalRef?.close();
         this.resetEnForm();
-      }, error => {
-        console.log('Error registrando encargado', error)
-        Swal.fire('Error', 'No se pudo registrar el encargado.', 'error')
-        this.loading = false;
+      }, (error) => {
+        console.log('Error registrando encargado', error),
+          Swal.fire('Error', 'No se pudo registrar el encargado.', 'error')
       });
     }
   }

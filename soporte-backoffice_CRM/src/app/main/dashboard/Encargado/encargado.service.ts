@@ -15,7 +15,7 @@ export class EncargadoService {
         return this.http.get<Encargado[]>(this.baseUrl);
     }
 
-    createEncargado(encargado: Encargado): Observable<Encargado> {
+    createEncargado(encargado: FormData): Observable<Encargado> {
         return this.http.post<Encargado>(this.baseUrl, encargado);
     }
 }
